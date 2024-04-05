@@ -34,12 +34,10 @@ flutter:
   fonts:
     - family: InknutAntiqua
       fonts:
-        - asset: assets/fonts/InknutAntiqua-Light.tff
+        - asset: assets/fonts/InknutAntiqua-Light.ttf
         - asset: assets/fonts/InknutAntiqua-Regular.ttf
-        - asset: assets/fonts/InknutAntiqua-Medium.tff
+        - asset: assets/fonts/InknutAntiqua-Medium.ttf
         - asset: assets/fonts/InknutAntiqua-Bold.ttf
         - asset: assets/fonts/InknutAntiqua-SemiBold.ttf
-        - asset: assets/fonts/InknutAntiqua-ExtraBold.tff
-        - asset: assets/fonts/InknutAntiqua-Black.tff
-
-        
+        - asset: assets/fonts/InknutAntiqua-ExtraBold.ttf
+        - asset: assets/fonts/InknutAntiqua-Black.ttf
