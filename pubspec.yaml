@@ -1,0 +1,45 @@
+name: darb_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.3.2 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dash_chat_2: ^0.0.20
+  flutter_bloc: ^8.1.4
+  flutter_dotenv: ^5.1.0
+  flutter_svg: ^2.0.10+1
+  get_it: ^7.6.7
+  get_storage: ^2.1.1
+  supabase_flutter: ^2.3.4
+  intl: ^0.18.1
+  flutter_otp_text_field: ^1.1.0+2
+  otp_timer_button: ^1.1.1
+  timer_button: ^2.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
+    - assets/fonts/
+  fonts:
+    - family: InknutAntiqua
+      fonts:
+        - asset: assets/fonts/InknutAntiqua-Light.tff
+        - asset: assets/fonts/InknutAntiqua-Regular.ttf
+        - asset: assets/fonts/InknutAntiqua-Medium.tff
+        - asset: assets/fonts/InknutAntiqua-Bold.ttf
+        - asset: assets/fonts/InknutAntiqua-SemiBold.ttf
+        - asset: assets/fonts/InknutAntiqua-ExtraBold.tff
+        - asset: assets/fonts/InknutAntiqua-Black.tff
+
+        
