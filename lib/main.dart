@@ -1,4 +1,5 @@
 import 'package:darb_app/pages/startup_page.dart';
+import 'package:darb_app/pages/supervisor_home.dart';
 import 'package:darb_app/utils/setup.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: StartupPage()
+      debugShowCheckedModeBanner: false,
+      home: SupervisorHome(),
+      // StartupPage()
     );
   }
 }
