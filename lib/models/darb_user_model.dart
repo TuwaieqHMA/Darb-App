@@ -1,5 +1,6 @@
 class DarUser {
-  DarUser({
+  // ignore: non_constant_identifier_names
+  DarUser.DarbUser({
     required this.id,
     required this.name,
     required this.email,

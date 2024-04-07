@@ -20,6 +20,7 @@ dependencies:
   flutter_otp_text_field: ^1.1.0+2
   otp_timer_button: ^1.1.1
   timer_button: ^2.1.1
+  device_preview: ^1.1.0
 
 dev_dependencies:
   flutter_test:
