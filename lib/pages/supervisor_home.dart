@@ -17,7 +17,7 @@ class SupervisorHome extends StatelessWidget {
       PreferredSize(
         preferredSize: Size(
           context.getWidth(),
-          context.getHeight() * 0.13,
+          context.getHeight() * 0.10,
         ),
         child: 
         const

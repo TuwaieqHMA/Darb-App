@@ -1,6 +1,8 @@
 import 'package:darb_app/pages/startup_page.dart';
 import 'package:darb_app/pages/supervisor_home.dart';
 import 'package:darb_app/utils/setup.dart';
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Future main() async{
@@ -9,7 +11,9 @@ Future main() async{
   await databaseSetup();
   await setup();
   
-  runApp(const MainApp());
+  runApp(DevicePreview(
+    enabled: !kReleaseMode,
+    builder: (context) => const MainApp() ),);
 }
 
 class MainApp extends StatelessWidget {
@@ -17,9 +21,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SupervisorHome(),
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      
+      home: const SupervisorHome(),
       // StartupPage()
     );
   }

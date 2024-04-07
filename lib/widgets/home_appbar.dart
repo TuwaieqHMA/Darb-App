@@ -31,6 +31,7 @@ class HomeAppBar extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                height24,
                 Row(
                   children: [
                     InkWell(
