@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-
+const noColor = Colors.transparent;
 const whiteColor = Colors.white;
 const offWhiteColor = Color(0xffFFF8E8);
+const fadedwhiteColor = Color(0xff9CCDCD);
 const redColor = Color(0xffF24C3D);
+const sandYellowColor = Color(0xffFFE19A);
 const signatureYellowColor = Color(0xffFFC94A);
 const lightYellowColor = Color(0xffFAF6EE);
 const greenColor = Color(0xff66A19E);
 const fadedBlueColor = Color(0xffAFE1DE);
 const seaSaltBlueColor = Color(0xff1DAEEF);
 const lightSeaSaltBlue = Color(0xff3EC3FF);
+const fadedGreenColor = Color(0xffACBA7A);
 const skyblueColor = Color(0xff79CCC7);
 const signatureBlueColor = Color(0xff5AABAB);
 const signatureTealColor = Color(0xff408B8B);

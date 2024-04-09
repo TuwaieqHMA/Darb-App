@@ -1,5 +1,7 @@
 import 'package:darb_app/pages/startup_page.dart';
 import 'package:darb_app/pages/supervisor_home.dart';
+import 'package:darb_app/pages/welcome_page.dart';
+
 import 'package:darb_app/utils/setup.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
