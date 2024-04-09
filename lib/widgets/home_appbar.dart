@@ -62,10 +62,12 @@ class HomeAppBar extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   padding: const EdgeInsets.only(bottom: 10),
                   decoration: const BoxDecoration(
-                      color: whiteColor,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20))),
+                    color: whiteColor,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
                   child: Image.asset(
                     "assets/images/app_logo.png",
                   ),
