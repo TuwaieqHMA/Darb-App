@@ -7,3 +7,5 @@ const width32 = SizedBox(width: 32,);
 const height8 = SizedBox(height: 8,);
 const height16 = SizedBox(height: 16,);
 const height32 = SizedBox(height: 32,);
+
+const nothing = SizedBox();

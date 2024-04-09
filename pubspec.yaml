@@ -21,6 +21,8 @@ dependencies:
   otp_timer_button: ^1.1.1
   timer_button: ^2.1.1
   device_preview: ^1.1.0
+  font_awesome_flutter: ^10.7.0
+  shape_of_view_null_safe: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -32,13 +34,22 @@ flutter:
   assets:
     - .env
     - assets/fonts/
+    - assets/images/
+    - assets/icons/
   fonts:
     - family: InknutAntiqua
       fonts:
         - asset: assets/fonts/InknutAntiqua-Light.ttf
+          weight: 300
         - asset: assets/fonts/InknutAntiqua-Regular.ttf
+          weight: 400
         - asset: assets/fonts/InknutAntiqua-Medium.ttf
+          weight: 500
         - asset: assets/fonts/InknutAntiqua-Bold.ttf
+          weight: 700
         - asset: assets/fonts/InknutAntiqua-SemiBold.ttf
+          weight: 600
         - asset: assets/fonts/InknutAntiqua-ExtraBold.ttf
+          weight: 800
         - asset: assets/fonts/InknutAntiqua-Black.ttf
+          weight: 900
