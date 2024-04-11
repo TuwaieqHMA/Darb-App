@@ -1,5 +1,6 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/create_account_type_page.dart';
+import 'package:darb_app/pages/supervisor_naivgation_page.dart';
 import 'package:darb_app/pages/verify_email_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -40,9 +41,9 @@ class LoginPage extends StatelessWidget {
                             topRight: Radius.circular(20))),
                     child: Column(
                       children: [
-                        HeaderTextField(controller: nameController, headerText: "البريد الالكتروني",),
+                        HeaderTextField(controller: nameController, headerText: "البريد الالكتروني", textDirection: TextDirection.ltr,),
                         height8,
-                        HeaderTextField(controller: passwordController, headerText: "كلمة المرور", isObscured: true),
+                        HeaderTextField(controller: passwordController, headerText: "كلمة المرور", isObscured: true,),
                         height8,
                         Align(
                           alignment: Alignment.centerRight,
@@ -53,7 +54,7 @@ class LoginPage extends StatelessWidget {
                         ),  
                         height32,
                         BottomButton(text: "تسجيل الدخول", onPressed: () {
-                          
+                          context.push(const SupervisorNavigationPage(), false);
                         },),
                         height16,
                         TwoTextSpan(normalText: "ليس لديك حساب؟      ", underlinedText: "إنشاء حساب", onTap: () {

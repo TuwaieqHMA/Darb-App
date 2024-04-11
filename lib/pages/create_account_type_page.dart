@@ -16,7 +16,8 @@ class CreateAccountTypePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: signatureBlueColor,
         automaticallyImplyLeading: false,
-        actions: const [CircleBackButton()],
+        toolbarHeight: 42,
+        leading: const CircleBackButton(),
       ),
       body: Container(
         width: context.getWidth(),

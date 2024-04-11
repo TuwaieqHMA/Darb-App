@@ -17,11 +17,12 @@ class VerifyOtpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        scrolledUnderElevation: 0,
-        automaticallyImplyLeading: false,
-        actions: const [CircleBackButton()],
-        
-      ),
+          scrolledUnderElevation: 0,
+          automaticallyImplyLeading: false,
+          toolbarHeight: 42,
+          leading: const CircleBackButton(),
+          
+        ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(

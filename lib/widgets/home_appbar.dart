@@ -1,4 +1,5 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/pages/profile_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -35,7 +36,9 @@ class HomeAppBar extends StatelessWidget {
                 Row(
                   children: [
                     InkWell(
-                      onTap: () {}, //! push to profile page ,
+                      onTap: () {
+                        context.push(ProfilePage(), true);
+                      }, //! push to profile page ,
                       child: SvgPicture.asset(
                         "assets/icons/icon_person.svg",
                         width: 35,

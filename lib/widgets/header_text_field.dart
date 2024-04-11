@@ -29,7 +29,7 @@ class HeaderTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           headerText,
@@ -41,6 +41,8 @@ class HeaderTextField extends StatelessWidget {
         ),
         height8,
         TextField(
+          enabled: isEnabled,
+          readOnly: isReadOnly!,
           controller: controller,
           style: const TextStyle(fontFamily: inukFont),
           keyboardType: keyboardType,
