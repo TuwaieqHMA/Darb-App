@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 
 class BottomButton extends StatelessWidget {
   const BottomButton({
-    super.key, this.onPressed, required this.text, this.color = signatureYellowColor,
+    super.key, this.onPressed, required this.text, this.color = signatureYellowColor, this.textColor = deepBlueColor, this.fontSize = 16,
   });
 
   final Function()? onPressed;
   final String text;
+  final Color? textColor;
+  final double? fontSize;
   final Color? color;
 
   @override
@@ -21,6 +23,6 @@ class BottomButton extends StatelessWidget {
       height: 50,
       splashColor: fadedwhiteColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Text(text, style: const TextStyle(color: deepBlueColor, fontFamily: inukFont, fontSize: 16, fontWeight: FontWeight.bold),),);
+      child: Text(text, style:  TextStyle(color: textColor, fontFamily: inukFont, fontSize: fontSize, fontWeight: FontWeight.bold),),);
   }
 }

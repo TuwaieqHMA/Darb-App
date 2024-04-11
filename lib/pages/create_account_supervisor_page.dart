@@ -59,9 +59,9 @@ class CreateAccountSupervisorPage extends StatelessWidget {
                 children: [
                   HeaderTextField(controller: nameController, headerText: "الاسم",),
                   height8,
-                  HeaderTextField(controller: phoneController, headerText: "رقم الجوال", keyboardType: TextInputType.number,),
+                  HeaderTextField(controller: phoneController, headerText: "رقم الجوال", keyboardType: TextInputType.number, textDirection: TextDirection.ltr,),
                   height8,
-                  HeaderTextField(controller: emailController, headerText: "البريد الالكتروني",),
+                  HeaderTextField(controller: emailController, headerText: "البريد الالكتروني", textDirection: TextDirection.ltr,),
                   height8,
                   HeaderTextField(controller: passwordController, headerText: "كلمة المرور", isObscured: true),
                   height8,

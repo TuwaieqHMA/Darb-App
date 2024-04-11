@@ -1,11 +1,16 @@
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/pages/startup_page.dart';
-import 'package:darb_app/pages/supervisor_home.dart';
+import 'package:darb_app/pages/supervisor_add_type_page.dart';
+import 'package:darb_app/pages/supervisor_naivgation_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
+import 'package:darb_app/utils/app_locale.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 import 'package:darb_app/utils/setup.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,25 +18,49 @@ Future main() async{
   await databaseSetup();
   await setup();
   
-  runApp(DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) => const MainApp() ),);
+  runApp(const MainApp(),);
 }
+final FlutterLocalization localization = FlutterLocalization.instance;
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  @override
+void initState() {
+    localization.init(
+        mapLocales: [
+            const MapLocale('en', AppLocale.EN),
+            const MapLocale('ar', AppLocale.AR),
+        ],
+        initLanguageCode: 'ar',
+    );
+    localization.onTranslatedLanguage = _onTranslatedLanguage;
+    super.initState();
+}
+
+// the setState function here is a must to add
+void _onTranslatedLanguage(Locale? locale) {
+    setState(() {});
+}
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      supportedLocales: localization.supportedLocales,
+        localizationsDelegates: localization.localizationsDelegates,
+        locale: localization.currentLocale,
+      // useInheritedMediaQuery: true,
+      // locale: DevicePreview.locale(context),
+      // builder: DevicePreview.appBuilder,
+      // theme: ThemeData.light(),
+      // darkTheme: ThemeData.dark(),
       
-      home: const SupervisorHome(),
+      home: const WelcomePage(),
       // StartupPage()
     );
   }

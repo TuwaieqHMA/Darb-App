@@ -19,7 +19,8 @@ class ChangePasswordPage extends StatelessWidget {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
-        actions: const [CircleBackButton()],
+        toolbarHeight: 42,
+        leading: const CircleBackButton(),
         
       ),
       body: Column(

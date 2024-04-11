@@ -14,11 +14,12 @@ class VerifyEmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
-        actions: const [CircleBackButton()],
+        toolbarHeight: 42,
+        leading: const CircleBackButton(),
         
       ),
       body: Column(
