@@ -2,6 +2,7 @@ import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/widgets/custom_search_bar.dart';
 import 'package:darb_app/widgets/page_app_bar.dart';
+import 'package:darb_app/widgets/person_card.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -37,8 +38,19 @@ class DriverListPage extends StatelessWidget {
           ),
         ),
       ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32,),
+        children: const [
+          PersonCard(
+            name: "حامد اليحيوي",
+            isSigned: true,
+          ),
+        ],
+      ),
     );
   }
 }
+
+
 
 
