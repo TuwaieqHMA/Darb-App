@@ -1,4 +1,8 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/pages/edit_bus.dart';
+import 'package:darb_app/pages/edit_driver.dart';
+import 'package:darb_app/pages/edit_student.dart';
+import 'package:darb_app/pages/edit_trip.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -7,14 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class PersonCard extends StatelessWidget {
-  const PersonCard({
+  PersonCard({
     super.key,
     required this.name,
     this.isSigned,
+    this.onEdit
   });
 
   final String name;
   final bool? isSigned;
+  Function()? onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +67,14 @@ class PersonCard extends StatelessWidget {
                 )
               : nothing,
           MoreButton(
-            onEditClick: (){},
+            onEditClick: 
+            // (){
+              onEdit,
+              // context.push(EditDriver(), true);
+              // context.push(EditStudent(), true);
+              // context.push(EditTrip(), true);
+              // context.push(EditBus(), true);
+            // },
             onDeleteClick: (){},
           )
 

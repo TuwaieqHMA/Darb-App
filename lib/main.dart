@@ -1,7 +1,16 @@
 import 'package:darb_app/data_layer/home_data_layer.dart';
+import 'package:darb_app/pages/add_driver.dart';
+import 'package:darb_app/pages/bus_list_page.dart';
+import 'package:darb_app/pages/driver_list_page.dart';
+import 'package:darb_app/pages/edit_bus.dart';
+import 'package:darb_app/pages/edit_trip.dart';
+import 'package:darb_app/pages/profile_page.dart';
 import 'package:darb_app/pages/startup_page.dart';
+import 'package:darb_app/pages/student_list_page.dart';
 import 'package:darb_app/pages/supervisor_add_type_page.dart';
+import 'package:darb_app/pages/supervisor_home_page.dart';
 import 'package:darb_app/pages/supervisor_naivgation_page.dart';
+import 'package:darb_app/pages/verify_email_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
 import 'package:darb_app/utils/app_locale.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -60,7 +69,10 @@ void _onTranslatedLanguage(Locale? locale) {
       // theme: ThemeData.light(),
       // darkTheme: ThemeData.dark(),
       
-      home: const WelcomePage(),
+      home:
+      // EditBus(),
+      const SupervisorAddTypePage(),
+      //  const WelcomePage(),
       // StartupPage()
     );
   }
