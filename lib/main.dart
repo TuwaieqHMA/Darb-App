@@ -79,9 +79,8 @@ class _MainAppState extends State<MainApp> {
       // darkTheme: ThemeData.dark(),
 
       home: 
-      // AddDriver(),
-      AddBus(),
-      // const SupervisorAddTypePage(),
+      // const SupervisorNavigationPage(),
+      const SupervisorAddTypePage(),
       //  const WelcomePage(),
       // StartupPage()
     );

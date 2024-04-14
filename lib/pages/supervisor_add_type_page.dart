@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/add_bus.dart';
 import 'package:darb_app/pages/add_driver.dart';
@@ -6,7 +8,9 @@ import 'package:darb_app/pages/add_trip.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/add_card.dart';
+import 'package:darb_app/widgets/circle_custom_button.dart';
 import 'package:darb_app/widgets/home_appbar.dart';
+import 'package:darb_app/widgets/page_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class SupervisorAddTypePage extends StatelessWidget {
@@ -21,7 +25,14 @@ class SupervisorAddTypePage extends StatelessWidget {
           context.getWidth(),
           context.getHeight() * 0.10,
         ),
-        child: const HomeAppBar(),
+        child: // const HomeAppBar(),
+         // PageAppBar(title: "صفحة الإضافات", actionButton: context.pop(), ),
+          PreferredSize(
+        preferredSize: Size(context.getWidth(), context.getHeight() * .10),
+        child: const PageAppBar(
+          title: "صفحة الإضافات",
+        ),
+      ),
       ),
       body: SafeArea(
           child: ListView(
@@ -59,7 +70,7 @@ class SupervisorAddTypePage extends StatelessWidget {
               
                       SupervisorAddCard(
                         onTap: (){
-                          context.push(AddTrip(), true);
+                          context.push(const AddTrip(), true);
                         },
                         text: "رحلة جديد",
                         bgColor: const Color.fromARGB(192, 121, 204, 198),
@@ -86,7 +97,7 @@ class SupervisorAddTypePage extends StatelessWidget {
                       ),
                       SupervisorAddCard(
                         onTap: (){
-                          context.push(AddBus(), true);
+                          context.push(const AddBus(), true);
                         },
                         text: "باص جديد",
                         bgColor: signatureBlueColor,

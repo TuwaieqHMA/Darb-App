@@ -18,4 +18,5 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     locator.currentPageIndex = event.index;
     emit(ChangedPageState());
   }
+  
 }
