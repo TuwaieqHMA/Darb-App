@@ -90,10 +90,10 @@ class _MainAppState extends State<MainApp> {
         // theme: ThemeData.light(),
         // darkTheme: ThemeData.dark(),
       home: 
-      // const SupervisorNavigationPage(),
-      const AddBus(),
+      // const Super visorNavigationPage(),
+      AddTrip()
       // const WelcomePage(),
-      // StartupPage(),
+      // const StartupPage(),
     ));
   }
 }

@@ -68,74 +68,82 @@ class _AddBusState extends State<AddBus> {
                         Column(
                           children: [
                             height32,
-                             textFieldLabel(text: "اسم السائق "),
-                        height16,
-                        Container(
-                          padding: const EdgeInsets.only(right: 16),
-                          alignment: Alignment.centerRight,
-                          width: context.getWidth() * 0.9,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            border: Border.all(
-                                color: signatureTealColor, width: 3),
-                            borderRadius: BorderRadius.circular(
-                              10,
+                            textFieldLabel(text: "اسم السائق "),
+                            height16,
+                            Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              alignment: Alignment.centerRight,
+                              width: context.getWidth() * 0.9,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                border: Border.all(
+                                    color: signatureTealColor, width: 3),
+                                borderRadius: BorderRadius.circular(
+                                  10,
+                                ),
+                              ),
+                              child: BlocBuilder<SupervisorActionsBloc,
+                                  SupervisorActionsState>(
+                                builder: (context, state) {
+                                  if (state is SelectDriverState) {
+                                    return DropdownButton(
+                                      isExpanded: true,
+                                      underline: const Text(""),
+                                      menuMaxHeight: 200,
+                                      style: const TextStyle(
+                                          fontSize: 16, fontFamily: inukFont),
+                                      iconDisabledColor: signatureTealColor,
+                                      borderRadius: BorderRadius.circular(15),
+                                      value: state.value, // bloc.dropdownValue,
+                                      icon: const Icon(
+                                        Icons.keyboard_arrow_down_outlined,
+                                        size: 30,
+                                        color: signatureBlueColor,
+                                      ),
+                                      items: bloc.items.map((e) {
+                                        return DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        bloc.add(SelectDriverEvent(
+                                            value.toString(),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                  return DropdownButton(
+                                    hint: const Text("اختر سائق"),
+                                    isExpanded: true,
+                                    menuMaxHeight: 200,
+                                    underline: const Text(""),
+                                    style: const TextStyle(
+                                        fontSize: 16, fontFamily: inukFont),
+                                    iconDisabledColor: signatureTealColor,
+                                    borderRadius: BorderRadius.circular(15),
+                                    value: null,
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down_outlined,
+                                      size: 30,
+                                      color: signatureBlueColor,
+                                    ),
+                                    items: bloc.items.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e,
+                                        child: Text(e),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      bloc.add(
+                                          SelectDriverEvent(value.toString()));
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                          child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
-                            builder: (context, state) {
-                              if(state is SelectDriverState){
-                              return DropdownButton(
-                                isExpanded: true,
-                                underline: const Text(""),
-                                menuMaxHeight: 200,
-                                style: const TextStyle(
-                                    fontSize: 16, fontFamily: inukFont),
-                                iconDisabledColor: signatureTealColor,
-                                borderRadius: BorderRadius.circular(15),
-                                value: state.value, // bloc.dropdownValue,
-                                icon: const Icon(
-                                    Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
-                                items: bloc.items.map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  bloc.add(
-                                      SelectDriverEvent(value.toString()));
-                                },
-                              );
-                            
-                            }return DropdownButton(
-                              hint: const Text("اختر سائق"),
-                              isExpanded: true,
-                                menuMaxHeight: 200,
-                                underline: const Text(""),
-                                style: const TextStyle(
-                                    fontSize: 16, fontFamily: inukFont),
-                                iconDisabledColor: signatureTealColor,
-                                borderRadius: BorderRadius.circular(15),
-                                value:  null ,
-                                icon: const Icon(
-                                    Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
-                                items: bloc.items.map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  bloc.add(
-                                      SelectDriverEvent(value.toString()));
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        
                             height16,
                             HeaderTextField(
                               controller: busNumberController,
@@ -170,12 +178,13 @@ class _AddBusState extends State<AddBus> {
                                 width: context.getWidth() * 0.9,
                                 height: 55,
                                 decoration: BoxDecoration(
-                                    color: whiteColor,
-                                    border: Border.all(
-                                        color: signatureTealColor, width: 3),
-                                    borderRadius: BorderRadius.circular(
-                                      10,
-                                    )),
+                                  color: whiteColor,
+                                  border: Border.all(
+                                      color: signatureTealColor, width: 3),
+                                  borderRadius: BorderRadius.circular(
+                                    10,
+                                  ),
+                                ),
                                 child: BlocBuilder<SupervisorActionsBloc,
                                     SupervisorActionsState>(
                                   builder: (context, state) {
@@ -222,7 +231,7 @@ class _AddBusState extends State<AddBus> {
                             height8,
                             InkWell(
                               onTap: () {
-                                bloc.add(SelectDayEvent(context, 2)); 
+                                bloc.add(SelectDayEvent(context, 2));
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(right: 16),
@@ -236,25 +245,26 @@ class _AddBusState extends State<AddBus> {
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
-                                child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                                child: BlocBuilder<SupervisorActionsBloc,
+                                    SupervisorActionsState>(
                                   builder: (context, state) {
-                                    if(state is SelectDayState){
-                                    return Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.calendar_month_rounded,
-                                          color: signatureBlueColor,
-                                          size: 23,
-                                        ),
-                                        width8,
-                                        Text(
-                                          "${bloc.endDate.toLocal()}"
-                                              .split(' ')[0],
-                                          style: const TextStyle(
-                                              fontFamily: inukFont),
-                                        ),
-                                      ],
-                                    );
+                                    if (state is SelectDayState) {
+                                      return Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.calendar_month_rounded,
+                                            color: signatureBlueColor,
+                                            size: 23,
+                                          ),
+                                          width8,
+                                          Text(
+                                            "${bloc.endDate.toLocal()}"
+                                                .split(' ')[0],
+                                            style: const TextStyle(
+                                                fontFamily: inukFont),
+                                          ),
+                                        ],
+                                      );
                                     }
                                     return Row(
                                       children: [
@@ -328,41 +338,5 @@ class _AddBusState extends State<AddBus> {
         ),
       ),
     );
-  }
-
-  Future<void> _selectDate(BuildContext context, int num) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: signatureYellowColor,
-              onPrimary: offWhiteColor,
-              onSurface: signatureTealColor,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: signatureYellowColor,
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-      initialDate: startDate,
-      firstDate: DateTime(2024, 4),
-      lastDate: DateTime(2026, 12),
-    );
-    if (picked != null) {
-      //! we will change to bloc
-      setState(() {
-        if (num == 1) {
-          startDate = picked;
-        } else {
-          endDate = picked;
-        }
-      });
-    }
   }
 }

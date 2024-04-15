@@ -50,7 +50,7 @@ class SupervisorActionsBloc
   FutureOr<void> selectDay(
       SelectDayEvent event, Emitter<SupervisorActionsState> emit) async {
     await selectDate(event.context, event.num);
-    emit(SelectDayState(locator.startDate, locator.endDate));
+    emit(SelectDayState(startDate, endDate));
   }
 
   FutureOr<void> selectStartTimeOfTrip(SelectStartAndExpireTimeEvent event,
