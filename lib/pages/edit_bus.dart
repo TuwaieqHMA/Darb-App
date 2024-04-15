@@ -12,6 +12,7 @@ import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// ignore: must_be_immutable
 class EditBus extends StatelessWidget {
   EditBus({super.key, required this.isView});
   final isView;
