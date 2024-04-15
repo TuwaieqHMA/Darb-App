@@ -5,11 +5,12 @@ import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 
-class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({super.key});
-
+class AppBarHome extends StatelessWidget {
+    AppBarHome({super.key,  required this.tital, this.onTap,  this.icon});
+final String tital;
+Function()? onTap;
+ Widget? icon;
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -24,8 +25,9 @@ class HomeAppBar extends StatelessWidget {
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20)),
-          color: offWhiteColor,
-        ),
+              color: lightGreenColor,
+          
+        ), 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,19 +39,14 @@ class HomeAppBar extends StatelessWidget {
                 Row(
                   children: [
                     InkWell(
-                      onTap: () {
-                        context.push(ProfilePage(), true);
-                      }, //! push to profile page ,
-                      child: SvgPicture.asset(
-                        "assets/icons/icon_person.svg",
-                        width: 35,
-                      ),
+                      onTap: onTap ,
+                      child: icon
                     ),
                     width16,
-                    const Text(
-                      "مرحباً آلاء", //! change name to user name
-                      style: TextStyle(
-                          color: skyblueColor,
+                     Text(
+                   tital,
+                      style: const TextStyle(
+                          color: whiteColor,
                           fontSize: 36,
                           fontFamily: inukFont),
                     ),

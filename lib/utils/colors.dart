@@ -25,3 +25,6 @@ const greyColor = Color(0xffD7D7D7);
 const coalColor = Color(0xff2F2F2F);
 const blackColor = Colors.black;
 final shadowColor = Colors.black.withOpacity(0.14);
+final shadowblackColor = Colors.black.withOpacity(0.25);
+final lightsignatureColor = const Color(0xff5AABAB).withOpacity(0.50);
+final lightyellowColor = const Color(0xffFFC94A).withOpacity(0.13);

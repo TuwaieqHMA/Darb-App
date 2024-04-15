@@ -11,4 +11,5 @@ const height8 = SizedBox(height: 8,);
 const height16 = SizedBox(height: 16,);
 const height24 = SizedBox(height: 24,);
 const height32 = SizedBox(height: 32,);
+const height50 = SizedBox(height: 50,);
 const nothing = SizedBox();
