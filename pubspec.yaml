@@ -25,6 +25,8 @@ dependencies:
   shape_of_view_null_safe: ^3.0.0
   flutter_localization: ^0.2.0
   dropdown_button2: ^2.3.9
+  easy_stepper: ^0.8.3
+  google_maps_flutter: ^2.2.8
 
 dev_dependencies:
   flutter_test:
