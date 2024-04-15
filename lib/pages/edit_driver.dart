@@ -11,7 +11,8 @@ import '../widgets/circle_back_button.dart';
 
 // ignore: must_be_immutable
 class EditDriver extends StatelessWidget {
-  EditDriver({super.key});
+  EditDriver({super.key, required this.isView});
+   final bool isView;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -44,10 +45,11 @@ class EditDriver extends StatelessWidget {
                     child: Column(
                       children: [
                         height24,
-                        const Center(
+                        Center(
                           child: Text(
+                            isView ? "بيانات السائق" : 
                             "تعديل السائق",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                                 color: lightGreenColor),
@@ -61,6 +63,7 @@ class EditDriver extends StatelessWidget {
                               headerText: "الاسم",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
@@ -68,6 +71,7 @@ class EditDriver extends StatelessWidget {
                               headerText: "البريد الالكتروني ",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly:  isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
@@ -76,10 +80,11 @@ class EditDriver extends StatelessWidget {
                               keyboardType: TextInputType.phone,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height32,
                             height8,
-                            BottomButton(
+                            isView ? const SizedBox.shrink() : BottomButton(
                               text: "تعديل بيانات السائق",
                               textColor: whiteColor,
                               fontSize: 20,
@@ -105,8 +110,8 @@ class EditDriver extends StatelessWidget {
                                 }
                               },
                             ),
-                            height24,
-                            BottomButton(
+                            isView ? const SizedBox.shrink() : height24,
+                            isView ? const SizedBox.shrink() : BottomButton(
                               text: "إلغاء",
                               textColor: whiteColor,
                               fontSize: 20,

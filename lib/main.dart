@@ -1,3 +1,4 @@
+import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/pages/attendance_list.dart';
 import 'package:darb_app/pages/driver_home.dart';
@@ -14,6 +15,7 @@ import 'package:darb_app/pages/bus_list_page.dart';
 import 'package:darb_app/pages/driver_list_page.dart';
 import 'package:darb_app/pages/edit_bus.dart';
 import 'package:darb_app/pages/edit_driver.dart';
+import 'package:darb_app/pages/edit_student.dart';
 import 'package:darb_app/pages/edit_trip.dart';
 import 'package:darb_app/pages/profile_page.dart';
 import 'package:darb_app/pages/startup_page.dart';
@@ -26,6 +28,7 @@ import 'package:darb_app/pages/verify_email_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
 import 'package:darb_app/utils/app_locale.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:darb_app/utils/setup.dart';
 import 'package:device_preview/device_preview.dart';
@@ -74,17 +77,18 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      supportedLocales: localization.supportedLocales,
-      localizationsDelegates: localization.localizationsDelegates,
-      locale: localization.currentLocale,
-      // useInheritedMediaQuery: true,
-      // locale: DevicePreview.locale(context),
-      // builder: DevicePreview.appBuilder,
-      // theme: ThemeData.light(),
-      // darkTheme: ThemeData.dark(),
-
+    return BlocProvider(
+      create: (context) => SupervisorActionsBloc(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        supportedLocales: localization.supportedLocales,
+        localizationsDelegates: localization.localizationsDelegates,
+        locale: localization.currentLocale,
+        // useInheritedMediaQuery: true,
+        // locale: DevicePreview.locale(context),
+        // builder: DevicePreview.appBuilder,
+        // theme: ThemeData.light(),
+        // darkTheme: ThemeData.dark(),
       home: 
       // const SupervisorNavigationPage(),
       const WelcomePage(),

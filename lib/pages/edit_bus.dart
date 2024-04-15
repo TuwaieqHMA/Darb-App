@@ -1,3 +1,4 @@
+import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -9,33 +10,26 @@ import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EditBus extends StatefulWidget {
-  const EditBus({super.key});
+class EditBus extends StatelessWidget {
+  EditBus({super.key, required this.isView});
+  final isView;
 
-  @override
-  State<EditBus> createState() => _EditBusState();
-}
-
-class _EditBusState extends State<EditBus> {
+ 
   TextEditingController nameController = TextEditingController();
-
   TextEditingController busNumberController = TextEditingController();
-
   TextEditingController seatsNumberController = TextEditingController();
-
   TextEditingController busPlateController = TextEditingController();
-
   TextEditingController dateIssusController = TextEditingController();
-
   TextEditingController dateExpireController = TextEditingController();
-
+  
   DateTime startDate = DateTime.now();
-
   DateTime endDate = DateTime.now().add(const Duration(days: 365));
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SupervisorActionsBloc>();
     return Scaffold(
       backgroundColor: offWhiteColor,
     
@@ -62,10 +56,11 @@ class _EditBusState extends State<EditBus> {
                     child: Column(
                       children: [
                         height16 ,
-                        const Center(
+                        Center(
                           child: Text(
+                            isView ? "بيانات الباص" :
                             "تعديل الباص",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                                 color: lightGreenColor),
@@ -79,6 +74,7 @@ class _EditBusState extends State<EditBus> {
                               headerText: "الاسم",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
@@ -86,6 +82,7 @@ class _EditBusState extends State<EditBus> {
                               headerText: "رقم الباص ",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
@@ -93,6 +90,7 @@ class _EditBusState extends State<EditBus> {
                               headerText: "عدد المقاعد",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
@@ -100,13 +98,16 @@ class _EditBusState extends State<EditBus> {
                               headerText: "لوحة الباص",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
-                            textFieldLabel(text: "تاريخ الاصدار "),
+                            textFieldLabel(text: " تاريخ اصدار الرخصة "),
                             height8,
                             InkWell(
-                              onTap: () {
-                                _selectDate(context, 1);
+                              onTap: isView ? (){}:
+                               () {
+                                
+                                bloc.add(SelectDayEvent(context, 1));
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(right: 16),
@@ -120,18 +121,54 @@ class _EditBusState extends State<EditBus> {
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
-                                child: Text(
-                                  "${startDate.toLocal()}".split(' ')[0],
-                                  style: const TextStyle(fontFamily: inukFont),
+                                child: BlocBuilder<SupervisorActionsBloc,
+                                    SupervisorActionsState>(
+                                  builder: (context, state) {
+                                    if (state is SelectDayState) {
+                                      return Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.calendar_month_rounded,
+                                            color: signatureBlueColor,
+                                            size: 23,
+                                          ),
+                                          width8,
+                                          Text(
+                                            "${bloc.startDate.toLocal()}"
+                                                .split(' ')[0],
+                                            style: const TextStyle(
+                                                fontFamily: inukFont),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                    return Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month_rounded,
+                                          color: signatureBlueColor,
+                                          size: 23,
+                                        ),
+                                        width8,
+                                        Text(
+                                          "${bloc.startDate.toLocal()}"
+                                              .split(' ')[0],
+                                          style: const TextStyle(
+                                              fontFamily: inukFont),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
                             ),
                             height16,
-                            textFieldLabel(text: "تاريخ الانتهاء "),
+                            textFieldLabel(text: " تاريخ انتهاء الرخصة "),
                             height8,
                             InkWell(
-                              onTap: () {
-                                _selectDate(context, 2);
+                              onTap: isView ? (){} :
+                              () {
+                                bloc.add(SelectDayEvent(context, 2)); 
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(right: 16),
@@ -145,14 +182,49 @@ class _EditBusState extends State<EditBus> {
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
-                                child: Text(
-                                  "${endDate.toLocal()}".split(' ')[0],
-                                  style: const TextStyle(fontFamily: inukFont),
+                                child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                                  builder: (context, state) {
+                                    if(state is SelectDayState){
+                                    return Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month_rounded,
+                                          color: signatureBlueColor,
+                                          size: 23,
+                                        ),
+                                        width8,
+                                        Text(
+                                          "${bloc.endDate.toLocal()}"
+                                              .split(' ')[0],
+                                          style: const TextStyle(
+                                              fontFamily: inukFont),
+                                        ),
+                                      ],
+                                    );
+                                    }
+                                    return Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month_rounded,
+                                          color: signatureBlueColor,
+                                          size: 23,
+                                        ),
+                                        width8,
+                                        Text(
+                                          "${bloc.endDate.toLocal()}"
+                                              .split(' ')[0],
+                                          style: const TextStyle(
+                                              fontFamily: inukFont),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
                             ),
                             height32,
                             height8,
+                            isView ? const SizedBox.shrink() : 
                             BottomButton(
                               text: "تعديل بيانات الباص",
                               textColor: whiteColor,
@@ -185,8 +257,8 @@ class _EditBusState extends State<EditBus> {
                                 }
                               },
                             ),
-                            height24,
-                            BottomButton(
+                            isView ? const SizedBox.shrink() : height24,
+                            isView ? const SizedBox.shrink() : BottomButton(
                               text: "إلغاء",
                               textColor: whiteColor,
                               fontSize: 20,
@@ -212,41 +284,5 @@ class _EditBusState extends State<EditBus> {
         ),
       ),
     );
-  }
-
-  Future<void> _selectDate(BuildContext context, int num) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: signatureYellowColor,
-              onPrimary: offWhiteColor,
-              onSurface: signatureTealColor,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: signatureYellowColor,
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-      initialDate: startDate,
-      firstDate: DateTime(2024, 4),
-      lastDate: DateTime(2026, 12),
-    );
-    if (picked != null) {
-      //! we will change to bloc
-      setState(() {
-        if (num == 1) {
-          startDate = picked;
-        } else {
-          endDate = picked;
-        }
-      });
-    }
   }
 }
