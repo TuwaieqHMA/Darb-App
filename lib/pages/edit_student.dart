@@ -9,7 +9,8 @@ import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 
 class EditStudent extends StatelessWidget {
-  EditStudent({super.key});
+  EditStudent({super.key, required this.isView});
+  final bool isView;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -43,10 +44,11 @@ class EditStudent extends StatelessWidget {
                     child: Column(
                       children: [
                         height24,
-                        const Center(
+                        Center(
                           child: Text(
-                            "تعديل الطالبة",
-                            style: TextStyle(
+                            isView ? "بيانات الطالب" :
+                            "تعديل الطالب",
+                            style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                                 color: lightGreenColor),
@@ -56,37 +58,41 @@ class EditStudent extends StatelessWidget {
                           children: [
                             height32,
                             HeaderTextField(
-                              controller: nameController,
+                              controller:  nameController, //! عرض بيانات الطالب من قاعدة البيانات 
                               headerText: "الاسم",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
-                              controller: emailController,
+                              controller: emailController, //! عرض بيانات الطالب من قاعدة البيانات 
                               headerText: "البريد الالكتروني ",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
-                              controller: phoneController,
+                              controller: phoneController, //! عرض بيانات الطالب من قاعدة البيانات 
                               headerText: "رقم الجوال",
                               keyboardType: TextInputType.phone,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
-                              controller: addressController,
+                              controller: addressController, //! عرض بيانات الطالب من قاعدة البيانات 
                               headerText: "العنوان",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
+                              isReadOnly: isView ? true : false,
                             ),
                             height32,
                             height8,
-                            BottomButton(
-                              text: "تعديل بيانات الطالبة",
+                            isView ? const SizedBox.shrink() : BottomButton(
+                              text: "تعديل بيانات الطالب",
                               textColor: whiteColor,
                               fontSize: 20,
                               onPressed: () {
@@ -98,14 +104,14 @@ class EditStudent extends StatelessWidget {
                                     context: context,
                                     builder: (context) => DialogBox(
                                       text:
-                                          "هل أنت متأكد من تعديل بيانات الطالبة ؟",
+                                          "هل أنت متأكد من تعديل بيانات الطالب ؟",
                                       onAcceptClick: () {
                                         //! add new student to student table -- bloc --
             
                                         context.pop();
                                         context.pop();
                                         context.showSuccessSnackBar(
-                                            "تم تعديل بيانات الطالبة بنجاح");
+                                            "تم تعديل بيانات الطالب بنجاح");
                                       },
                                       onRefuseClick: () {
                                         context.pop();
@@ -115,8 +121,8 @@ class EditStudent extends StatelessWidget {
                                 }
                               },
                             ),
-                            height24,                        
-                            BottomButton(
+                            isView ? const SizedBox.shrink() : height24,                        
+                            isView ? const SizedBox.shrink() : BottomButton(
                                 text: "إلغاء",
                                 textColor: whiteColor,
                                 fontSize: 20,

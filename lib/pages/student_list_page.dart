@@ -45,7 +45,7 @@ class StudentListPage extends StatelessWidget {
           PersonCard(
             name: "حامد اليحيوي",
             onEdit: () {
-              context.push(EditStudent(), true);
+              context.push(EditStudent(isView: false,), true);
             },
           ),
         ],

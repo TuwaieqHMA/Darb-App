@@ -49,7 +49,7 @@ class DriverListPage extends StatelessWidget {
             name: "حامد اليحيوي",
             isSigned: true,
             onEdit: () {
-              context.push(EditDriver(), true);
+              context.push(EditDriver(isView:  false,), true);
             },
           ),
         ],

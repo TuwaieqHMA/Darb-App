@@ -1,3 +1,4 @@
+import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -9,15 +10,13 @@ import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EditTrip extends StatefulWidget {
-  const EditTrip({super.key});
+class EditTrip extends StatelessWidget {
+  EditTrip({super.key, required this.isView});
+  final bool isView;
 
-  @override
-  State<EditTrip> createState() => _EditTripState();
-}
 
-class _EditTripState extends State<EditTrip> {
   TextEditingController busNumberController = TextEditingController();
   TextEditingController tripTypeController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -26,13 +25,10 @@ class _EditTripState extends State<EditTrip> {
   TextEditingController dateStartController = TextEditingController();
   TextEditingController dateEndController = TextEditingController();
 
-  int _selectedValue = 1;
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay _startTime = TimeOfDay.now();
-  TimeOfDay _endTime = TimeOfDay.now();
-
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SupervisorActionsBloc>();
+
     return Scaffold(
       backgroundColor: offWhiteColor,
       body: SafeArea(
@@ -57,10 +53,11 @@ class _EditTripState extends State<EditTrip> {
                     child: Column(
                       children: [
                         height24,
-                        const Center(
+                        Center(
                           child: Text(
+                            isView ? "بيانات الرحلة": 
                             "تعديل الرحلة",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                                 color: lightGreenColor),
@@ -69,64 +66,124 @@ class _EditTripState extends State<EditTrip> {
                         height32,
                         textFieldLabel(text: "نوع الرحلة"),
                         height8,
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: context.getWidth() * .4,
-                              child: RadioListTile(
-                                fillColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                  return blueColor;
-                                }),
-                                title: const Text(
-                                  'ذهاب',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      color: blueColor),
+                        BlocBuilder<SupervisorActionsBloc,
+                            SupervisorActionsState>(
+                          builder: (context, state) {
+                            if (state is ChangeTripTypeState) {
+                              return Row(
+                                children: [
+                                  SizedBox(
+                                    width: context.getWidth() * .4,
+                                    child: RadioListTile(
+                                      fillColor: MaterialStateProperty
+                                          .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                        return blueColor;
+                                      }),
+                                      title: const Text(
+                                        'ذهاب',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: blueColor),
+                                      ),
+                                      value: 1,
+                                      groupValue: bloc.seletctedType,
+                                      onChanged: (value) {
+                                        bloc.add(
+                                            ChangeTripTypeEvent(num: value!));
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: context.getWidth() * .4,
+                                    child: RadioListTile(
+                                      fillColor: MaterialStateProperty
+                                          .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                        return blueColor;
+                                      }),
+                                      title: const Text(
+                                        'عودة',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: blueColor),
+                                      ),
+                                      value: 2,
+                                      groupValue: bloc.seletctedType,
+                                      onChanged: (value) {
+                                        bloc.add(
+                                            ChangeTripTypeEvent(num: value!));
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: context.getWidth() * .4,
+                                  child: RadioListTile(
+                                    fillColor:
+                                        MaterialStateProperty.resolveWith<
+                                            Color>((Set<MaterialState> states) {
+                                      return blueColor;
+                                    }),
+                                    title: const Text(
+                                      'ذهاب',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: blueColor),
+                                    ),
+                                    value: 1,
+                                    groupValue: bloc.seletctedType,
+                                    onChanged: (value) {
+                                       isView ? (){} :
+                                      bloc.add(
+                                          ChangeTripTypeEvent(num: value!));
+                                    },
+                                  ),
                                 ),
-                                value: 1,
-                                groupValue: _selectedValue,
-                                onChanged: (valuess) {
-                                  setState(() {
-                                    _selectedValue = valuess!;
-                                  }); //! we will change it to bloc
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: context.getWidth() * .4,
-                              child: RadioListTile(
-                                fillColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                  return blueColor;
-                                }),
-                                title: const Text(
-                                  'عودة',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      color: blueColor),
+                                SizedBox(
+                                  width: context.getWidth() * .4,
+                                  child: RadioListTile(
+                                    fillColor:
+                                        MaterialStateProperty.resolveWith<
+                                            Color>((Set<MaterialState> states) {
+                                      return blueColor;
+                                    }),
+                                    title: const Text(
+                                      'عودة',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: blueColor),
+                                    ),
+                                    value: 2,
+                                    groupValue: bloc.seletctedType,
+                                    onChanged:   
+                                    (value) {
+                                       isView ? (){} :
+                                      bloc.add(
+                                          ChangeTripTypeEvent(num: value!));
+                                    },
+                                  ),
                                 ),
-                                value: 2,
-                                groupValue: _selectedValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedValue = value!;
-                                  }); //! we will change it to bloc
-                                },
-                              ),
-                            ),
-                          ],
+                              ],
+                            );
+                          },
                         ),
+                       
                         height16,
                         HeaderTextField(
                           controller: busNumberController,
                           headerText: "رقم الباص",
                           headerColor: signatureTealColor,
                           textDirection: TextDirection.rtl,
+                          isReadOnly:  isView ? true : false,
                         ),
                         height16,
                         HeaderTextField(
@@ -134,45 +191,72 @@ class _EditTripState extends State<EditTrip> {
                           headerText: "اسم السائق  ",
                           headerColor: signatureTealColor,
                           textDirection: TextDirection.rtl,
+                          isReadOnly:  isView ? true : false,
                         ),
                         height16,
                         HeaderTextField(
                           controller: locationController,
                           headerText: "الحي",
                           headerColor: signatureTealColor,
-                          textDirection: TextDirection.rtl,
+                          textDirection: TextDirection.rtl,                          
+                          isReadOnly:  isView ? true : false,
                         ),
                         height16,
                         textFieldLabel(text: "اليوم "),
                         height8,
-                        InkWell(
-                          onTap: () {
-                            _selectDate(context);
+                         InkWell(
+                          onTap:  isView ? (){} :
+                           () {
+                            bloc.add(SelectDayEvent(context, 1));
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(right: 16),
-                            alignment: Alignment.centerRight,
-                            width: context.getWidth() * 0.9,
-                            height: 55,
-                            decoration: BoxDecoration(
+                              padding: const EdgeInsets.only(right: 16),
+                              alignment: Alignment.centerRight,
+                              width: context.getWidth() * 0.9,
+                              height: 55,
+                              decoration: BoxDecoration(
                                 color: whiteColor,
                                 border: Border.all(
                                     color: signatureTealColor, width: 3),
                                 borderRadius: BorderRadius.circular(
                                   10,
-                                )),
-                            child: Text(
-                              "${selectedDate.toLocal()}".split(' ')[0],
-                              style: const TextStyle(fontFamily: inukFont),
-                            ),
-                          ),
+                                ),
+                              ),
+                              child: BlocBuilder<SupervisorActionsBloc,
+                                      SupervisorActionsState>(
+                                  builder: (context, state) {
+                                if (state is SelectDayState) {
+                                  return Row(
+                                    children: [
+                                      const Icon(Icons.calendar_month_rounded, color: signatureBlueColor, size: 23,),
+                                    width8,
+                                      Text(
+                                        "${bloc.startDate.toLocal()}".split(' ')[0],
+                                        style:
+                                            const TextStyle(fontFamily: inukFont),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Row(
+                                  children: [
+                                    const Icon(Icons.calendar_month_rounded, color: signatureBlueColor, size: 23,),
+                                    width8,
+                                    Text(
+                                      "${bloc.startDate.toLocal()}".split(' ')[0],
+                                      style: const TextStyle(fontFamily: inukFont),
+                                    ),
+                                  ],
+                                );
+                              })),
                         ),
                         height16,
                         textFieldLabel(text: "بداية الرحلة"),
                         height8,
-                        InkWell(
-                          onTap: () {
-                            selectTime(context, 1);
+                         InkWell(
+                          onTap:  isView ? (){} : 
+                          () {
+                            bloc.add(SelectStartAndExpireTimeEvent(context, 1));
                           },
                           child: Container(
                             padding: const EdgeInsets.only(right: 16),
@@ -186,18 +270,43 @@ class _EditTripState extends State<EditTrip> {
                                 borderRadius: BorderRadius.circular(
                                   10,
                                 )),
-                            child: Text(
-                              " ${_startTime.minute} : ${_startTime.hourOfPeriod} ${_startTime.period.name == "pm" ? "م" : "ص"} ",
-                              style: const TextStyle(fontFamily: inukFont),
+                            child: BlocBuilder<SupervisorActionsBloc,
+                                SupervisorActionsState>(
+                              builder: (context, state) {
+                                if (state is SelectStartAndExpireTimeState) {
+                                  return Row(
+                                    children: [
+                                      const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    width8,
+                                      Text(
+                                        " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
+                                        style:
+                                            const TextStyle(fontFamily: inukFont),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Row(
+                                  children: [
+                                    const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    width8,
+                                    Text(
+                                      " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
+                                      style: const TextStyle(fontFamily: inukFont),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),
                         height16,
                         textFieldLabel(text: "نهاية الرحلة"),
                         height8,
-                        InkWell(
-                          onTap: () {
-                            selectTime(context, 2);
+                       InkWell(
+                          onTap: isView ? (){} :
+                           () {
+                            bloc.add(SelectStartAndExpireTimeEvent(context, 2));
                           },
                           child: Container(
                             padding: const EdgeInsets.only(right: 16),
@@ -211,14 +320,39 @@ class _EditTripState extends State<EditTrip> {
                                 borderRadius: BorderRadius.circular(
                                   10,
                                 )),
-                            child: Text(
-                              " ${_endTime.minute} : ${_endTime.hourOfPeriod} ${_endTime.period.name == "pm" ? "م" : "ص"} ",
-                              style: const TextStyle(fontFamily: inukFont),
+                            child: BlocBuilder<SupervisorActionsBloc,
+                                SupervisorActionsState>(
+                              builder: (context, state) {
+                                if (state is SelectStartAndExpireTimeState) {
+                                  return Row(
+                                    children: [
+                                      const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    width8,
+                                      Text(
+                                        " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
+                                        style:
+                                            const TextStyle(fontFamily: inukFont),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Row(
+                                  children: [
+                                    const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    width8,
+                                    Text(
+                                      " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
+                                      style: const TextStyle(fontFamily: inukFont),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),
                         height32,
-                        BottomButton(
+                        isView ? const SizedBox.shrink() :
+                         BottomButton(
                           text: "تعديل بيانات الرحلة ",
                           textColor: whiteColor,
                           fontSize: 20,
@@ -246,8 +380,8 @@ class _EditTripState extends State<EditTrip> {
                             }
                           },
                         ),
-                        height24,
-                        BottomButton(
+                        isView ? const SizedBox.shrink() : height24,
+                        isView ? const SizedBox.shrink() : BottomButton(
                           text: "إلغاء",
                           textColor: whiteColor,
                           fontSize: 20,
@@ -269,67 +403,4 @@ class _EditTripState extends State<EditTrip> {
     );
   }
 
-//  function that used to time pick an date pick
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: signatureYellowColor,
-              onPrimary: offWhiteColor,
-              onSurface: signatureTealColor,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: signatureYellowColor,
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-      initialDate: selectedDate,
-      firstDate: DateTime(2024, 4),
-      lastDate: DateTime(2026, 12),
-    );
-    if (picked != null) {
-      //! we will change to bloc
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
-  Future<Null> selectTime(BuildContext context, int num) async {
-    TimeOfDay picked;
-    picked = (await showTimePicker(
-      context: context,
-      initialTime: _startTime,
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-                // change the border color
-                primary: signatureYellowColor,
-                // change the text color
-                onSurface: signatureTealColor,
-                secondary: greenColor),
-          ),
-          child: child!,
-        );
-      },
-    ))!;
-    setState(() {
-      if (num == 1) {
-        _startTime = picked;
-      } else {
-        _endTime = picked;
-      }
-
-      print(picked);
-    });
-  }
 }

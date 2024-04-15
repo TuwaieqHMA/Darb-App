@@ -70,7 +70,7 @@ class SupervisorAddTypePage extends StatelessWidget {
               
                       SupervisorAddCard(
                         onTap: (){
-                          context.push(const AddTrip(), true);
+                          context.push( AddTrip(), true);
                         },
                         text: "رحلة جديد",
                         bgColor: const Color.fromARGB(192, 121, 204, 198),
