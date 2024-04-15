@@ -20,6 +20,16 @@ class SupervisorActionsBloc
   TimeOfDay startTime = TimeOfDay.now();
   TimeOfDay endTime = TimeOfDay.now();
 
+  
+  List items = [
+    "Ali",
+    "Ahmad",
+    "salem",
+    "Anas",
+    "hasan",
+    "faisal"
+  ];
+
   SupervisorActionsBloc() : super(SupervisorActionsInitial()) {
     on<SupervisorActionsEvent>((event, emit) {
       // TODO: implement event handler
@@ -28,6 +38,7 @@ class SupervisorActionsBloc
     on<ChangeTripTypeEvent>(changeTripType);
     on<SelectDayEvent>(selectDay);
     on<SelectStartAndExpireTimeEvent>(selectStartTimeOfTrip);
+    on<SelectDriverEvent>(selectDriver);
   }
 
   FutureOr<void> changeTripType(
@@ -105,5 +116,11 @@ class SupervisorActionsBloc
     } else {
       endTime = picked;
     }
+  }
+
+  FutureOr<void> selectDriver(SelectDriverEvent event, Emitter<SupervisorActionsState> emit) {
+    String dropdownValue = event.driverName;
+    emit(SelectDriverState(dropdownValue));
+
   }
 }

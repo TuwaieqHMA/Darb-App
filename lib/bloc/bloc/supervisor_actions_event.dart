@@ -20,3 +20,9 @@ final class SelectStartAndExpireTimeEvent extends SupervisorActionsEvent {
   late int num ;
   SelectStartAndExpireTimeEvent(this.context, this.num);
 }
+
+final class SelectDriverEvent extends SupervisorActionsEvent {
+  String driverName;
+  SelectDriverEvent(this.driverName);
+
+}

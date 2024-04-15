@@ -1,5 +1,4 @@
 import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
-import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -12,7 +11,6 @@ import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class AddTrip extends StatelessWidget {
@@ -23,6 +21,21 @@ class AddTrip extends StatelessWidget {
   TextEditingController nameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
 
+  // String dropdownValue = 'Ali';
+  // List items = [
+  //   "Ali",
+  //   "Ahmad",
+  //   "salem",
+  //   "Anas",
+  //   "Alia",
+  //   "Ahmada",
+  //   "salema",
+  //   "Anasa",
+  //   "Aliaa",
+  //   "Ahmadaa",
+  //   "salemaa",
+  //   "Anasaa"
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -179,12 +192,77 @@ class AddTrip extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                         ),
                         height16,
-                        HeaderTextField(
-                          controller: nameController,
-                          headerText: "اسم السائق  ",
-                          headerColor: signatureTealColor,
-                          textDirection: TextDirection.rtl,
+                        textFieldLabel(text: "اسم السائق "),
+                        height16,
+                        Container(
+                          padding: const EdgeInsets.only(right: 16),
+                          alignment: Alignment.centerRight,
+                          width: context.getWidth() * 0.9,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            border: Border.all(
+                                color: signatureTealColor, width: 3),
+                            borderRadius: BorderRadius.circular(
+                              10,
+                            ),
+                          ),
+                          child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                            builder: (context, state) {
+                              if(state is SelectDriverState){
+                              return DropdownButton(
+                                isExpanded: true,
+                                underline: const Text(""),
+                                menuMaxHeight: 200,
+                                style: const TextStyle(
+                                    fontSize: 16, fontFamily: inukFont),
+                                iconDisabledColor: signatureTealColor,
+                                borderRadius: BorderRadius.circular(15),
+                                value: state.value, // bloc.dropdownValue,
+                                icon: const Icon(
+                                    Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
+                                items: bloc.items.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  bloc.add(
+                                      SelectDriverEvent(value.toString()));
+                                },
+                              );
+                            
+                            }return DropdownButton(
+                                disabledHint: const Text("hhh"),
+                              hint: const Text("اختر سائق"),
+                              isExpanded: true,
+                                menuMaxHeight: 200,
+                                underline: const Text(""),
+                                style: const TextStyle(
+                                    fontSize: 16, fontFamily: inukFont),
+                                iconDisabledColor: signatureTealColor,
+                                borderRadius: BorderRadius.circular(15),
+                                value:  null ,// bloc.dropdownValue,
+                                icon: const Icon(
+                                    Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
+                                items: bloc.items.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  bloc.add(
+                                      SelectDriverEvent(value.toString()));
+                                },
+                              );
+                            
+                            
+                            },
+                          ),
                         ),
+                        
                         height16,
                         HeaderTextField(
                           controller: locationController,
@@ -218,23 +296,34 @@ class AddTrip extends StatelessWidget {
                                 if (state is SelectDayState) {
                                   return Row(
                                     children: [
-                                      const Icon(Icons.calendar_month_rounded, color: signatureBlueColor, size: 23,),
-                                    width8,
+                                      const Icon(
+                                        Icons.calendar_month_rounded,
+                                        color: signatureBlueColor,
+                                        size: 23,
+                                      ),
+                                      width8,
                                       Text(
-                                        "${bloc.startDate.toLocal()}".split(' ')[0],
-                                        style:
-                                            const TextStyle(fontFamily: inukFont),
+                                        "${bloc.startDate.toLocal()}"
+                                            .split(' ')[0],
+                                        style: const TextStyle(
+                                            fontFamily: inukFont),
                                       ),
                                     ],
                                   );
                                 }
                                 return Row(
                                   children: [
-                                    const Icon(Icons.calendar_month_rounded, color: signatureBlueColor, size: 23,),
+                                    const Icon(
+                                      Icons.calendar_month_rounded,
+                                      color: signatureBlueColor,
+                                      size: 23,
+                                    ),
                                     width8,
                                     Text(
-                                      "${bloc.startDate.toLocal()}".split(' ')[0],
-                                      style: const TextStyle(fontFamily: inukFont),
+                                      "${bloc.startDate.toLocal()}"
+                                          .split(' ')[0],
+                                      style:
+                                          const TextStyle(fontFamily: inukFont),
                                     ),
                                   ],
                                 );
@@ -265,23 +354,32 @@ class AddTrip extends StatelessWidget {
                                 if (state is SelectStartAndExpireTimeState) {
                                   return Row(
                                     children: [
-                                      const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
-                                    width8,
+                                      const Icon(
+                                        Icons.access_time_filled,
+                                        color: signatureBlueColor,
+                                        size: 23,
+                                      ),
+                                      width8,
                                       Text(
                                         " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
-                                        style:
-                                            const TextStyle(fontFamily: inukFont),
+                                        style: const TextStyle(
+                                            fontFamily: inukFont),
                                       ),
                                     ],
                                   );
                                 }
                                 return Row(
                                   children: [
-                                    const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    const Icon(
+                                      Icons.access_time_filled,
+                                      color: signatureBlueColor,
+                                      size: 23,
+                                    ),
                                     width8,
                                     Text(
                                       " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
-                                      style: const TextStyle(fontFamily: inukFont),
+                                      style:
+                                          const TextStyle(fontFamily: inukFont),
                                     ),
                                   ],
                                 );
@@ -314,23 +412,32 @@ class AddTrip extends StatelessWidget {
                                 if (state is SelectStartAndExpireTimeState) {
                                   return Row(
                                     children: [
-                                      const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
-                                    width8,
+                                      const Icon(
+                                        Icons.access_time_filled,
+                                        color: signatureBlueColor,
+                                        size: 23,
+                                      ),
+                                      width8,
                                       Text(
                                         " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
-                                        style:
-                                            const TextStyle(fontFamily: inukFont),
+                                        style: const TextStyle(
+                                            fontFamily: inukFont),
                                       ),
                                     ],
                                   );
                                 }
                                 return Row(
                                   children: [
-                                    const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    const Icon(
+                                      Icons.access_time_filled,
+                                      color: signatureBlueColor,
+                                      size: 23,
+                                    ),
                                     width8,
                                     Text(
                                       " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
-                                      style: const TextStyle(fontFamily: inukFont),
+                                      style:
+                                          const TextStyle(fontFamily: inukFont),
                                     ),
                                   ],
                                 );
@@ -346,12 +453,12 @@ class AddTrip extends StatelessWidget {
                           fontSize: 20,
                           onPressed: () {
                             if (tripTypeController.text.isNotEmpty &&
-                                busNumberController.text.isNotEmpty &&
-                                nameController.text.isNotEmpty &&
-                                locationController.text.isNotEmpty 
+                                    busNumberController.text.isNotEmpty &&
+                                    nameController.text.isNotEmpty &&
+                                    locationController.text.isNotEmpty
                                 // bloc.startDate == DateTime.now() && // ! add day and start and expire time
                                 // bloc.startTime != (TimeOfDay.hoursPerDay > 16 ) && // ! add day and start and expire time
-                                // bloc.endDate != (TimeOfDay.hoursPerDay > 16 ) 
+                                // bloc.endDate != (TimeOfDay.hoursPerDay > 16 )
                                 ) {
                               showDialog(
                                 context: context,
@@ -361,12 +468,14 @@ class AddTrip extends StatelessWidget {
                                     //! add new trip to trip table -- bloc --
                                     context.pop();
                                     context.pop();
-                                    context.showSuccessSnackBar("تم إضافة رحلة بنجاح");
+                                    context.showSuccessSnackBar(
+                                        "تم إضافة رحلة بنجاح");
                                   },
                                 ),
                               );
                             } else {
-                              context.showErrorSnackBar("الرجاء ملئ جميع الحقول");
+                              context
+                                  .showErrorSnackBar("الرجاء ملئ جميع الحقول");
                             }
                           },
                         ),
@@ -382,5 +491,4 @@ class AddTrip extends StatelessWidget {
       ),
     );
   }
-
 }
