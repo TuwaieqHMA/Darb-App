@@ -16,7 +16,7 @@ class StudentListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(context.getWidth(), context.getHeight() * .17),
+        preferredSize: Size(context.getWidth(), context.getHeight() * .19),
         child: PageAppBar(
           backgroundColor: signatureBlueColor,
           textColor: whiteColor,

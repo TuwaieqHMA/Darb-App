@@ -2,11 +2,9 @@ import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class SupervisorAddCard extends StatelessWidget {
   SupervisorAddCard(
       {super.key,

@@ -61,6 +61,8 @@ class BusCard extends StatelessWidget {
             onEditClick: () {
               context.push(EditBus(isView: false,), true);
             },
+            onDeleteClick: () {
+            },
           ),
         ],
       ),

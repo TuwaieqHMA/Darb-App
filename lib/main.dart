@@ -1,5 +1,12 @@
 import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
+import 'package:darb_app/pages/attendance_list.dart';
+import 'package:darb_app/pages/driver_home.dart';
+import 'package:darb_app/pages/map_page.dart';
+import 'package:darb_app/pages/map_student.dart';
+import 'package:darb_app/pages/startup_page.dart';
+import 'package:darb_app/pages/student_home.dart';
+import 'package:darb_app/pages/student_location_page.dart';
 import 'package:darb_app/pages/add_bus.dart';
 import 'package:darb_app/pages/add_driver.dart';
 import 'package:darb_app/pages/add_student.dart';
@@ -16,13 +23,13 @@ import 'package:darb_app/pages/student_list_page.dart';
 import 'package:darb_app/pages/supervisor_add_type_page.dart';
 import 'package:darb_app/pages/supervisor_home_page.dart';
 import 'package:darb_app/pages/supervisor_naivgation_page.dart';
+import 'package:darb_app/pages/tracking_page.dart';
 import 'package:darb_app/pages/verify_email_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
 import 'package:darb_app/utils/app_locale.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-
 import 'package:darb_app/utils/setup.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
@@ -82,10 +89,10 @@ class _MainAppState extends State<MainApp> {
         // builder: DevicePreview.appBuilder,
         // theme: ThemeData.light(),
         // darkTheme: ThemeData.dark(),
-
-        home: const WelcomePage(),
-        // StartupPage()
-      ),
+      home: 
+      // const SupervisorNavigationPage(),
+      const WelcomePage(),
+      // StartupPage(),
     );
   }
 }
