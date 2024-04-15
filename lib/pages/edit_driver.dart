@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/circle_back_button.dart';
 
+// ignore: must_be_immutable
 class EditDriver extends StatelessWidget {
   EditDriver({super.key});
 

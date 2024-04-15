@@ -80,9 +80,8 @@ class _MainAppState extends State<MainApp> {
 
       home: 
       // const SupervisorNavigationPage(),
-      const SupervisorAddTypePage(),
-      //  const WelcomePage(),
-      // StartupPage()
+      const WelcomePage(),
+      // StartupPage(),
     );
   }
 }

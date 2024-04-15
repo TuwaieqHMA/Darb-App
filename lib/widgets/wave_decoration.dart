@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
