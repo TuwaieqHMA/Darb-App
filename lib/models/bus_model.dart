@@ -6,6 +6,7 @@ class Bus {
     required this.dateIssue,
     required this.dateExpire,
     required this.driverId,
+    required this.supervisorId,
   });
   
   final int? id;
@@ -14,6 +15,7 @@ class Bus {
   late final DateTime dateIssue;
   late final DateTime dateExpire;
   late final String driverId;
+  late final String supervisorId;
   
   Bus.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -21,7 +23,8 @@ class Bus {
         busPlate = json['bus_plate'],
         dateIssue = DateTime.parse(json['date_issue']),
         dateExpire = DateTime.parse(json['date_expire']),
-        driverId = json['driver_id'];
+        driverId = json['driver_id'],
+        supervisorId = json['supervisor_id'];
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
@@ -31,9 +34,11 @@ class Bus {
     _data['date_issue'] = dateIssue.toIso8601String();
     _data['date_expire'] = dateExpire.toIso8601String();
     _data['driver_id'] = driverId;
+    _data['supervisor_id'] = supervisorId; // Add supervisorId to JSON
     return _data;
   }
 }
+
 
 // {
 //      "id": 5,
@@ -41,5 +46,6 @@ class Bus {
 //      "bus_plate": "1439-HMA",
 //      "date_issue": "2024-04-12T00:00:00.000",
 //      "date_expire": "2024-04-12T00:00:00.000",
-//      "driver_id": "82672jidccen"
+//      "driver_id": "82672jidccen",
+//      "supervisor_id": "jencijn3298e00"
 // }
