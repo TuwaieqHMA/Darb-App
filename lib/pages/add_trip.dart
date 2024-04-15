@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+// ignore: must_be_immutable
 class AddTrip extends StatelessWidget {
   AddTrip({super.key});
 
