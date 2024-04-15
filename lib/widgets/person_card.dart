@@ -1,8 +1,4 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
-import 'package:darb_app/pages/edit_bus.dart';
-import 'package:darb_app/pages/edit_driver.dart';
-import 'package:darb_app/pages/edit_student.dart';
-import 'package:darb_app/pages/edit_trip.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -10,6 +6,7 @@ import 'package:darb_app/widgets/more_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+// ignore: must_be_immutable
 class PersonCard extends StatelessWidget {
   PersonCard({
     super.key,
@@ -21,6 +18,7 @@ class PersonCard extends StatelessWidget {
   final String name;
   final bool? isSigned;
   Function()? onEdit;
+  Function()? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +73,7 @@ class PersonCard extends StatelessWidget {
               // context.push(EditTrip(), true);
               // context.push(EditBus(), true);
             // },
-            onDeleteClick: (){},
+            onDeleteClick: onDelete,
           )
 
         ],

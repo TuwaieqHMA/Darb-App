@@ -8,6 +8,7 @@ import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class AddDriver extends StatelessWidget {
   AddDriver({super.key});
 
@@ -39,7 +40,6 @@ class AddDriver extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     width: context.getWidth() * 0.85,
-                    height: context.getHeight(),
                     child: Column(
                       children: [
                         height24,
