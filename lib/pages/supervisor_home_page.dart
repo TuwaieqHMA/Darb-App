@@ -12,59 +12,60 @@ class SupervisorHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: ListView(
-          padding: const EdgeInsets.all(16),
-          shrinkWrap: true,
-          children: [
-            const Text(
-              "الرحلات الحالية",
-              style: TextStyle(
-                color: blackColor,
-                fontFamily: inukFont,
-                fontSize: 30,
-                
+      padding: const EdgeInsets.all(16),
+      shrinkWrap: true,
+      children: [
+        const Text(
+          "الرحلات الحالية",
+          style: TextStyle(
+            color: blackColor,
+            fontFamily: inukFont,
+            fontSize: 30,
+          ),
+        ),
+        height24,
+        TripCard(
+          trip: Trip(
+            district: "الرصيفة",
+            date: DateTime.now(),
+            isToSchool: true,
+            timeFrom: const TimeOfDay(hour: 9, minute: 0),
+            timeTo: const TimeOfDay(hour: 12, minute: 0),
+            driverId: "",
+          ),
+          driverName: "خالد الصبحي",
+          noOfPassengers: 19,
+        ),
+        height24,
+        const Text(
+          "الرحلات القادمة",
+          style: TextStyle(
+            color: blackColor,
+            fontFamily: inukFont,
+            fontSize: 30,
+          ),
+        ),
+        height24,
+        ...List.generate(4, (index) {
+          return Column(
+            children: [
+              TripCard(
+                trip: Trip(
+                  district: "الرصيفة",
+                  date: DateTime.now(),
+                  isToSchool: true,
+                  timeFrom: const TimeOfDay(hour: 9, minute: 0),
+                  timeTo: const TimeOfDay(hour: 12, minute: 0),
+                  driverId: "",
+                ),
+                driverName: "خالد الصبحي",
+                noOfPassengers: 19,
               ),
-            ),
-            height24,
-            TripCard(
-              trip: Trip(
-                driverName: "خالد الصبحيييييييييييييييييييييي",
-                district: "الرصيفة",
-                date: DateTime.now(),
-                noOfPassengers: 40,
-                tripType: "رحلة ذهاب",
-                timeFrom: const TimeOfDay(hour: 9, minute: 0),
-                timeTo: const TimeOfDay(hour: 12, minute: 0),
-              ),
-            ),
-            height24,
-            const Text(
-              "الرحلات القادمة",
-              style: TextStyle(
-                color: blackColor,
-                fontFamily: inukFont,
-                fontSize: 30,
-              ),
-            ),
-            height24,
-            ...List.generate(4, (index) {
-              return Column(
-                children: [
-                  TripCard(
-                    trip: Trip(
-                      driverName: "خالد الصبحيييييييييييييييييييييي",
-                      district: "الرصيفة",
-                      date: DateTime.now(),
-                      noOfPassengers: 40,
-                      tripType: "رحلة ذهاب",
-                      timeFrom: const TimeOfDay(hour: 9, minute: 0),
-                      timeTo: const TimeOfDay(hour: 12, minute: 0),
-                    ),
-                  ),
-                  height16,
-                ],
-              );
-            })
-          ],
-        ));
+              height16,
+            ],
+          );
+        })
+      ],
+    ));
   }
 }

@@ -16,7 +16,7 @@ class HomeAppBar extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Container(
         width: context.getWidth(),
-        height: context.getWidth() * 0.90,
+        height: context.getWidth() * 0.91,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
         ),

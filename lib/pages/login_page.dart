@@ -31,7 +31,7 @@ class LoginPage extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: context.getWidth(),
-                    height: context.getHeight() * .63,
+                    height: context.getHeight() * .68,
                     padding: const EdgeInsets.only(
                         left: 16, right: 16, top: 46, bottom: 16),
                     decoration: const BoxDecoration(
@@ -80,7 +80,7 @@ class LoginPage extends StatelessWidget {
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
-                    ))
+                    ),),
               ],
             ),
           ),

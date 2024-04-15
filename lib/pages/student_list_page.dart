@@ -1,4 +1,5 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/pages/edit_student.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/widgets/custom_search_bar.dart';
 import 'package:darb_app/widgets/page_app_bar.dart';
@@ -15,7 +16,7 @@ class StudentListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(context.getWidth(), context.getHeight() * .17),
+        preferredSize: Size(context.getWidth(), context.getHeight() * .19),
         child: PageAppBar(
           backgroundColor: signatureBlueColor,
           textColor: whiteColor,
@@ -40,9 +41,12 @@ class StudentListPage extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32,),
-        children: const [
+        children: [
           PersonCard(
             name: "حامد اليحيوي",
+            onEdit: () {
+              context.push(EditStudent(), true);
+            },
           ),
         ],
       ),

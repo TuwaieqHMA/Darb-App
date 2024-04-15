@@ -2,41 +2,41 @@ import 'package:flutter/material.dart';
 
 class Trip {
   Trip({
-    required this.driverName,
+    this.id,
     required this.district,
     required this.date,
     required this.timeFrom,
     required this.timeTo,
-    required this.noOfPassengers,
-    required this.tripType,
+    required this.driverId,
+    required this.isToSchool,
   });
-
-  late final String driverName;
+  
+  final int? id;
   late final String district;
   late final DateTime date;
   late final TimeOfDay timeFrom;
   late final TimeOfDay timeTo;
-  late final int noOfPassengers;
-  late final String tripType;
-
+  late final String driverId;
+  late final bool isToSchool;
+  
   Trip.fromJson(Map<String, dynamic> json)
-      : driverName = json['driverName'],
+      : id = json['id'],
         district = json['district'],
         date = DateTime.parse(json['date']),
-        timeFrom = _parseTimeOfDay(json['timeFrom']),
-        timeTo = _parseTimeOfDay(json['timeTo']),
-        noOfPassengers = json['noOfPassengers'],
-        tripType = json['tripType'];
+        timeFrom = _parseTimeOfDay(json['time_from']),
+        timeTo = _parseTimeOfDay(json['time_to']),
+        driverId = json['driver_id'],
+        isToSchool = json['isToSchool'];
 
   Map<String, dynamic> toJson() {
     return {
-      'driverName': driverName,
+      // 'id': id, // No Need to send the id, since its auto generated
       'district': district,
       'date': date.toIso8601String(),
-      'timeFrom': '${timeFrom.hour}:${timeFrom.minute}',
-      'timeTo': '${timeTo.hour}:${timeTo.minute}',
-      'noOfPassengers': noOfPassengers,
-      'tripType': tripType,
+      'time_from': '${timeFrom.hour}:${timeFrom.minute}',
+      'time_to': '${timeTo.hour}:${timeTo.minute}',
+      'driver_id': driverId,
+      'isToSchool': isToSchool,
     };
   }
 
@@ -46,13 +46,12 @@ class Trip {
   }
 }
 
-// JSON FORMAT
 // {
-//       "driverName": "Mohammed",
-//       "district": "Alrusaifa",
-//       "date": "2024-09-08",
-//       "timeFrom": "09:00",
-//       "timeTo": "12:00",
-//       "noOfPassengers": 40,
-//       "tripType": "Departure"
+//   "id": 1,
+//   "district": "Sample District",
+//   "date": "2024-04-12T00:00:00.000",
+//   "time_from": "8:30",
+//   "time_to": "10:0",
+//   "driver_id": "driver123",
+//   "isToSchool": true
 // }

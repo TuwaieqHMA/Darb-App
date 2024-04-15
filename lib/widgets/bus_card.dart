@@ -1,5 +1,6 @@
 import 'package:darb_app/helpers/extensions/format_helper.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/pages/edit_bus.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -56,7 +57,13 @@ class BusCard extends StatelessWidget {
             ],
     
           ),
-          const MoreButton(
+          MoreButton(
+            onEditClick: () {
+              context.push(const EditBus(), true);
+            },
+            onDeleteClick: () {
+              
+            },
           ),
         ],
       ),
