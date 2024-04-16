@@ -21,21 +21,6 @@ class AddTrip extends StatelessWidget {
   TextEditingController nameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
 
-  // String dropdownValue = 'Ali';
-  // List items = [
-  //   "Ali",
-  //   "Ahmad",
-  //   "salem",
-  //   "Anas",
-  //   "Alia",
-  //   "Ahmada",
-  //   "salema",
-  //   "Anasa",
-  //   "Aliaa",
-  //   "Ahmadaa",
-  //   "salemaa",
-  //   "Anasaa"
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -452,9 +437,9 @@ class AddTrip extends StatelessWidget {
                           textColor: whiteColor,
                           fontSize: 20,
                           onPressed: () {
-                            if (tripTypeController.text.isNotEmpty &&
+                            if (
                                     busNumberController.text.isNotEmpty &&
-                                    nameController.text.isNotEmpty &&
+                                    // nameController.text.isNotEmpty &&
                                     locationController.text.isNotEmpty
                                 // bloc.startDate == DateTime.now() && // ! add day and start and expire time
                                 // bloc.startTime != (TimeOfDay.hoursPerDay > 16 ) && // ! add day and start and expire time
@@ -470,6 +455,9 @@ class AddTrip extends StatelessWidget {
                                     context.pop();
                                     context.showSuccessSnackBar(
                                         "تم إضافة رحلة بنجاح");
+                                  },
+                                  onRefuseClick: () {
+                                    context.pop();
                                   },
                                 ),
                               );
