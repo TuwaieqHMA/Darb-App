@@ -8,6 +8,7 @@ import 'package:darb_app/widgets/bottom_button.dart';
 import 'package:darb_app/widgets/circle_back_button.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TrackingPage extends StatelessWidget {
   const TrackingPage({super.key});
 

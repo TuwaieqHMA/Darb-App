@@ -1,13 +1,13 @@
 class Driver {
   Driver({
     required this.id,
-    required this.noTrips,
-    required this.hasBus,
+    this.noTrips,
+    this.hasBus,
     required this.supervisorId,
   });
   late final String id;
-  late final int noTrips;
-  late final bool hasBus;
+  int? noTrips;
+  bool? hasBus;
   late final String supervisorId;
   
   Driver.fromJson(Map<String, dynamic> json){
@@ -20,9 +20,9 @@ class Driver {
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['id'] = id;
-    _data['no_trips'] = noTrips;
-    _data['has_bus'] = hasBus;
-    _data['supervisor_id'] = supervisorId;
+    // _data['no_trips'] = noTrips; // automatically set to 0
+    // _data['has_bus'] = hasBus; // automatically set to false 
+    _data['supervisor_id'] = supervisorId; 
     return _data;
   }
 }

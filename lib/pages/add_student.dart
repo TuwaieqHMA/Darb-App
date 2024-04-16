@@ -58,36 +58,14 @@ class AddStudent extends StatelessWidget {
                             height32,
                             HeaderTextField(
                               controller: nameController,
-                              headerText: "الاسم",
-                              headerColor: signatureTealColor,
-                              textDirection: TextDirection.rtl,
-                            ),
-                            height16,
-                            HeaderTextField(
-                              controller: emailController,
-                              headerText: "البريد الالكتروني ",
-                              headerColor: signatureTealColor,
-                              textDirection: TextDirection.rtl,
-                            ),
-                            height16,
-                            HeaderTextField(
-                              controller: phoneController,
-                              headerText: "رقم الجوال",
-                              keyboardType: TextInputType.phone,
-                              headerColor: signatureTealColor,
-                              textDirection: TextDirection.rtl,
-                            ),
-                            height16,
-                            HeaderTextField(
-                              controller: addressController,
-                              headerText: "العنوان",
+                              headerText: "رمز الطالب التعريفي",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                             ),
                             height32,
                             height8,
                             BottomButton(
-                              text: "إضافة",
+                              text: "بحث",
                               textColor: whiteColor,
                               fontSize: 20,
                               onPressed: () {

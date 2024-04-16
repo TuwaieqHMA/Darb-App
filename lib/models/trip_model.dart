@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class Trip {
   Trip({
     this.id,
@@ -9,8 +8,9 @@ class Trip {
     required this.timeTo,
     required this.driverId,
     required this.isToSchool,
+    required this.supervisorId,
   });
-  
+
   final int? id;
   late final String district;
   late final DateTime date;
@@ -18,7 +18,8 @@ class Trip {
   late final TimeOfDay timeTo;
   late final String driverId;
   late final bool isToSchool;
-  
+  late final String supervisorId; // New attribute
+
   Trip.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         district = json['district'],
@@ -26,7 +27,8 @@ class Trip {
         timeFrom = _parseTimeOfDay(json['time_from']),
         timeTo = _parseTimeOfDay(json['time_to']),
         driverId = json['driver_id'],
-        isToSchool = json['isToSchool'];
+        isToSchool = json['isToSchool'],
+        supervisorId = json['supervisor_id']; // Parse supervisorId from JSON
 
   Map<String, dynamic> toJson() {
     return {
@@ -37,6 +39,7 @@ class Trip {
       'time_to': '${timeTo.hour}:${timeTo.minute}',
       'driver_id': driverId,
       'isToSchool': isToSchool,
+      'supervisor_id': supervisorId, // Add supervisorId to JSON
     };
   }
 
@@ -45,6 +48,7 @@ class Trip {
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
   }
 }
+
 
 // {
 //   "id": 1,
