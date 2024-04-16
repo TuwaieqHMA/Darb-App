@@ -20,4 +20,18 @@ final class SelectStartAndExpireTimeState extends SupervisorActionsState {
   SelectStartAndExpireTimeState(this.startTime, this.endTime);
 }
 
+final class SelectDriverState extends SupervisorActionsState {
+  late String value  ;
+  SelectDriverState(this.value);
+}  
+
+final class SuccessAddBusState extends SupervisorActionsState {
+  String mas;
+  SuccessAddBusState({required this.mas});
+}
+final class ErrorAddBusState extends SupervisorActionsState {
+  String mas;
+  ErrorAddBusState({required this.mas});
+}
+
 

@@ -17,7 +17,6 @@ class EditTrip extends StatelessWidget {
   EditTrip({super.key, required this.isView});
   final bool isView;
 
-
   TextEditingController busNumberController = TextEditingController();
   TextEditingController tripTypeController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -56,8 +55,7 @@ class EditTrip extends StatelessWidget {
                         height24,
                         Center(
                           child: Text(
-                            isView ? "بيانات الرحلة": 
-                            "تعديل الرحلة",
+                            isView ? "بيانات الرحلة" : "تعديل الرحلة",
                             style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
@@ -142,9 +140,10 @@ class EditTrip extends StatelessWidget {
                                     value: 1,
                                     groupValue: bloc.seletctedType,
                                     onChanged: (value) {
-                                       isView ? (){} :
-                                      bloc.add(
-                                          ChangeTripTypeEvent(num: value!));
+                                      isView
+                                          ? () {}
+                                          : bloc.add(
+                                              ChangeTripTypeEvent(num: value!));
                                     },
                                   ),
                                 ),
@@ -165,11 +164,11 @@ class EditTrip extends StatelessWidget {
                                     ),
                                     value: 2,
                                     groupValue: bloc.seletctedType,
-                                    onChanged:   
-                                    (value) {
-                                       isView ? (){} :
-                                      bloc.add(
-                                          ChangeTripTypeEvent(num: value!));
+                                    onChanged: (value) {
+                                      isView
+                                          ? () {}
+                                          : bloc.add(
+                                              ChangeTripTypeEvent(num: value!));
                                     },
                                   ),
                                 ),
@@ -177,39 +176,118 @@ class EditTrip extends StatelessWidget {
                             );
                           },
                         ),
-                       
                         height16,
                         HeaderTextField(
                           controller: busNumberController,
                           headerText: "رقم الباص",
                           headerColor: signatureTealColor,
                           textDirection: TextDirection.rtl,
-                          isReadOnly:  isView ? true : false,
+                          isReadOnly: isView ? true : false,
                         ),
                         height16,
-                        HeaderTextField(
-                          controller: nameController,
-                          headerText: "اسم السائق  ",
-                          headerColor: signatureTealColor,
-                          textDirection: TextDirection.rtl,
-                          isReadOnly:  isView ? true : false,
+                        isView
+                            ? HeaderTextField(
+                                controller: nameController,
+                                headerText: "اسم السائق  ",
+                                headerColor: signatureTealColor,
+                                textDirection: TextDirection.rtl,
+                                isReadOnly: isView ? true : false,
+                              )
+                            : Column(
+                              children: [
+                                textFieldLabel(text: "اسم السائق "),
+                        height16,
+                        Container(
+                          padding: const EdgeInsets.only(right: 16),
+                          alignment: Alignment.centerRight,
+                          width: context.getWidth() * 0.9,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            border:
+                                Border.all(color: signatureTealColor, width: 3),
+                            borderRadius: BorderRadius.circular(
+                              10,
+                            ),
+                          ),
+                          child: BlocBuilder<SupervisorActionsBloc,
+                              SupervisorActionsState>(
+                            builder: (context, state) {
+                              if (state is SelectDriverState) {
+                                return DropdownButton(
+                                  isExpanded: true,
+                                  underline: const Text(""),
+                                  menuMaxHeight: 200,
+                                  style: const TextStyle(
+                                      fontSize: 16, fontFamily: inukFont),
+                                  iconDisabledColor: signatureTealColor,
+                                  borderRadius: BorderRadius.circular(15),
+                                  value: state.value, // bloc.dropdownValue,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down_outlined,
+                                    size: 30,
+                                    color: signatureBlueColor,
+                                  ),
+                                  items: bloc.items.map((e) {
+                                    return DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    bloc.add(
+                                        SelectDriverEvent(value.toString()));
+                                  },
+                                );
+                              }
+                              return DropdownButton(
+                                disabledHint: const Text("hhh"),
+                                hint: const Text("اختر سائق"),
+                                isExpanded: true,
+                                menuMaxHeight: 200,
+                                underline: const Text(""),
+                                style: const TextStyle(
+                                    fontSize: 16, fontFamily: inukFont),
+                                iconDisabledColor: signatureTealColor,
+                                borderRadius: BorderRadius.circular(15),
+                                value: null,
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down_outlined,
+                                  size: 30,
+                                  color: signatureBlueColor,
+                                ),
+                                items: bloc.items.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  bloc.add(SelectDriverEvent(value.toString()));
+                                },
+                              );
+                            },
+                          ),
                         ),
+                              ],
+                            ),
                         height16,
                         HeaderTextField(
                           controller: locationController,
                           headerText: "الحي",
                           headerColor: signatureTealColor,
-                          textDirection: TextDirection.rtl,                          
-                          isReadOnly:  isView ? true : false,
+                          textDirection: TextDirection.rtl,
+                          isReadOnly: isView ? true : false,
                         ),
                         height16,
                         textFieldLabel(text: "اليوم "),
                         height8,
-                         InkWell(
-                          onTap:  isView ? (){} :
-                           () {
-                            bloc.add(SelectDayEvent(context, 1));
-                          },
+                        InkWell(
+                          onTap: isView
+                              ? () {}
+                              : () {
+                                  bloc.add(SelectDayEvent(context, 1));
+                                },
                           child: Container(
                               padding: const EdgeInsets.only(right: 16),
                               alignment: Alignment.centerRight,
@@ -229,23 +307,34 @@ class EditTrip extends StatelessWidget {
                                 if (state is SelectDayState) {
                                   return Row(
                                     children: [
-                                      const Icon(Icons.calendar_month_rounded, color: signatureBlueColor, size: 23,),
-                                    width8,
+                                      const Icon(
+                                        Icons.calendar_month_rounded,
+                                        color: signatureBlueColor,
+                                        size: 23,
+                                      ),
+                                      width8,
                                       Text(
-                                        "${bloc.startDate.toLocal()}".split(' ')[0],
-                                        style:
-                                            const TextStyle(fontFamily: inukFont),
+                                        "${bloc.startDate.toLocal()}"
+                                            .split(' ')[0],
+                                        style: const TextStyle(
+                                            fontFamily: inukFont),
                                       ),
                                     ],
                                   );
                                 }
                                 return Row(
                                   children: [
-                                    const Icon(Icons.calendar_month_rounded, color: signatureBlueColor, size: 23,),
+                                    const Icon(
+                                      Icons.calendar_month_rounded,
+                                      color: signatureBlueColor,
+                                      size: 23,
+                                    ),
                                     width8,
                                     Text(
-                                      "${bloc.startDate.toLocal()}".split(' ')[0],
-                                      style: const TextStyle(fontFamily: inukFont),
+                                      "${bloc.startDate.toLocal()}"
+                                          .split(' ')[0],
+                                      style:
+                                          const TextStyle(fontFamily: inukFont),
                                     ),
                                   ],
                                 );
@@ -254,11 +343,13 @@ class EditTrip extends StatelessWidget {
                         height16,
                         textFieldLabel(text: "بداية الرحلة"),
                         height8,
-                         InkWell(
-                          onTap:  isView ? (){} : 
-                          () {
-                            bloc.add(SelectStartAndExpireTimeEvent(context, 1));
-                          },
+                        InkWell(
+                          onTap: isView
+                              ? () {}
+                              : () {
+                                  bloc.add(SelectStartAndExpireTimeEvent(
+                                      context, 1));
+                                },
                           child: Container(
                             padding: const EdgeInsets.only(right: 16),
                             alignment: Alignment.centerRight,
@@ -277,23 +368,32 @@ class EditTrip extends StatelessWidget {
                                 if (state is SelectStartAndExpireTimeState) {
                                   return Row(
                                     children: [
-                                      const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
-                                    width8,
+                                      const Icon(
+                                        Icons.access_time_filled,
+                                        color: signatureBlueColor,
+                                        size: 23,
+                                      ),
+                                      width8,
                                       Text(
                                         " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
-                                        style:
-                                            const TextStyle(fontFamily: inukFont),
+                                        style: const TextStyle(
+                                            fontFamily: inukFont),
                                       ),
                                     ],
                                   );
                                 }
                                 return Row(
                                   children: [
-                                    const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    const Icon(
+                                      Icons.access_time_filled,
+                                      color: signatureBlueColor,
+                                      size: 23,
+                                    ),
                                     width8,
                                     Text(
                                       " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
-                                      style: const TextStyle(fontFamily: inukFont),
+                                      style:
+                                          const TextStyle(fontFamily: inukFont),
                                     ),
                                   ],
                                 );
@@ -304,11 +404,13 @@ class EditTrip extends StatelessWidget {
                         height16,
                         textFieldLabel(text: "نهاية الرحلة"),
                         height8,
-                       InkWell(
-                          onTap: isView ? (){} :
-                           () {
-                            bloc.add(SelectStartAndExpireTimeEvent(context, 2));
-                          },
+                        InkWell(
+                          onTap: isView
+                              ? () {}
+                              : () {
+                                  bloc.add(SelectStartAndExpireTimeEvent(
+                                      context, 2));
+                                },
                           child: Container(
                             padding: const EdgeInsets.only(right: 16),
                             alignment: Alignment.centerRight,
@@ -327,23 +429,32 @@ class EditTrip extends StatelessWidget {
                                 if (state is SelectStartAndExpireTimeState) {
                                   return Row(
                                     children: [
-                                      const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
-                                    width8,
+                                      const Icon(
+                                        Icons.access_time_filled,
+                                        color: signatureBlueColor,
+                                        size: 23,
+                                      ),
+                                      width8,
                                       Text(
                                         " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
-                                        style:
-                                            const TextStyle(fontFamily: inukFont),
+                                        style: const TextStyle(
+                                            fontFamily: inukFont),
                                       ),
                                     ],
                                   );
                                 }
                                 return Row(
                                   children: [
-                                    const Icon(Icons.access_time_filled, color: signatureBlueColor, size: 23,),
+                                    const Icon(
+                                      Icons.access_time_filled,
+                                      color: signatureBlueColor,
+                                      size: 23,
+                                    ),
                                     width8,
                                     Text(
                                       " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
-                                      style: const TextStyle(fontFamily: inukFont),
+                                      style:
+                                          const TextStyle(fontFamily: inukFont),
                                     ),
                                   ],
                                 );
@@ -352,45 +463,48 @@ class EditTrip extends StatelessWidget {
                           ),
                         ),
                         height32,
-                        isView ? const SizedBox.shrink() :
-                         BottomButton(
-                          text: "تعديل بيانات الرحلة ",
-                          textColor: whiteColor,
-                          fontSize: 20,
-                          onPressed: () {
-                            if (tripTypeController.text.isNotEmpty &&
-                                busNumberController.text.isNotEmpty &&
-                                nameController.text.isNotEmpty &&
-                                locationController.text.isNotEmpty &&
-                                dateController.text.isNotEmpty &&
-                                dateStartController.text.isNotEmpty &&
-                                dateEndController.text.isNotEmpty) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => DialogBox(
-                                  text: "هل أنت متأكد من تعديل الرحلة ؟",
-                                  onAcceptClick: () {
-                                    //! add new trip to trip table -- bloc --
-                                    context.pop();
-                                    context.pop();
-                                    context.showSuccessSnackBar(
-                                        "تم تعديل بيانات الرحلة بنجاح");
-                                  },
-                                ),
-                              );
-                            }
-                          },
-                        ),
+                        isView
+                            ? const SizedBox.shrink()
+                            : BottomButton(
+                                text: "تعديل بيانات الرحلة ",
+                                textColor: whiteColor,
+                                fontSize: 20,
+                                onPressed: () {
+                                  if (tripTypeController.text.isNotEmpty &&
+                                      busNumberController.text.isNotEmpty &&
+                                      nameController.text.isNotEmpty &&
+                                      locationController.text.isNotEmpty &&
+                                      dateController.text.isNotEmpty &&
+                                      dateStartController.text.isNotEmpty &&
+                                      dateEndController.text.isNotEmpty) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => DialogBox(
+                                        text: "هل أنت متأكد من تعديل الرحلة ؟",
+                                        onAcceptClick: () {
+                                          //! add new trip to trip table -- bloc --
+                                          context.pop();
+                                          context.pop();
+                                          context.showSuccessSnackBar(
+                                              "تم تعديل بيانات الرحلة بنجاح");
+                                        },
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
                         isView ? const SizedBox.shrink() : height24,
-                        isView ? const SizedBox.shrink() : BottomButton(
-                          text: "إلغاء",
-                          textColor: whiteColor,
-                          fontSize: 20,
-                          color: signatureBlueColor,
-                          onPressed: () {
-                            context.pop();
-                          },
-                        ),
+                        isView
+                            ? const SizedBox.shrink()
+                            : BottomButton(
+                                text: "إلغاء",
+                                textColor: whiteColor,
+                                fontSize: 20,
+                                color: signatureBlueColor,
+                                onPressed: () {
+                                  context.pop();
+                                },
+                              ),
                         height32,
                       ],
                     ),
@@ -403,5 +517,4 @@ class EditTrip extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -1,5 +1,6 @@
 import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -20,7 +21,6 @@ class AddBus extends StatefulWidget {
 }
 
 class _AddBusState extends State<AddBus> {
-  // TextEditingController nameController = TextEditingController();
   TextEditingController busNumberController = TextEditingController();
   TextEditingController seatsNumberController = TextEditingController();
   TextEditingController busPlateController = TextEditingController();
@@ -69,6 +69,83 @@ class _AddBusState extends State<AddBus> {
                         Column(
                           children: [
                             height32,
+                            textFieldLabel(text: "اسم السائق "),
+                            height16,
+                            Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              alignment: Alignment.centerRight,
+                              width: context.getWidth() * 0.9,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                border: Border.all(
+                                    color: signatureTealColor, width: 3),
+                                borderRadius: BorderRadius.circular(
+                                  10,
+                                ),
+                              ),
+                              child: BlocBuilder<SupervisorActionsBloc,
+                                  SupervisorActionsState>(
+                                builder: (context, state) {
+                                  if (state is SelectDriverState) {
+                                    return DropdownButton(
+                                      hint: const Text("اختر سائق"),
+                                      isExpanded: true,
+                                      underline: const Text(""),
+                                      menuMaxHeight: 200,
+                                      style: const TextStyle(
+                                          fontSize: 16, fontFamily: inukFont),
+                                      borderRadius: BorderRadius.circular(15),
+                                      value: bloc.dropdownValue.isNotEmpty  ? bloc.dropdownValue : null, //bloc.dropdownValue, //state.value, 
+                                      icon: const Icon(
+                                        Icons.keyboard_arrow_down_outlined,
+                                        size: 30,
+                                        color: signatureBlueColor,
+                                      ),
+                                      items: bloc.items.map((e) { //! bloc.drivers
+                                        return DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        bloc.add(
+                                          SelectDriverEvent(
+                                            value.toString(),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                  return DropdownButton(
+                                    hint: const Text("اختر سائق"),
+                                    isExpanded: true,
+                                    menuMaxHeight: 200,
+                                    underline: const Text(""),
+                                    style: const TextStyle(
+                                        fontSize: 16, fontFamily: inukFont),
+                                    borderRadius: BorderRadius.circular(15),
+                                    value: bloc.dropdownValue.isNotEmpty  ? bloc.dropdownValue : null,
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down_outlined,
+                                      size: 30,
+                                      color: signatureBlueColor,
+                                    ),
+                                    items: bloc.items.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e,
+                                        child: Text(e),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      bloc.add(
+                                          SelectDriverEvent(value.toString()));
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                            height16,
                             HeaderTextField(
                               controller: busNumberController,
                               headerText: "رقم الباص ",
@@ -95,7 +172,6 @@ class _AddBusState extends State<AddBus> {
                             InkWell(
                               onTap: () {
                                 bloc.add(SelectDayEvent(context, 1));
-                                // _selectDate(context, 1);
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(right: 16),
@@ -103,12 +179,13 @@ class _AddBusState extends State<AddBus> {
                                 width: context.getWidth() * 0.9,
                                 height: 55,
                                 decoration: BoxDecoration(
-                                    color: whiteColor,
-                                    border: Border.all(
-                                        color: signatureTealColor, width: 3),
-                                    borderRadius: BorderRadius.circular(
-                                      10,
-                                    )),
+                                  color: whiteColor,
+                                  border: Border.all(
+                                      color: signatureTealColor, width: 3),
+                                  borderRadius: BorderRadius.circular(
+                                    10,
+                                  ),
+                                ),
                                 child: BlocBuilder<SupervisorActionsBloc,
                                     SupervisorActionsState>(
                                   builder: (context, state) {
@@ -155,8 +232,7 @@ class _AddBusState extends State<AddBus> {
                             height8,
                             InkWell(
                               onTap: () {
-                                bloc.add(SelectDayEvent(context, 2)); //(context, 2));
-                                // _selectDate(context, 2);
+                                bloc.add(SelectDayEvent(context, 2));
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(right: 16),
@@ -170,25 +246,26 @@ class _AddBusState extends State<AddBus> {
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
-                                child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                                child: BlocBuilder<SupervisorActionsBloc,
+                                    SupervisorActionsState>(
                                   builder: (context, state) {
-                                    if(state is SelectDayState){
-                                    return Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.calendar_month_rounded,
-                                          color: signatureBlueColor,
-                                          size: 23,
-                                        ),
-                                        width8,
-                                        Text(
-                                          "${bloc.endDate.toLocal()}"
-                                              .split(' ')[0],
-                                          style: const TextStyle(
-                                              fontFamily: inukFont),
-                                        ),
-                                      ],
-                                    );
+                                    if (state is SelectDayState) {
+                                      return Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.calendar_month_rounded,
+                                            color: signatureBlueColor,
+                                            size: 23,
+                                          ),
+                                          width8,
+                                          Text(
+                                            "${bloc.endDate.toLocal()}"
+                                                .split(' ')[0],
+                                            style: const TextStyle(
+                                                fontFamily: inukFont),
+                                          ),
+                                        ],
+                                      );
                                     }
                                     return Row(
                                       children: [
@@ -212,38 +289,52 @@ class _AddBusState extends State<AddBus> {
                             ),
                             height32,
                             height8,
-                            BottomButton(
-                              text: "إضافة",
-                              textColor: whiteColor,
-                              fontSize: 20,
-                              onPressed: () {
-                                if (busNumberController.text.isNotEmpty &&
-                                    seatsNumberController.text.isNotEmpty &&
-                                    busPlateController.text.isNotEmpty &&
-                                    seatsNumberController.text.isNotEmpty &&
-                                    dateIssusController.text.isNotEmpty &&
-                                    dateExpireController.text.isNotEmpty) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => DialogBox(
-                                      text: "هل أنت متأكد من إضافة باص ؟",
-                                      onAcceptClick: () {
-                                        //! add new bus to bus table -- bloc --
-                                        context.pop();
-                                        context.pop();
-                                        context.showSuccessSnackBar(
-                                            "تم إضافة باص بنجاح");
-                                      },
-                                      onRefuseClick: () {
-                                        context.pop();
-                                      },
-                                    ),
-                                  );
-                                } else {
-                                  context.showErrorSnackBar(
-                                      "الرجاء ملئ جميع الجقول");
-                                }
+                            BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
+                              listener: (context, state) {
+                                // TODO: implement listener
                               },
+                              child: BottomButton(
+                                text: "إضافة",
+                                textColor: whiteColor,
+                                fontSize: 20,
+                                onPressed: () {
+                                  
+                                  bloc.add(RefrshDriverEvent());
+                                  if (busNumberController.text.isNotEmpty &&
+                                      seatsNumberController.text.isNotEmpty &&
+                                      busPlateController.text.isNotEmpty &&
+                                      seatsNumberController.text.isNotEmpty &&
+                                      dateIssusController.text.isNotEmpty &&
+                                      dateExpireController.text.isNotEmpty) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => DialogBox(
+                                        text: "هل أنت متأكد من إضافة باص ؟",
+                                        onAcceptClick: () {
+                                          bloc.add(AddBusEvent( bus: Bus(
+                                            seatsNumber: int.parse(seatsNumberController.text),
+                                            busPlate: busPlateController.text,
+                                            dateIssue: bloc.startDate,
+                                            dateExpire: bloc.endDate,
+                                            driverId: bloc.dropdownValue,
+                                            )));
+                                          //! add new bus to bus table -- bloc --
+                                          context.pop();
+                                          context.pop();
+                                          context.showSuccessSnackBar(
+                                              "تم إضافة باص بنجاح");
+                                        },
+                                        onRefuseClick: () {
+                                          context.pop();
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    context.showErrorSnackBar(
+                                        "الرجاء ملئ جميع الجقول");
+                                  }
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -262,41 +353,5 @@ class _AddBusState extends State<AddBus> {
         ),
       ),
     );
-  }
-
-  Future<void> _selectDate(BuildContext context, int num) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: signatureYellowColor,
-              onPrimary: offWhiteColor,
-              onSurface: signatureTealColor,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: signatureYellowColor,
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-      initialDate: startDate,
-      firstDate: DateTime(2024, 4),
-      lastDate: DateTime(2026, 12),
-    );
-    if (picked != null) {
-      //! we will change to bloc
-      setState(() {
-        if (num == 1) {
-          startDate = picked;
-        } else {
-          endDate = picked;
-        }
-      });
-    }
   }
 }
