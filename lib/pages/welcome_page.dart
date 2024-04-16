@@ -11,7 +11,8 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: [
+        body: Stack(
+          children: [
       Container(
         alignment: Alignment.bottomCenter,
         width: context.getWidth(),

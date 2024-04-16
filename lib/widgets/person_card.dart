@@ -6,15 +6,19 @@ import 'package:darb_app/widgets/more_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+// ignore: must_be_immutable
 class PersonCard extends StatelessWidget {
-  const PersonCard({
+  PersonCard({
     super.key,
     required this.name,
     this.isSigned,
+    this.onEdit
   });
 
   final String name;
   final bool? isSigned;
+  Function()? onEdit;
+  Function()? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +65,15 @@ class PersonCard extends StatelessWidget {
                 )
               : nothing,
           MoreButton(
-            onEditClick: (){},
-            onDeleteClick: (){},
+            onEditClick: 
+            // (){
+              onEdit,
+              // context.push(EditDriver(), true);
+              // context.push(EditStudent(), true);
+              // context.push(EditTrip(), true);
+              // context.push(EditBus(), true);
+            // },
+            onDeleteClick: onDelete,
           )
 
         ],

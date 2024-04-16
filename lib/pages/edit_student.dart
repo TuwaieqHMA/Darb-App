@@ -9,8 +9,8 @@ import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class AddStudent extends StatelessWidget {
-  AddStudent({super.key});
+class EditStudent extends StatelessWidget {
+  EditStudent({super.key});
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -21,12 +21,12 @@ class AddStudent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: offWhiteColor,
-     
+      
       body: SafeArea(
         child: Stack(
           children: [
             WaveDecoration(
-              containerColor: signatureBlueColor,
+              containerColor: lightGreenColor,
             ),
             ListView(
               children: [
@@ -46,11 +46,11 @@ class AddStudent extends StatelessWidget {
                         height24,
                         const Center(
                           child: Text(
-                            "إضافة طالبة",
+                            "تعديل الطالبة",
                             style: TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
-                                color: blueColor),
+                                color: lightGreenColor),
                           ),
                         ),
                         Column(
@@ -87,7 +87,7 @@ class AddStudent extends StatelessWidget {
                             height32,
                             height8,
                             BottomButton(
-                              text: "إضافة",
+                              text: "تعديل بيانات الطالبة",
                               textColor: whiteColor,
                               fontSize: 20,
                               onPressed: () {
@@ -96,27 +96,35 @@ class AddStudent extends StatelessWidget {
                                     phoneController.text.isNotEmpty &&
                                     addressController.text.isNotEmpty) {
                                   showDialog(
-                                      context: context,
-                                      builder: (context) => DialogBox(
-                                            text: "هل أنت متأكد من إضافة الطالبة ؟",
-                                            onAcceptClick: () {
-                                              //! add new student to student table -- bloc --
+                                    context: context,
+                                    builder: (context) => DialogBox(
+                                      text:
+                                          "هل أنت متأكد من تعديل بيانات الطالبة ؟",
+                                      onAcceptClick: () {
+                                        //! add new student to student table -- bloc --
             
-                                              context.pop();
-                                              context.pop();
-                                              context.showSuccessSnackBar(
-                                                  "تم إضافة الطالبة بنجاح");
-                                            },
-                                            onRefuseClick: () {
-                                              context.pop();
-                                            },
-                                          ));
-                                } else {
-                                  context
-                                      .showErrorSnackBar("الرجاء ملئ جميع الحقول ");
+                                        context.pop();
+                                        context.pop();
+                                        context.showSuccessSnackBar(
+                                            "تم تعديل بيانات الطالبة بنجاح");
+                                      },
+                                      onRefuseClick: () {
+                                        context.pop();
+                                      },
+                                    ),
+                                  );
                                 }
                               },
                             ),
+                            height24,                        
+                            BottomButton(
+                                text: "إلغاء",
+                                textColor: whiteColor,
+                                fontSize: 20,
+                                color: signatureBlueColor,
+                                onPressed: () {
+                                  context.pop();
+                                }),
                           ],
                         ),
                         Image.asset(
@@ -135,6 +143,5 @@ class AddStudent extends StatelessWidget {
         ),
       ),
     );
- 
   }
 }
