@@ -1,3 +1,4 @@
+import 'package:darb_app/bloc/auth_bloc.dart';
 import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/pages/attendance_list.dart';
@@ -27,6 +28,7 @@ import 'package:darb_app/pages/tracking_page.dart';
 import 'package:darb_app/pages/verify_email_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
 import 'package:darb_app/utils/app_locale.dart';
+import 'package:darb_app/widgets/redirect_widget.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -77,8 +79,11 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SupervisorActionsBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => SupervisorActionsBloc()),
+        BlocProvider(create: (context) => AuthBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         supportedLocales: localization.supportedLocales,
@@ -91,8 +96,9 @@ class _MainAppState extends State<MainApp> {
         // darkTheme: ThemeData.dark(),
       home: 
       // const SupervisorNavigationPage(),
-      const WelcomePage(),
+      const RedirectWidget(),
       // StartupPage(),
-    ));
+          ),
+    );
   }
 }

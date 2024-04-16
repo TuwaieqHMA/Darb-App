@@ -9,7 +9,8 @@ final class SignUpEvent extends AuthEvent {
   final String phone;
   final String password;
   final String rePassword;
-  SignUpEvent({required this.name,required this.email,required this.phone,required this.password,required this.rePassword});
+  final String userType;
+  SignUpEvent({required this.name,required this.email,required this.phone,required this.password,required this.rePassword, required this.userType});
 }
 
 final class LoginEvent extends AuthEvent {
@@ -21,4 +22,7 @@ final class LoginEvent extends AuthEvent {
 
 final class SignOutEvent extends AuthEvent {
   
+}
+
+final class RedirectEvent extends AuthEvent {
 }

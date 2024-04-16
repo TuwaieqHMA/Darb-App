@@ -1,13 +1,13 @@
 class Student {
   Student({
     this.id,
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
     this.supervisorId,
   });
   late final String? id;
-  late final double latitude;
-  late final double longitude;
+  late final double? latitude;
+  late final double? longitude;
   late final String? supervisorId;
   
   Student.fromJson(Map<String, dynamic> json){
