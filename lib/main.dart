@@ -20,10 +20,7 @@ Future main() async {
   await setup();
 
   runApp(
-     DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) =>  const MainApp(), // Wrap your app
-  ),
+     const MainApp(),
     // const MainApp(),
   );
 }

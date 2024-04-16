@@ -7,7 +7,6 @@ import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/student_model.dart';
 import 'package:darb_app/pages/driver_home.dart';
 import 'package:darb_app/pages/student_home.dart';
-import 'package:darb_app/pages/supervisor_home_page.dart';
 import 'package:darb_app/pages/supervisor_naivgation_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
 import 'package:darb_app/services/database_service.dart';
@@ -28,8 +27,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>(login);
     on<SignOutEvent>(signout);
     on<RedirectEvent>(redirect);
+    on<VerifyEmailEvent>(verifyEmail);
+    on<VerifyOtpEvent>(verifyOtp);
+    on<ChangePasswordEvent>(changePassword);
+    on<ResendOtpEvent>(resendOtp);
   }
-
+// Signup Method
   FutureOr<void> signup(SignUpEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
     if (event.name.trim().isNotEmpty &&
@@ -41,21 +44,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (RegExp(r'^05[0-9]{8}$').hasMatch(event.phone)) {
           if (event.password.length >= 6 && event.rePassword.length >= 6) {
             if (event.password == event.rePassword) {
-              try{
-              AuthResponse res = await dbService.signUp(
-                  email: event.email, password: event.password);
-              await dbService.addUser(DarbUser(id: res.user!.id ,name: event.name, email: event.email, phone: event.phone, userType: event.userType));
-              if(event.userType == "Student"){
-                await dbService.addStudent(Student(id: res.user!.id));
-              }else if (event.userType == "Driver"){
-                await dbService.addDriver(Driver(id: res.user!.id, supervisorId: locator.currentUser.id!));
-              }
-              emit(SignedUpState(msg: "تم إنشاء الحساب بنجاح الرجاء تأكيد حسابك عن طريق البريد المرسل لبريدك الإلكتروني"));
+              try {
+                AuthResponse res = await dbService.signUp(
+                    email: event.email, password: event.password);
+                await dbService.addUser(DarbUser(
+                    id: res.user!.id,
+                    name: event.name,
+                    email: event.email,
+                    phone: event.phone,
+                    userType: event.userType));
+                if (event.userType == "Student") {
+                  await dbService.addStudent(Student(id: res.user!.id));
+                } else if (event.userType == "Driver") {
+                  await dbService.addDriver(Driver(
+                      id: res.user!.id, supervisorId: locator.currentUser.id!));
+                }
+                emit(SignedUpState(
+                    msg:
+                        "تم إنشاء الحساب بنجاح الرجاء تأكيد حسابك عن طريق البريد المرسل لبريدك الإلكتروني"));
               } catch (e) {
                 emit(AuthErrorState(msg: "هناك مشكلة في الإتصال بخدمتنا"));
                 print(e);
               }
-            }else {
+            } else {
               emit(AuthErrorState(msg: "كلمتا السر غير متطابقتين"));
             }
           } else {
@@ -72,17 +83,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  FutureOr<void> login(LoginEvent event, Emitter<AuthState> emit) async{
+// Login Method
+  FutureOr<void> login(LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
 
-    if(event.email.trim().isNotEmpty && event.password.trim().isNotEmpty){
-      if (validator.email(event.email)){
+    if (event.email.trim().isNotEmpty && event.password.trim().isNotEmpty) {
+      if (validator.email(event.email)) {
         try {
           await dbService.signIn(email: event.email, password: event.password);
-        locator.currentUser = await dbService.getCurrentUserInfo();
-        emit(LoggedInState(msg: "تم تسجيل الدخول بنجاح"));
+          locator.currentUser = await dbService.getCurrentUserInfo();
+          emit(LoggedInState(msg: "تم تسجيل الدخول بنجاح"));
         } catch (e) {
-          emit(AuthErrorState(msg: "هناك خطأفي عملية تسجيل الدخول، الرجاء التحقق من تأكيد بريدك"));
+          emit(AuthErrorState(
+              msg:
+                  "هناك خطأفي عملية تسجيل الدخول، الرجاء التحقق من تأكيد بريدك"));
           print(e);
         }
       } else {
@@ -93,19 +107,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  FutureOr<void> signout(SignOutEvent event, Emitter<AuthState> emit) async{
+// Signout Method
+  FutureOr<void> signout(SignOutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
 
     await dbService.signOut();
     emit(SignedOutState(msg: "تم تسجيل خروجك بنجاح"));
   }
 
-  FutureOr<void> redirect(RedirectEvent event, Emitter<AuthState> emit) async{
+// Redirect Method
+  FutureOr<void> redirect(RedirectEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
 
-    if(dbService.supabase.auth.currentSession != null) {
+    if (dbService.supabase.auth.currentSession != null) {
       locator.currentUser = await dbService.getCurrentUserInfo();
-      Widget widget = const Placeholder(); 
+      Widget widget;
       switch (locator.currentUser.userType) {
         case "Supervisor":
           widget = const SupervisorNavigationPage();
@@ -117,8 +133,90 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           widget = const WelcomePage();
       }
       emit(RedirectedState(page: widget));
-    }else {
+    } else {
       emit(RedirectedState(page: const WelcomePage()));
+    }
+  }
+
+  FutureOr<void> verifyEmail(
+      VerifyEmailEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoadingState());
+    if (event.email.trim().isNotEmpty) {
+      if (validator.email(event.email)) {
+        try {
+          await dbService.sendOtp(event.email);
+          emit(EmailVerifiedState(msg: "تم إرسال الرمز إلى بريدك الإلكتروني"));
+        } catch (e) {
+          emit(AuthErrorState(
+              msg: "هناك مشكلة في عملية التحقق من بريدك الإلكتروني"));
+        }
+      } else {
+        emit(AuthErrorState(msg: "الرجاء إدخال بريد إلكتروني صحيح"));
+      }
+    } else {
+      emit(AuthErrorState(msg: "الرجاء تعبئة البريد الإلكتروني"));
+    }
+  }
+
+  FutureOr<void> verifyOtp(
+      VerifyOtpEvent event, Emitter<AuthState> emit) async {
+    if (event.otp.trim().isNotEmpty) {
+      if (event.otp.length >= 6) {
+        try {
+          await dbService.verifyOtp(event.otp, event.email);
+          emit(OtpVerifiedState(
+              msg: "تم التحقق من الرمز بنجاح، يمكنك الان تغيير كلمة المرور"));
+        } catch (e) {
+          print(e);
+          emit(AuthErrorState(
+              msg: "حدث خطأ أثناء عملية التحقق، الرجاء المحاولة مرة أخرى"));
+        }
+      } else {
+        emit(AuthErrorState(msg: "رمز التحقق يتكون من 6 أرقام"));
+      }
+    } else {
+      emit(AuthErrorState(msg: "الرجاء إدخال رمز التحقق"));
+    }
+  }
+
+  FutureOr<void> changePassword(
+      ChangePasswordEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoadingState());
+    if (event.password.trim().isNotEmpty &&
+        event.rePassword.trim().isNotEmpty) {
+      if (event.password.length >= 6 && event.rePassword.length >= 6) {
+        if (event.password == event.rePassword) {
+          try {
+            await dbService.changePassword(event.password);
+            await dbService.signOut();
+            emit(PasswordChangedState(msg: "تم تغيير كلمة السر بنجاح"));
+          } catch (e) {
+            emit(AuthErrorState(
+                msg:
+                    "حدث خطأ أثناء عملية تغيير كلمة السر، الرجاء المحاولة لاحقاً"));
+          }
+        } else {
+          emit(AuthErrorState(msg: "كلمتا السر غير متطابقتين"));
+        }
+      } else {
+        emit(
+            AuthErrorState(msg: "يجب أن تتكون كلمة السر من 6 خانات على الأقل"));
+      }
+    } else {
+      emit(AuthErrorState(msg: "الرجاء تعبئة جميع الحقول"));
+    }
+  }
+
+  FutureOr<void> resendOtp(
+      ResendOtpEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoadingState());
+    print(event.email);
+    try {
+      await dbService.resendOtp(event.email);
+      emit(OtpResentState(msg: "تم إرسال الرمز بنجاح"));
+    } catch (e) {
+      print(e);
+      emit(AuthErrorState(msg: "هناك خطأ في عملية إعادة إرسال رمز التحقق"));
     }
   }
 }

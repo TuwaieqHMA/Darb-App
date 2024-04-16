@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 
 class CircleBackButton extends StatelessWidget {
   const CircleBackButton({
-    super.key,
+    super.key, this.onTap,
   });
+
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 16,),
       child: IconButton(
-        onPressed: () {
+        onPressed: onTap ?? () {
           context.pop();
         },
         icon: const Icon(

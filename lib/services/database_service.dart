@@ -1,13 +1,8 @@
-import 'dart:html';
-import 'dart:math';
 import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:darb_app/models/darb_user_model.dart';
-import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/student_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -148,5 +143,20 @@ class DBService {
 
   Future<void> addDriver(Driver driver) async {
     await supabase.from("Driver").insert(driver.toJson());
+  }
+
+  Future<void> sendOtp(String email) async{
+    await supabase.auth.signInWithOtp(email: email);
+  }
+
+  Future<void> verifyOtp(String otp, String email) async{
+    await supabase.auth.verifyOTP(type: OtpType.email, token: otp, email: email);
+  }
+
+  Future<void> changePassword(String password) async{
+    await supabase.auth.updateUser(UserAttributes(password: password,),);
+  }
+  Future<void> resendOtp(String email) async {
+    await sendOtp(email);
   }
 }

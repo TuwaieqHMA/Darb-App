@@ -26,3 +26,29 @@ final class SignOutEvent extends AuthEvent {
 
 final class RedirectEvent extends AuthEvent {
 }
+
+final class VerifyEmailEvent extends AuthEvent {
+  final String email;
+
+  VerifyEmailEvent({required this.email});
+}
+
+final class VerifyOtpEvent extends AuthEvent {
+  final String otp;
+  final String email;
+
+  VerifyOtpEvent({required this.otp, required this.email});
+}
+
+final class ChangePasswordEvent extends AuthEvent {
+  final String password;
+  final String rePassword;
+
+  ChangePasswordEvent({required this.password, required this.rePassword});
+}
+
+final class ResendOtpEvent extends AuthEvent {
+  final String email;
+
+  ResendOtpEvent({required this.email});
+}
