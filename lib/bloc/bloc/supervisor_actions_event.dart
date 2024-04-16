@@ -24,5 +24,13 @@ final class SelectStartAndExpireTimeEvent extends SupervisorActionsEvent {
 final class SelectDriverEvent extends SupervisorActionsEvent {
   String driverName;
   SelectDriverEvent(this.driverName);
+}
+final class RefrshDriverEvent extends SupervisorActionsEvent {
+  // String driverName;
+  // RefrshDriverEvent(this.driverName);
+}
 
+final class AddBusEvent extends SupervisorActionsEvent{
+  Bus bus;
+  AddBusEvent({required this.bus});
 }

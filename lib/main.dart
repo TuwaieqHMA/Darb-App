@@ -1,7 +1,10 @@
 import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/pages/add_bus.dart';
 import 'package:darb_app/pages/add_driver.dart';
+import 'package:darb_app/pages/supervisor_add_type_page.dart';
 import 'package:darb_app/utils/app_locale.dart';
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:darb_app/utils/setup.dart';
@@ -14,7 +17,11 @@ Future main() async {
   await setup();
 
   runApp(
-    const MainApp(),
+     DevicePreview(
+    enabled: !kReleaseMode,
+    builder: (context) =>  const MainApp(), // Wrap your app
+  ),
+    // const MainApp(),
   );
 }
 
@@ -51,18 +58,22 @@ class _MainAppState extends State<MainApp> {
     return BlocProvider(
       create: (context) => SupervisorActionsBloc(),
       child: MaterialApp(
+        
         debugShowCheckedModeBanner: false,
         supportedLocales: localization.supportedLocales,
         localizationsDelegates: localization.localizationsDelegates,
-        locale: localization.currentLocale,
-        // useInheritedMediaQuery: true,
-        // locale: DevicePreview.locale(context),
-        // builder: DevicePreview.appBuilder,
+        // locale: localization.currentLocale,
+        useInheritedMediaQuery: true,
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
+        
         // theme: ThemeData.light(),
         // darkTheme: ThemeData.dark(),
       home: 
       // const Super visorNavigationPage(),
-      const AddBus(),
+      // const AddBus(),
+       const SupervisorAddTypePage ()
+
       // const WelcomePage(),
       // const StartupPage(),
     ));

@@ -25,3 +25,13 @@ final class SelectDriverState extends SupervisorActionsState {
   SelectDriverState(this.value);
 }  
 
+final class SuccessAddBusState extends SupervisorActionsState {
+  String mas;
+  SuccessAddBusState({required this.mas});
+}
+final class ErrorAddBusState extends SupervisorActionsState {
+  String mas;
+  ErrorAddBusState({required this.mas});
+}
+
+

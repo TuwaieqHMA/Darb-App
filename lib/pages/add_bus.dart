@@ -1,5 +1,6 @@
 import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -88,27 +89,28 @@ class _AddBusState extends State<AddBus> {
                                 builder: (context, state) {
                                   if (state is SelectDriverState) {
                                     return DropdownButton(
+                                      hint: const Text("اختر سائق"),
                                       isExpanded: true,
                                       underline: const Text(""),
                                       menuMaxHeight: 200,
                                       style: const TextStyle(
                                           fontSize: 16, fontFamily: inukFont),
-                                      iconDisabledColor: signatureTealColor,
                                       borderRadius: BorderRadius.circular(15),
-                                      value: state.value, // bloc.dropdownValue,
+                                      value: bloc.dropdownValue.isNotEmpty  ? bloc.dropdownValue : null, //bloc.dropdownValue, //state.value, 
                                       icon: const Icon(
                                         Icons.keyboard_arrow_down_outlined,
                                         size: 30,
                                         color: signatureBlueColor,
                                       ),
-                                      items: bloc.items.map((e) {
+                                      items: bloc.items.map((e) { //! bloc.drivers
                                         return DropdownMenuItem(
                                           value: e,
                                           child: Text(e),
                                         );
                                       }).toList(),
                                       onChanged: (value) {
-                                        bloc.add(SelectDriverEvent(
+                                        bloc.add(
+                                          SelectDriverEvent(
                                             value.toString(),
                                           ),
                                         );
@@ -122,9 +124,8 @@ class _AddBusState extends State<AddBus> {
                                     underline: const Text(""),
                                     style: const TextStyle(
                                         fontSize: 16, fontFamily: inukFont),
-                                    iconDisabledColor: signatureTealColor,
                                     borderRadius: BorderRadius.circular(15),
-                                    value: null,
+                                    value: bloc.dropdownValue.isNotEmpty  ? bloc.dropdownValue : null,
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       size: 30,
@@ -288,38 +289,52 @@ class _AddBusState extends State<AddBus> {
                             ),
                             height32,
                             height8,
-                            BottomButton(
-                              text: "إضافة",
-                              textColor: whiteColor,
-                              fontSize: 20,
-                              onPressed: () {
-                                if (busNumberController.text.isNotEmpty &&
-                                    seatsNumberController.text.isNotEmpty &&
-                                    busPlateController.text.isNotEmpty &&
-                                    seatsNumberController.text.isNotEmpty &&
-                                    dateIssusController.text.isNotEmpty &&
-                                    dateExpireController.text.isNotEmpty) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => DialogBox(
-                                      text: "هل أنت متأكد من إضافة باص ؟",
-                                      onAcceptClick: () {
-                                        //! add new bus to bus table -- bloc --
-                                        context.pop();
-                                        context.pop();
-                                        context.showSuccessSnackBar(
-                                            "تم إضافة باص بنجاح");
-                                      },
-                                      onRefuseClick: () {
-                                        context.pop();
-                                      },
-                                    ),
-                                  );
-                                } else {
-                                  context.showErrorSnackBar(
-                                      "الرجاء ملئ جميع الجقول");
-                                }
+                            BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
+                              listener: (context, state) {
+                                // TODO: implement listener
                               },
+                              child: BottomButton(
+                                text: "إضافة",
+                                textColor: whiteColor,
+                                fontSize: 20,
+                                onPressed: () {
+                                  
+                                  bloc.add(RefrshDriverEvent());
+                                  if (busNumberController.text.isNotEmpty &&
+                                      seatsNumberController.text.isNotEmpty &&
+                                      busPlateController.text.isNotEmpty &&
+                                      seatsNumberController.text.isNotEmpty &&
+                                      dateIssusController.text.isNotEmpty &&
+                                      dateExpireController.text.isNotEmpty) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => DialogBox(
+                                        text: "هل أنت متأكد من إضافة باص ؟",
+                                        onAcceptClick: () {
+                                          bloc.add(AddBusEvent( bus: Bus(
+                                            seatsNumber: int.parse(seatsNumberController.text),
+                                            busPlate: busPlateController.text,
+                                            dateIssue: bloc.startDate,
+                                            dateExpire: bloc.endDate,
+                                            driverId: bloc.dropdownValue,
+                                            )));
+                                          //! add new bus to bus table -- bloc --
+                                          context.pop();
+                                          context.pop();
+                                          context.showSuccessSnackBar(
+                                              "تم إضافة باص بنجاح");
+                                        },
+                                        onRefuseClick: () {
+                                          context.pop();
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    context.showErrorSnackBar(
+                                        "الرجاء ملئ جميع الجقول");
+                                  }
+                                },
+                              ),
                             ),
                           ],
                         ),

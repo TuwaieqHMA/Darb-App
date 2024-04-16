@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
+import 'package:darb_app/models/bus_model.dart';
+import 'package:darb_app/services/database_service.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -20,15 +22,8 @@ class SupervisorActionsBloc
   TimeOfDay startTime = TimeOfDay.now();
   TimeOfDay endTime = TimeOfDay.now();
 
-  
-  List items = [
-    "Ali",
-    "Ahmad",
-    "salem",
-    "Anas",
-    "hasan",
-    "faisal"
-  ];
+  String dropdownValue = '';
+  List items = ["Ali", "Ahmad", "salem", "Anas", "hasan", "faisal"];
 
   SupervisorActionsBloc() : super(SupervisorActionsInitial()) {
     on<SupervisorActionsEvent>((event, emit) {
@@ -39,6 +34,8 @@ class SupervisorActionsBloc
     on<SelectDayEvent>(selectDay);
     on<SelectStartAndExpireTimeEvent>(selectStartTimeOfTrip);
     on<SelectDriverEvent>(selectDriver);
+    on<RefrshDriverEvent>(refreshDriver);
+    on<AddBusEvent>(addBus);
   }
 
   FutureOr<void> changeTripType(
@@ -59,6 +56,7 @@ class SupervisorActionsBloc
     emit(SelectStartAndExpireTimeState(startTime, endTime));
   }
 
+  //  Date Picker
   Future<void> selectDate(BuildContext context, int num) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -92,6 +90,7 @@ class SupervisorActionsBloc
     }
   }
 
+  //  Time Picker
   Future<Null> selectTime(BuildContext context, int num) async {
     TimeOfDay picked;
     picked = (await showTimePicker(
@@ -118,9 +117,28 @@ class SupervisorActionsBloc
     }
   }
 
-  FutureOr<void> selectDriver(SelectDriverEvent event, Emitter<SupervisorActionsState> emit) {
-    String dropdownValue = event.driverName;
+  // select one driver
+  FutureOr<void> selectDriver(
+      SelectDriverEvent event, Emitter<SupervisorActionsState> emit) {
+    dropdownValue = event.driverName;
     emit(SelectDriverState(dropdownValue));
+  }
 
+  FutureOr<void> addBus(
+      AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
+    try {
+      // dropdownValue = '';
+      // emit(SelectDriverState(dropdownValue));
+      final addNewBus = DBService().addBus(event.bus);
+      emit(SuccessAddBusState(mas: "تم إضافة الباص بنحاج "));
+    } catch (e) {
+      print(e);
+      emit(ErrorAddBusState(mas: "حدث خطأ أنثاء لإضافة الباص"));
+    }
+  }
+
+  FutureOr<void> refreshDriver(RefrshDriverEvent event, Emitter<SupervisorActionsState> emit) {
+    dropdownValue = '';
+    emit(SelectDriverState(dropdownValue));
   }
 }
