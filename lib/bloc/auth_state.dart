@@ -29,6 +29,30 @@ final class RedirectedState extends AuthState {
   RedirectedState({required this.page});
 }
 
+final class EmailVerifiedState extends AuthState {
+  final String msg;
+
+  EmailVerifiedState({required this.msg});
+}
+
+final class OtpVerifiedState extends AuthState {
+  final String msg;
+
+  OtpVerifiedState({required this.msg});
+}
+
+final class PasswordChangedState extends AuthState {
+  final String msg;
+
+  PasswordChangedState({required this.msg});
+}
+
+final class OtpResentState extends AuthState {
+  final String msg;
+
+  OtpResentState({required this.msg});
+}
+
 final class AuthLoadingState extends AuthState {
 
 }
