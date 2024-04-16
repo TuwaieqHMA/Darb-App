@@ -132,6 +132,8 @@ class DBService {
       'time_to' : trip.timeTo
     });
     print("Add Trip");
+
+  }
   Future<DarbUser> getCurrentUserInfo() async {
     return DarbUser.fromJson(await supabase.from("User").select().match({"id": await getCurrentUserId()}).single());
   }

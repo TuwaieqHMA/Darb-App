@@ -312,6 +312,7 @@ class _AddBusState extends State<AddBus> {
                                         text: "هل أنت متأكد من إضافة باص ؟",
                                         onAcceptClick: () {
                                           bloc.add(AddBusEvent( bus: Bus(
+                                            supervisorId: "",
                                             seatsNumber: int.parse(seatsNumberController.text),
                                             busPlate: busPlateController.text,
                                             dateIssue: bloc.startDate,
