@@ -7,6 +7,7 @@ import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/student_model.dart';
 import 'package:darb_app/pages/driver_home.dart';
 import 'package:darb_app/pages/student_home.dart';
+import 'package:darb_app/pages/user_location_page.dart';
 import 'package:darb_app/pages/supervisor_naivgation_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
 import 'package:darb_app/services/database_service.dart';
@@ -31,6 +32,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<VerifyOtpEvent>(verifyOtp);
     on<ChangePasswordEvent>(changePassword);
     on<ResendOtpEvent>(resendOtp);
+    on<SwitchEditModeEvent>(switchEditMode);
+    on<EditProfileInfoEvent>(editProfileInfo);
   }
 // Signup Method
   FutureOr<void> signup(SignUpEvent event, Emitter<AuthState> emit) async {
@@ -126,9 +129,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         case "Supervisor":
           widget = const SupervisorNavigationPage();
         case "Student":
-          widget = const StudentHome();
+          widget = const UserLocationPage();
         case "Driver":
-          widget = const DriverHome();
+          widget = const UserLocationPage();
         default:
           widget = const WelcomePage();
       }
@@ -217,6 +220,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       print(e);
       emit(AuthErrorState(msg: "هناك خطأ في عملية إعادة إرسال رمز التحقق"));
+    }
+  }
+
+  FutureOr<void> switchEditMode(SwitchEditModeEvent event, Emitter<AuthState> emit) {
+    if(event.isEdit){
+      emit(ViewProfileState());
+    }else {
+      emit(EditingProfileState());
+    }
+  }
+
+  FutureOr<void> editProfileInfo(EditProfileInfoEvent event, Emitter<AuthState> emit) async{
+    emit(AuthLoadingState());
+
+    if(event.name.trim().isNotEmpty && event.phone.trim().isNotEmpty){
+      if(RegExp(r'^05[0-9]{8}$').hasMatch(event.phone)){
+        await dbService.updateUserInfo(event.name, event.phone);
+        locator.currentUser = await dbService.getCurrentUserInfo();
+        emit(ViewProfileState());
+      }else {
+        emit(AuthErrorState(msg: "الرجاء إدخال رقم الجوال بالصيغة الصحيحة بداية ب 05"));
+      }
+    }else {
+      emit(AuthErrorState(msg: "الرجاء تعبئة جميع الحقول"));
     }
   }
 }

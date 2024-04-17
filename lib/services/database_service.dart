@@ -159,4 +159,7 @@ class DBService {
   Future<void> resendOtp(String email) async {
     await sendOtp(email);
   }
+  Future<void> updateUserInfo(String name, String phone) async {
+    await supabase.from("User").update({'name': name, 'phone': phone}).eq('id', await getCurrentUserId());
+  }
 }

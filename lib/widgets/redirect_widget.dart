@@ -27,7 +27,7 @@ class RedirectWidget extends StatelessWidget {
                   return Container(
                     width: context.getWidth(),
                     height: context.getHeight(),
-                    color: whiteColor,
+                    color: offWhiteColor,
                     child: const Center(
                       child: CircularProgressIndicator(color: signatureYellowColor,),
                     ),
@@ -36,7 +36,7 @@ class RedirectWidget extends StatelessWidget {
                   return Container(
                     width: context.getWidth(),
                     height: context.getHeight(),
-                    color: whiteColor,
+                    color: offWhiteColor,
                   );
                 }
               },

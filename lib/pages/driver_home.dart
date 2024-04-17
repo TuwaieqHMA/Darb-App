@@ -1,12 +1,10 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
-import 'package:darb_app/pages/profile_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
-import 'package:darb_app/widgets/appbar_home.dart';
+import 'package:darb_app/widgets/home_appbar.dart';
 import 'package:darb_app/widgets/home_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class DriverHome extends StatelessWidget {
   const DriverHome({super.key});
@@ -16,14 +14,11 @@ class DriverHome extends StatelessWidget {
     return  Scaffold(
         appBar: PreferredSize(
         preferredSize: Size(context.getWidth(), context.getHeight() * .10),
-        child:    AppBarHome(tital:'مرحباً، أحمد',onTap: () {
-                        context.push(ProfilePage(), true);
-                      }, icon:SvgPicture.asset(
-                        "assets/icons/icon_person.svg",
-                        width: 35,
+        child:    const HomeAppBar(
+              backgroundColor: signatureBlueColor,
+              textColor: whiteColor,
+            )
                       ),
-                      )
-                      ),//CircleBackButton
    body:  Center(
      child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
