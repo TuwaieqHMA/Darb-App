@@ -52,3 +52,16 @@ final class ResendOtpEvent extends AuthEvent {
 
   ResendOtpEvent({required this.email});
 }
+
+final class SwitchEditModeEvent extends AuthEvent {
+  final bool isEdit;
+
+  SwitchEditModeEvent({required this.isEdit});
+}
+
+final class EditProfileInfoEvent extends AuthEvent {
+  final String name;
+  final String phone;
+
+  EditProfileInfoEvent({required this.name, required this.phone});
+}

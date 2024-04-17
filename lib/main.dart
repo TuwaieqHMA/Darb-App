@@ -6,7 +6,7 @@ import 'package:darb_app/pages/map_page.dart';
 import 'package:darb_app/pages/map_student.dart';
 import 'package:darb_app/pages/startup_page.dart';
 import 'package:darb_app/pages/student_home.dart';
-import 'package:darb_app/pages/student_location_page.dart';
+import 'package:darb_app/pages/user_location_page.dart';
 import 'package:darb_app/bloc/auth_bloc.dart';
 import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/pages/add_bus.dart';

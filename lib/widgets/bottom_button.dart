@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class BottomButton extends StatelessWidget {
   const BottomButton({
-    super.key, this.onPressed, required this.text, this.color = signatureYellowColor, this.textColor = deepBlueColor, this.fontSize = 16,
+    super.key, this.onPressed, required this.text, this.color = signatureYellowColor, this.textColor = deepBlueColor, this.fontSize = 16, this.width,
   });
 
   final Function()? onPressed;
@@ -13,13 +13,14 @@ class BottomButton extends StatelessWidget {
   final Color? textColor;
   final double? fontSize;
   final Color? color;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: onPressed,
       color: color,
-      minWidth: context.getWidth(),
+      minWidth: width ?? context.getWidth(),
       height: 50,
       splashColor: fadedwhiteColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

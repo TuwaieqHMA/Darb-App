@@ -4,6 +4,7 @@ import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/appbar_home.dart';
+import 'package:darb_app/widgets/home_appbar.dart';
 import 'package:darb_app/widgets/home_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,16 +17,10 @@ class StudentHome extends StatelessWidget {
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size(context.getWidth(), context.getHeight() * .10),
-            child: AppBarHome(
-              tital: 'مرحباً، الاء',
-              onTap: () {
-                context.push(ProfilePage(), true);
-              },
-              icon: SvgPicture.asset(
-                "assets/icons/icon_person.svg",
-                width: 35,
-              ),
-            )), //CircleBackButton
+            child: const HomeAppBar(
+              backgroundColor: signatureBlueColor,
+              textColor: whiteColor,
+            )),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -80,7 +75,7 @@ class StudentHome extends StatelessWidget {
               ),
               Image.asset(
                 'assets/images/home-driver.png',
-                height: 260,
+                height: context.getWidth() * .5,
               )
             ],
           ),

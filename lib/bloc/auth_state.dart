@@ -62,3 +62,11 @@ final class AuthErrorState extends AuthState {
 
   AuthErrorState({required this.msg});
 }
+
+final class ViewProfileState extends AuthState {
+
+}
+
+final class EditingProfileState extends AuthState {
+  
+}
