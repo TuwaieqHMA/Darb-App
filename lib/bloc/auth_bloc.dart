@@ -5,8 +5,6 @@ import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/student_model.dart';
-import 'package:darb_app/pages/driver_home.dart';
-import 'package:darb_app/pages/student_home.dart';
 import 'package:darb_app/pages/user_location_page.dart';
 import 'package:darb_app/pages/supervisor_naivgation_page.dart';
 import 'package:darb_app/pages/welcome_page.dart';
