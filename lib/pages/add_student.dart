@@ -59,6 +59,7 @@ class AddStudent extends StatelessWidget {
                             HeaderTextField(
                               controller: nameController,
                               headerText: "رمز الطالب التعريفي",
+                              hintText: "أدخل الرمز التعريفي للطالب",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                             ),

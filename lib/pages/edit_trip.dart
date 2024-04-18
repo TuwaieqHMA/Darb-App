@@ -1,4 +1,5 @@
-import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -11,6 +12,7 @@ import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class EditTrip extends StatelessWidget {
@@ -28,6 +30,8 @@ class EditTrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
+
+    final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
       backgroundColor: offWhiteColor,
@@ -235,8 +239,8 @@ class EditTrip extends StatelessWidget {
                                     );
                                   }).toList(),
                                   onChanged: (value) {
-                                    bloc.add(
-                                        SelectDriverEvent(value.toString()));
+                                    // bloc.add(
+                                    //     SelectDriverEvent(value.toString()));
                                   },
                                 );
                               }
@@ -263,7 +267,7 @@ class EditTrip extends StatelessWidget {
                                   );
                                 }).toList(),
                                 onChanged: (value) {
-                                  bloc.add(SelectDriverEvent(value.toString()));
+                                  // bloc.add(SelectDriverEvent(value.toString()));
                                 },
                               );
                             },

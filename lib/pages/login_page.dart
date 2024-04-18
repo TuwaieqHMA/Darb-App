@@ -65,12 +65,15 @@ class LoginPage extends StatelessWidget {
                           children: [
                             HeaderTextField(
                               controller: emailController,
+                              hintText: "someone@email.com",
+                              hintTextDircetion: TextDirection.ltr,
                               headerText: "البريد الالكتروني",
                               textDirection: TextDirection.ltr,
                             ),
                             height8,
                             HeaderTextField(
                               controller: passwordController,
+                              hintText: "ادخل كلمة المرور الخاصة بك",
                               headerText: "كلمة المرور",
                               isObscured: true,
                             ),
