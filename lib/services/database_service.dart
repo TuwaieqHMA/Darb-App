@@ -243,6 +243,12 @@ class DBService {
         .update({'name': name, 'phone': phone}).eq('id', studentId);
     await getAllUser();
   }
+  Future updateDriver(String driverId, String name, String phone) async {
+    await supabase
+        .from('User')
+        .update({'name': name, 'phone': phone}).eq('id', driverId);
+    await getAllDriver();
+  }
 
   Future<DarbUser> getCurrentUserInfo() async {
     return DarbUser.fromJson(await supabase
