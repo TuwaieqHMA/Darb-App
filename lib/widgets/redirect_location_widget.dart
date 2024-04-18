@@ -1,29 +1,34 @@
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'package:darb_app/bloc/student_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/pages/location_select_page.dart';
+import 'package:darb_app/pages/student_home.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RedirectWidget extends StatelessWidget {
-  const RedirectWidget({super.key,});
+class RedirectLocationWidget extends StatelessWidget {
+  const RedirectLocationWidget({super.key,});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthBloc(),
+      create: (context) => StudentBloc(),
       child: Builder(
         builder: (context) {
-          final authBloc = context.read<AuthBloc>();
-          authBloc.add(RedirectEvent());
+          final studentBloc = context.read<StudentBloc>();
+          studentBloc.add(CheckStudentLocationAvailabilityEvent());
           return Scaffold(
-            body: BlocConsumer<AuthBloc, AuthState>(
+            body: BlocConsumer<StudentBloc, StudentState>(
               listener: (context, state) {
-                if(state is RedirectedState){
-                  context.push(state.page, false);
+                if(state is UserSelectedLocationState){
+                  context.push(const StudentHome(), false);
+                }else if (state is UserNotSelectedLocationState){
+                  context.showTopSnackBar(state.msg);
+                  context.push(const LocationSelectPage(), false);
                 }
               },
               builder: (context, state) {
-                if(state is AuthLoadingState){
+                if(state is StudentLoadingState){
                   return Container(
                     width: context.getWidth(),
                     height: context.getHeight(),

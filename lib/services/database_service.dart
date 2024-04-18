@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
@@ -8,6 +7,7 @@ import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/models/student_model.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DBService {
@@ -258,5 +258,31 @@ class DBService {
 
   Future<void> addDriver(Driver driver) async {
     await supabase.from("Driver").insert(driver.toJson());
+  }
+
+  Future<void> sendOtp(String email) async{
+    await supabase.auth.signInWithOtp(email: email);
+  }
+
+  Future<void> verifyOtp(String otp, String email) async{
+    await supabase.auth.verifyOTP(type: OtpType.email, token: otp, email: email);
+  }
+
+  Future<void> changePassword(String password) async{
+    await supabase.auth.updateUser(UserAttributes(password: password,),);
+  }
+  Future<void> resendOtp(String email) async {
+    await sendOtp(email);
+  }
+  Future<void> updateUserInfo(String name, String phone) async {
+    await supabase.from("User").update({'name': name, 'phone': phone}).eq('id', await getCurrentUserId());
+  }
+  //---------------------------Student Actions---------------------------
+  Future<Student> getStudentInfo() async {
+    return Student.fromJson(await supabase.from("Student").select('latitude, longitude').eq('id', await getCurrentUserId()).single());
+  }
+
+  Future<void> updateUserLocation(LatLng coordinates) async {
+    await supabase.from("Student").update({'latitude': coordinates.latitude, 'longitude': coordinates.longitude}).eq('id', await getCurrentUserId());
   }
 }
