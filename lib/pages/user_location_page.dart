@@ -8,6 +8,7 @@ import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/bottom_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
+import 'package:darb_app/widgets/redirect_location_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -29,10 +30,10 @@ class UserLocationPage extends StatelessWidget {
             if (state is LocationPermissionDeniedState) {
               context.showErrorSnackBar(state.msg);
             } else if (state is LocationPermissionPreviouslyGrantedState) {
-              context.push(locator.currentUser.userType == "Student" ? const StudentHome() : const DriverHome(), false);
+              context.push(locator.currentUser.userType == "Student" ? const RedirectLocationWidget() : const DriverHome(), false);
             } else if (state is LocationPermissionGrantedState) {
               context.showSuccessSnackBar(state.msg);
-              context.push(locator.currentUser.userType == "Student" ? const StudentHome() : const DriverHome(), false);
+              context.push(locator.currentUser.userType == "Student" ? const RedirectLocationWidget() : const DriverHome(), false);
             } else if (state is RequestAppSettingsState) {
               showDialog(
                 context: context,

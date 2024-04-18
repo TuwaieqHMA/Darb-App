@@ -1,6 +1,7 @@
 import 'package:darb_app/bloc/auth_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/pages/location_select_page.dart';
 import 'package:darb_app/pages/login_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -118,6 +119,10 @@ class ProfilePage extends StatelessWidget {
                 textDirection: TextDirection.ltr,
               ),
               height16,
+              (locator.currentUser.userType == "Student" && !isEdit) ? BottomButton(text: "تحديث الموقع الخاص بك", textColor: whiteColor, color: signatureTealColor, fontSize: 20 , onPressed: () {
+                context.push(const LocationSelectPage(isEdit: true,), true);
+              },) : nothing,
+              height16,
               (isEdit)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +155,7 @@ class ProfilePage extends StatelessWidget {
                         authBloc.add(SwitchEditModeEvent(isEdit: isEdit));
                       },
                       textColor: whiteColor,
-                      fontSize: 24,
+                      fontSize: 20,
                     ),
             ],
           ),
