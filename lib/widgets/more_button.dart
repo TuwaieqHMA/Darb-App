@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 class MoreButton extends StatelessWidget {
   const MoreButton({
     super.key,
+    this.onViewClick,
     this.onEditClick,
     this.onDeleteClick, this.padding,
   });
 
+  final Function()? onViewClick;
   final Function()? onEditClick;
   final Function()? onDeleteClick;
   final EdgeInsetsGeometry? padding;
@@ -38,6 +40,20 @@ class MoreButton extends StatelessWidget {
         ),
         menuChildren: [
           MenuItemButton(
+              onPressed: onViewClick,
+              leadingIcon: const Icon(
+                Icons.remove_red_eye,
+                color: signatureTealColor,
+              ),
+              child: const Text(
+                "عرض",
+                style: TextStyle(
+                    color: signatureTealColor,
+                    fontFamily: inukFont,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600),
+              )),         
+          MenuItemButton(
               onPressed: onEditClick,
               leadingIcon: const Icon(
                 Icons.edit,
@@ -51,6 +67,7 @@ class MoreButton extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w600),
               )),
+         
           MenuItemButton(
               onPressed: onDeleteClick,
               leadingIcon: const Icon(

@@ -1,4 +1,5 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -10,13 +11,18 @@ import 'package:flutter_svg/svg.dart';
 class PersonCard extends StatelessWidget {
   PersonCard({
     super.key,
+    required this.user,
     required this.name,
     this.isSigned,
-    this.onEdit
+    this.onView,
+    this.onEdit,
+    this.onDelete
   });
 
+  final DarbUser user; 
   final String name;
   final bool? isSigned;
+  Function()? onView;
   Function()? onEdit;
   Function()? onDelete;
 
@@ -65,6 +71,7 @@ class PersonCard extends StatelessWidget {
                 )
               : nothing,
           MoreButton(
+            onViewClick: onView,
             onEditClick: 
             // (){
               onEdit,
