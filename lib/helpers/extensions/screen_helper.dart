@@ -71,5 +71,26 @@ extension Screen on BuildContext {
       backgroundColor: signatureBlueColor,
     ));
   }
+  pushAndRemove(Widget screen) {
+    Navigator.pushAndRemoveUntil(this,
+        MaterialPageRoute(builder: (context) => screen), (route) => false);
+  }
 
+  showSnackBar(String msg,
+      {Color color = const Color.fromARGB(255, 51, 51, 51)}) {
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+  /// ----------- Snack Bar extensions ---------
+  // showErrorSnackBar(String message) {
+  //   showSnackBar(
+  //     message,
+  //     color: Colors.red,
+  //   );
+  // }
 }

@@ -14,6 +14,7 @@ class IconTextBar extends StatelessWidget {
   final String text;
   final IconData icon;
   final double? fontSize;
+  
 
   @override
   Widget build(BuildContext context) {
