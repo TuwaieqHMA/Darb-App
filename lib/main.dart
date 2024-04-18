@@ -12,6 +12,7 @@ import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/pages/add_bus.dart';
 import 'package:darb_app/pages/add_driver.dart';
 import 'package:darb_app/pages/supervisor_add_type_page.dart';
+import 'package:darb_app/pages/tracking_page.dart';
 import 'package:darb_app/utils/app_locale.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
@@ -83,7 +84,7 @@ class _MainAppState extends State<MainApp> {
         // darkTheme: ThemeData.dark(),
       home: 
       // const SupervisorNavigationPage(),
-      const RedirectWidget(),
+      const TrackingPage(),
       // StartupPage(),
           ),
     );

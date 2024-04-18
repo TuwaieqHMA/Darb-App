@@ -1,4 +1,5 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/pages/profile_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -90,7 +91,9 @@ class DriverHome extends StatelessWidget {
               height50,
               HomeButton(
           text: " تفاصيل الرحلة  ",
-          onPressed: (){},
+          onPressed: (){
+            // context.push();
+          },
           textColor: whiteColor,
           fontSize: 24,
         ),  
