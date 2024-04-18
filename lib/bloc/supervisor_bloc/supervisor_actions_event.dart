@@ -46,6 +46,13 @@ final class UpdateStudent extends SupervisorActionsEvent{
   UpdateStudent({required this.id, required this.name, required this.phone});
 }
 
+final class UpdateDriver extends SupervisorActionsEvent{
+  String id;  
+  String name;
+  String phone;
+  UpdateDriver({required this.id, required this.name, required this.phone});
+}
+
 final class GetAllBus extends SupervisorActionsEvent{}
 
 final class DeleteBus extends SupervisorActionsEvent{

@@ -98,6 +98,7 @@ class DriverListPage extends StatelessWidget {
                           onView: () {
                             context.push(
                                 EditDriver(
+                                  driver:  locator.drivers[index],
                                   isView: true,
                                 ),
                                 true);
@@ -105,6 +106,7 @@ class DriverListPage extends StatelessWidget {
                           onEdit: () {
                             context.push(
                                 EditDriver(
+                                  driver: locator.drivers[index],
                                   isView: false,
                                 ),
                                 true);
