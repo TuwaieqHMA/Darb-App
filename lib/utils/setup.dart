@@ -23,8 +23,4 @@ Future setup() async {
   GetIt.I.registerSingleton<HomeData>(HomeData());
   GetIt.I.registerSingleton<DBService>(DBService());
 
-  if(Platform.isAndroid) {
-    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
-  }
-
 }
