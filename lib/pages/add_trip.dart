@@ -1,5 +1,8 @@
-import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/driver_model.dart';
+import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -11,6 +14,7 @@ import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class AddTrip extends StatelessWidget {
@@ -25,6 +29,9 @@ class AddTrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
+    bloc.add(GetAllTripDriver());
+
+    final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
       backgroundColor: offWhiteColor,
@@ -173,6 +180,7 @@ class AddTrip extends StatelessWidget {
                         HeaderTextField(
                           controller: busNumberController,
                           headerText: "رقم الباص",
+                          hintText: "أدخل رقم الباص",
                           headerColor: signatureTealColor,
                           textDirection: TextDirection.rtl,
                         ),
@@ -192,6 +200,7 @@ class AddTrip extends StatelessWidget {
                               10,
                             ),
                           ),
+
                           child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
                             builder: (context, state) {
                               if(state is SelectDriverState){
@@ -203,23 +212,26 @@ class AddTrip extends StatelessWidget {
                                     fontSize: 16, fontFamily: inukFont),
                                 iconDisabledColor: signatureTealColor,
                                 borderRadius: BorderRadius.circular(15),
-                                value: state.value, // bloc.dropdownValue,
+                                value: state.value[0], // bloc.dropdownAddBusValue[0],/// state.value, // bloc.dropdownValue,
                                 icon: const Icon(
                                     Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
-                                items: bloc.items.map((e) {
+                                items: locator.driverHasBusList.map((e){
+                                // bloc.items.map((e) {
                                   return DropdownMenuItem(
                                     value: e,
-                                    child: Text(e),
+                                    child: Text(e.name),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
                                   bloc.add(
-                                      SelectDriverEvent(value.toString()));
+                                      SelectTripDriverEvent(value.toString()));
+                                    print("ppppppp");
+                                    print(value);
                                 },
                               );
                             
                             }return DropdownButton(
-                                disabledHint: const Text("hhh"),
+                                // disabledHint: const Text("hhh"),
                               hint: const Text("اختر سائق"),
                               isExpanded: true,
                                 menuMaxHeight: 200,
@@ -231,15 +243,18 @@ class AddTrip extends StatelessWidget {
                                 value:  null ,// bloc.dropdownValue,
                                 icon: const Icon(
                                     Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
-                                items: bloc.items.map((e) {
+                                items: locator.driverHasBusList.map((e){
+                                // bloc.items.map((e) {
                                   return DropdownMenuItem(
                                     value: e,
-                                    child: Text(e),
+                                    child: Text(e.name),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
                                   bloc.add(
-                                      SelectDriverEvent(value.toString()));
+                                      SelectTripDriverEvent(value.toString()));
+                                    print("driiiiivvvveeeerr ");
+                                    print(value);
                                 },
                               );
                             
@@ -252,6 +267,7 @@ class AddTrip extends StatelessWidget {
                         HeaderTextField(
                           controller: locationController,
                           headerText: "الحي",
+                          hintText: "أدخل اسم الحي",
                           headerColor: signatureTealColor,
                           textDirection: TextDirection.rtl,
                         ),
@@ -260,7 +276,7 @@ class AddTrip extends StatelessWidget {
                         height8,
                         InkWell(
                           onTap: () {
-                            bloc.add(SelectDayEvent(context, 1));
+                            bloc.add(SelectDayEvent(context, 3));
                           },
                           child: Container(
                               padding: const EdgeInsets.only(right: 16),
@@ -287,15 +303,14 @@ class AddTrip extends StatelessWidget {
                                         size: 23,
                                       ),
                                       width8,
-                                      Text(
-                                        "${bloc.startDate.toLocal()}"
-                                            .split(' ')[0],
-                                        style: const TextStyle(
-                                            fontFamily: inukFont),
+                                      Text( "${bloc.startTripDate.toLocal()}".split(' ')[0],
+                                        style: const TextStyle(fontFamily: inukFont),
                                       ),
                                     ],
                                   );
                                 }
+                                print("========================= ${bloc.startTripDate.day}");
+                                print("========================= ${DateTime.now().day}");
                                 return Row(
                                   children: [
                                     const Icon(
@@ -304,11 +319,9 @@ class AddTrip extends StatelessWidget {
                                       size: 23,
                                     ),
                                     width8,
-                                    Text(
-                                      "${bloc.startDate.toLocal()}"
-                                          .split(' ')[0],
-                                      style:
-                                          const TextStyle(fontFamily: inukFont),
+                                    Text( bloc.startTripDate.day == DateTime.now().day ? "أدخل يوم الرحلة " : 
+                                      "${bloc.startTripDate.toLocal()}".split(' ')[0],
+                                      style:  const TextStyle(fontFamily: inukFont),
                                     ),
                                   ],
                                 );
@@ -361,7 +374,7 @@ class AddTrip extends StatelessWidget {
                                       size: 23,
                                     ),
                                     width8,
-                                    Text(
+                                    Text( bloc.startTime.hour == TimeOfDay.now().hour  ? "أدخل وقت بداية الرحلة" : 
                                       " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
                                       style:
                                           const TextStyle(fontFamily: inukFont),
@@ -419,7 +432,7 @@ class AddTrip extends StatelessWidget {
                                       size: 23,
                                     ),
                                     width8,
-                                    Text(
+                                    Text(bloc.endTime.hour == TimeOfDay.now().hour ? "أدخل وقت نهاية الرحلة" : 
                                       " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
                                       style:
                                           const TextStyle(fontFamily: inukFont),
@@ -450,6 +463,23 @@ class AddTrip extends StatelessWidget {
                                 builder: (context) => DialogBox(
                                   text: "هل أنت متأكد من إضافة رحلة ؟",
                                   onAcceptClick: () {
+                                    bloc.add(AddTripEvent(trip: Trip(
+                                      isToSchool: bloc.seletctedType == 1 ? true : false,
+                                      date: bloc.startDate,
+                                      timeFrom: bloc.startTime,
+                                      timeTo: bloc.endTime,
+                                      district: locationController.text,
+                                      supervisorId: locator.currentUser.id!,
+                                      id: int.parse(busNumberController.text),                                      
+                                      driverId:  "e5e8213b-fe05-4e7e-a19f-3ff4e2739776"
+                                    ),
+                                    driver: Driver(
+                                      id: "e5e8213b-fe05-4e7e-a19f-3ff4e2739776", 
+                                      supervisorId: locator.currentUser.id!,
+                                      hasBus: false,
+                                      noTrips: 2,
+                                    )
+                                    ));
                                     //! add new trip to trip table -- bloc --
                                     context.pop();
                                     context.pop();

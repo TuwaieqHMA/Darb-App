@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -118,8 +118,8 @@ class EditBus extends StatelessWidget {
                                             );
                                           }).toList(),
                                           onChanged: (value) {
-                                            bloc.add(SelectDriverEvent(
-                                                value.toString()));
+                                            // bloc.add(SelectDriverEvent(
+                                            //     value.toString()));
                                           },
                                         );
                                       }
@@ -146,8 +146,8 @@ class EditBus extends StatelessWidget {
                                           );
                                         }).toList(),
                                         onChanged: (value) {
-                                          bloc.add(SelectDriverEvent(
-                                              value.toString()));
+                                          // bloc.add(SelectDriverEvent(
+                                          //     value.toString()));
                                         },
                                       );
                                     },
@@ -159,6 +159,7 @@ class EditBus extends StatelessWidget {
                             HeaderTextField(
                               controller: busNumberController,
                               headerText: "رقم الباص ",
+                              isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                               isReadOnly: isView ? true : false,
@@ -166,7 +167,8 @@ class EditBus extends StatelessWidget {
                             height16,
                             HeaderTextField(
                               controller: seatsNumberController,
-                              headerText: "عدد المقاعد",
+                              headerText: "عدد المقاعد",                              
+                              isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                               isReadOnly: isView ? true : false,
@@ -175,6 +177,7 @@ class EditBus extends StatelessWidget {
                             HeaderTextField(
                               controller: busPlateController,
                               headerText: "لوحة الباص",
+                              isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                               isReadOnly: isView ? true : false,
