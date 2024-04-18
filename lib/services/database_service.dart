@@ -4,6 +4,7 @@ import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/models/student_model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DBService {
@@ -161,5 +162,13 @@ class DBService {
   }
   Future<void> updateUserInfo(String name, String phone) async {
     await supabase.from("User").update({'name': name, 'phone': phone}).eq('id', await getCurrentUserId());
+  }
+  //---------------------------Student Actions---------------------------
+  Future<Student> getStudentInfo() async {
+    return Student.fromJson(await supabase.from("Student").select('latitude, longitude').eq('id', await getCurrentUserId()).single());
+  }
+
+  Future<void> updateUserLocation(LatLng coordinates) async {
+    await supabase.from("Student").update({'latitude': coordinates.latitude, 'longitude': coordinates.longitude}).eq('id', await getCurrentUserId());
   }
 }
