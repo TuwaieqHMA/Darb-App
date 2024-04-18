@@ -33,6 +33,7 @@ dependencies:
   open_filex: ^4.4.0
   email_validator: '^2.1.16'
   regexed_validator: ^2.0.0+1
+  timeago: ^3.6.1
 
 dev_dependencies:
   flutter_test:

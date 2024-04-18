@@ -1,4 +1,5 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/pages/chat_view.dart';
 import 'package:darb_app/pages/profile_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -51,10 +52,11 @@ class TrackingPage extends StatelessWidget {
               color: blackColor.withOpacity(0.1),
               blurRadius: 8,
               spreadRadius: 4,
-           
             ),
           ],),
-          child: TextButton(onPressed: (){}, child:const Text('التحدث مع السائق',style: TextStyle(
+          child: TextButton(onPressed: (){
+            context.push(ChatView(), true);
+          }, child:const Text('التحدث مع السائق',style: TextStyle(
                       color: Color(0xff928785),
                       decoration: TextDecoration.underline,
                     ),),)

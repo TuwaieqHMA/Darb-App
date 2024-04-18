@@ -1,5 +1,6 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/profile_page.dart';
+import 'package:darb_app/pages/tracking_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -67,7 +68,9 @@ class StudentHome extends StatelessWidget {
               height32,
               HomeButton(
                 text: " تتبع الباص   ",
-                onPressed: () {},
+                onPressed: () {
+                  context.push(const TrackingPage(),true);
+                },
                 textColor: whiteColor,
                 fontSize: 24,
               ),
