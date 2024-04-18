@@ -18,7 +18,8 @@ class HomeData {
 
   final List<DarbUser> drivers = [];
   final List<String> driverHasBus = [];
-  late List<DarbUser> driverHasBusList = []; 
+  late List<DarbUser> driverHasBusList = [];
+  late List<Driver> driverHasTrip = [];
   final List<DarbUser> students = [];
   final List<Bus> buses = [];
   final List<Trip> trips = [
