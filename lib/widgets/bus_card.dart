@@ -90,6 +90,8 @@ class BusCard extends StatelessWidget {
               onViewClick: () {
                 context.push(
                     EditBus(
+                      bus: bus ,
+                      // driverName: ,
                       isView: true,
                     ),
                     true);
@@ -97,6 +99,8 @@ class BusCard extends StatelessWidget {
               onEditClick: () {
                 context.push(
                     EditBus(
+                      bus: bus,
+                      // driverName: ,
                       isView: false,
                     ),
                     true);

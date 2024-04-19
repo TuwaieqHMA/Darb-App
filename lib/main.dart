@@ -77,17 +77,17 @@ class _MainAppState extends State<MainApp> {
         debugShowCheckedModeBanner: false,
         supportedLocales: localization.supportedLocales,
         localizationsDelegates: localization.localizationsDelegates,
-        // locale: localization.currentLocale,
-        useInheritedMediaQuery: true,
-        locale: DevicePreview.locale(context),
-        builder: DevicePreview.appBuilder,
+        locale: localization.currentLocale,
+        // useInheritedMediaQuery: true,
+        // locale: DevicePreview.locale(context),
+        // builder: DevicePreview.appBuilder,
         
         // theme: ThemeData.light(),
         // darkTheme: ThemeData.dark(),
       home: 
       // const SupervisorNavigationPage(),
-      //  const RedirectWidget(),
-      const AddBus(),
+       const RedirectWidget(),
+      // const AddBus(),
       // const StartupPage(), // MapPage
           ),
     );

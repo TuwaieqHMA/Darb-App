@@ -21,7 +21,7 @@ class SupervisorActionsBloc
   final locator = GetIt.I.get<HomeData>();
   
   int seletctedType = 1;
-  DateTime startDate = DateTime.now();
+  // DateTime startDate = DateTime.now();
   DateTime startTripDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
@@ -29,10 +29,8 @@ class SupervisorActionsBloc
   TimeOfDay endTime = TimeOfDay.now();
 
   List dropdownAddBusValue = [];
+  List dropdownAddBusNumberValue = [];
   List dropdownAddTripValue = [];
-  // List driverNoTrip = [];
-  // List driverHasNoBus = [];
-    List items = ["Ali", "Ahmad", "salem", "Anas", "hasan", "faisal"];
 
   SupervisorActionsBloc() : super(SupervisorActionsInitial()) {
     on<SupervisorActionsEvent>((event, emit) {
@@ -48,11 +46,13 @@ class SupervisorActionsBloc
     on<DeleteBus>(deleteBus);
     on<DeleteStudent>(deleteStudent);
     on<UpdateStudent>(updateStudent);
+    on<UpdateDriver>(updateDriver);
     on<DeleteDriver>(deleteDriver);
     on<GetAllStudent>(getAllStudent);
     on<GetAllDriverHasNotBus>(getAllDriverHasNotBus);
     on<SelectStartAndExpireTimeEvent>(selectStartTimeOfTrip);
     on<SelectBusDriverEvent>(selectBusDriver);
+    // on<SelectBusNumberEvent>(selectBusNumber);
     on<SelectTripDriverEvent>(selectTripDriver);
     on<RefrshDriverEvent>(refreshDriver);
     on<AddBusEvent>(addBus);
@@ -67,14 +67,14 @@ class SupervisorActionsBloc
 
   FutureOr<void> selectDay( SelectDayEvent event, Emitter<SupervisorActionsState> emit) async {
     await selectDate(event.context, event.num);
-    emit(SelectDayState(startDate, endDate, startTripDate));
-    emit(SelectDriverState(dropdownAddBusValue));
+    emit(SelectDayState(locator.startDate!, endDate, startTripDate));
+    // emit(SelectDriverState(dropdownAddBusValue));
     
     // emit(SelectDriverState(dropdownAddTripValue));
   }
 
   FutureOr<void> selectStartTimeOfTrip(SelectStartAndExpireTimeEvent event,
-      Emitter<SupervisorActionsState> emit) async {
+    Emitter<SupervisorActionsState> emit) async {
     await selectTime(event.context, event.num);
     emit(SelectStartAndExpireTimeState(startTime, endTime));
   }
@@ -100,13 +100,13 @@ class SupervisorActionsBloc
           child: child!,
         );
       },
-      initialDate: startDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2036, 1),
     );
     if (picked != null) {
       if (num == 1) {
-        startDate = picked;
+        locator.startDate = picked;
       } else if( num == 3) {
         startTripDate = picked;
       }
@@ -148,14 +148,21 @@ class SupervisorActionsBloc
     dropdownAddBusValue.clear();
     dropdownAddBusValue.add(event.driverId); 
     emit(SelectDriverState(dropdownAddBusValue));
-  
   }
+
+  // FutureOr<void> selectBusNumber( SelectBusNumberEvent event, Emitter<SupervisorActionsState> emit) {
+  //   dropdownAddBusNumberValue.clear();
+  //   dropdownAddBusNumberValue.add(event.busId); 
+  //   print(dropdownAddBusNumberValue.length);
+  //   print("dropdownAddBusNumberValue.length");
+  //   emit(SelectBusNumberState(dropdownAddBusNumberValue));
+  // }
+  
   // select one driver to add trip 
   FutureOr<void> selectTripDriver( SelectTripDriverEvent event, Emitter<SupervisorActionsState> emit) {
     dropdownAddTripValue.clear();
     dropdownAddTripValue.add(event.driverId); 
-    emit(SelectDriverState(dropdownAddBusValue));
-  
+    emit(SelectDriverState(dropdownAddTripValue));  
   }
 
   FutureOr<void> addBus(AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
@@ -170,13 +177,15 @@ class SupervisorActionsBloc
 
   FutureOr<void> refreshDriver(RefrshDriverEvent event, Emitter<SupervisorActionsState> emit) {
     dropdownAddBusValue = [];
+    dropdownAddBusNumberValue = [];
     dropdownAddTripValue = [];
-    startDate = DateTime.now();
+    // startDate = DateTime.now();
     startTripDate = DateTime.now();
     endDate = DateTime.now();
   }
 
   FutureOr<void> getAllTrip(GetAllTrip event, Emitter<SupervisorActionsState> emit) async {
+    emit(LoadingState());
     final user = await DBService().getAllTrip();
     emit(GetAllTripState());
   }
@@ -197,6 +206,7 @@ class SupervisorActionsBloc
   FutureOr<void> addTrip(AddTripEvent event, Emitter<SupervisorActionsState> emit) async {
     emit(LoadingState());
     try{
+      print(event.trip.date);
       final newTrip = await DBService().addTrip(event.trip , event.driver);
       emit(SuccessfulState("تمت إضافة الرحلة بنجاح")); 
 
@@ -209,11 +219,13 @@ class SupervisorActionsBloc
   FutureOr<void> getAllDriverHasNotBus(GetAllDriverHasNotBus event, Emitter<SupervisorActionsState> emit) async {
     final driver = await DBService().getDriversWithoutBus();
     //getDriverData();
-    emit(SuccessfulState("msg driver"));
+    // emit(SuccessfulState("msg driver"));
   }
 
   FutureOr<void> getAllDriver(GetAllDriver event, Emitter<SupervisorActionsState> emit) async {
+    emit(LoadingState());
     await DBService().getAllDriver();
+    await DBService().getDriversHasTrip();
     emit(GetUsersState());
   }
 
@@ -239,11 +251,19 @@ class SupervisorActionsBloc
     await DBService().updateStudent(event.id, event.name, event.phone);
     emit(SuccessfulState("تم تعديل بيانات الطالب بنجاح"));
     emit(GetUsersState());
-
   }
 
   FutureOr<void> getAllTripDriver(GetAllTripDriver event, Emitter<SupervisorActionsState> emit) async {
     await DBService().getDriversWithoutTrip();
+    // emit(GetAllTripDriverState(locator.driverHasTrip));
     // emit(SuccessfulState("تم"));
   }
+
+  FutureOr<void> updateDriver(UpdateDriver event, Emitter<SupervisorActionsState> emit) async {
+    await DBService().updateDriver(event.id, event.name, event.phone);
+    emit(SuccessfulState("تم تعديل بيانات السائق بنجاح"));
+    emit(GetUsersState());
+  }
+
+
 }
