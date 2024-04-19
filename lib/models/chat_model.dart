@@ -1,13 +1,15 @@
+
+
 class Chat {
-  Chat({
+  Chat(  
     this.id,
     this.createdAt,
-    required this.driverId,
-    required this.studentId,
-  });
+     this.driverId,
+     this.studentId,
+  );
   
   final int? id;
-  final DateTime? createdAt;
+  final DateTime createdAt;
   late final String driverId;
   late final String studentId;
   

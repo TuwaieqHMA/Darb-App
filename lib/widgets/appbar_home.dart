@@ -47,7 +47,7 @@ Function()? onTap;
                    tital,
                       style: const TextStyle(
                           color: whiteColor,
-                          fontSize: 36,
+                          fontSize: 26,
                           fontFamily: inukFont),
                     ),
                   ],

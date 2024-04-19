@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/login_page.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -84,11 +84,13 @@ class CreateAccountStudentPage extends StatelessWidget {
                   children: [
                     HeaderTextField(
                       controller: nameController,
+                      hintText: "الاسم الثلاثي",
                       headerText: "الاسم",
                     ),
                     height8,
                     HeaderTextField(
                       controller: phoneController,
+                      hintText: "بداية ب 05",
                       headerText: "رقم الجوال",
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly
@@ -99,17 +101,21 @@ class CreateAccountStudentPage extends StatelessWidget {
                     height8,
                     HeaderTextField(
                       controller: emailController,
+                      hintText: "someone@email.com",
+                      hintTextDircetion: TextDirection.ltr,
                       headerText: "البريد الالكتروني",
                       textDirection: TextDirection.ltr,
                     ),
                     height8,
                     HeaderTextField(
                         controller: passwordController,
+                        hintText: "ادخل كلمة المرور الخاصة بك",
                         headerText: "كلمة المرور",
                         isObscured: true),
                     height8,
                     HeaderTextField(
                         controller: rePasswordController,
+                        hintText: "ادخل كلمة المرور مرة اخرى",
                         headerText: "تأكيد كلمة المرور",
                         isObscured: true),
                     height32,
@@ -143,3 +149,8 @@ class CreateAccountStudentPage extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

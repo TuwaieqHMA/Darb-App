@@ -1,4 +1,5 @@
-import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -12,6 +13,8 @@ import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AddBus extends StatefulWidget {
   const AddBus({super.key});
@@ -32,6 +35,9 @@ class _AddBusState extends State<AddBus> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
+    bloc.add(GetAllDriverHasNotBus());
+    bloc.add(GetAllBus());
+    final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
       backgroundColor: offWhiteColor,
@@ -87,7 +93,12 @@ class _AddBusState extends State<AddBus> {
                               child: BlocBuilder<SupervisorActionsBloc,
                                   SupervisorActionsState>(
                                 builder: (context, state) {
-                                  if (state is SelectDriverState) {
+                                  if (state is SelectDriverState 
+                                  || state is SuccessfulState
+                                  ) {
+                                    print("locator.driverHasBusList");
+                                    print(locator.driverHasBusList);
+                                    print(locator.driverHasBusList.length);
                                     return DropdownButton(
                                       hint: const Text("اختر سائق"),
                                       isExpanded: true,
@@ -96,59 +107,61 @@ class _AddBusState extends State<AddBus> {
                                       style: const TextStyle(
                                           fontSize: 16, fontFamily: inukFont),
                                       borderRadius: BorderRadius.circular(15),
-                                      value: bloc.dropdownValue.isNotEmpty  ? bloc.dropdownValue : null, //bloc.dropdownValue, //state.value, 
+                                      value: bloc.dropdownAddBusValue.isNotEmpty  ? bloc.dropdownAddBusValue[0] : null, //bloc.dropdownValue, //state.value, 
                                       icon: const Icon(
                                         Icons.keyboard_arrow_down_outlined,
                                         size: 30,
                                         color: signatureBlueColor,
                                       ),
-                                      items: bloc.items.map((e) { //! bloc.drivers
+                                      items: locator.driverHasBusList.map((e) { //! bloc.drivers
                                         return DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e),
+                                          value: e.id,
+                                          child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
+                                          //(e.name),
                                         );
                                       }).toList(),
                                       onChanged: (value) {
+                                        print("value ====  $value");
                                         bloc.add(
-                                          SelectDriverEvent(
-                                            value.toString(),
-                                          ),
+                                          SelectBusDriverEvent(value.toString(),),
                                         );
                                       },
                                     );
                                   }
+
                                   return DropdownButton(
-                                    hint: const Text("اختر سائق"),
+                                    hint: Text( (locator.driverHasBusList.isNotEmpty) ? "اختر سائق" : "جميع السائقين لديهم باص"),
                                     isExpanded: true,
                                     menuMaxHeight: 200,
                                     underline: const Text(""),
                                     style: const TextStyle(
                                         fontSize: 16, fontFamily: inukFont),
                                     borderRadius: BorderRadius.circular(15),
-                                    value: bloc.dropdownValue.isNotEmpty  ? bloc.dropdownValue : null,
+                                    value: bloc.dropdownAddBusValue.isNotEmpty  ? bloc.dropdownAddBusValue : null,
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       size: 30,
                                       color: signatureBlueColor,
                                     ),
-                                    items: bloc.items.map((e) {
+                                    items: locator.driverHasBusList.map((e) {
                                       return DropdownMenuItem(
-                                        value: e,
-                                        child: Text(e),
+                                        value: e ,
+                                        child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
                                       );
                                     }).toList(),
                                     onChanged: (value) {
-                                      bloc.add(
-                                          SelectDriverEvent(value.toString()));
+                                      bloc.add(SelectBusDriverEvent(value.toString()));
                                     },
                                   );
                                 },
                               ),
                             ),
+                           
                             height16,
                             HeaderTextField(
                               controller: busNumberController,
                               headerText: "رقم الباص ",
+                              hintText: "أدخل رقم الباص",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                             ),
@@ -156,6 +169,7 @@ class _AddBusState extends State<AddBus> {
                             HeaderTextField(
                               controller: seatsNumberController,
                               headerText: "عدد المقاعد",
+                              hintText: "أدخل عدد مقاعد الباص",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                             ),
@@ -163,6 +177,7 @@ class _AddBusState extends State<AddBus> {
                             HeaderTextField(
                               controller: busPlateController,
                               headerText: "لوحة الباص",
+                              hintText: "أدخل لوحة الباص مثل ( هـ م هـ - 2024 ) ",
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                             ),
@@ -198,9 +213,7 @@ class _AddBusState extends State<AddBus> {
                                             size: 23,
                                           ),
                                           width8,
-                                          Text(
-                                            "${bloc.startDate.toLocal()}"
-                                                .split(' ')[0],
+                                          Text( "${locator.startDate!.toLocal()}".split(' ')[0],
                                             style: const TextStyle(
                                                 fontFamily: inukFont),
                                           ),
@@ -215,9 +228,8 @@ class _AddBusState extends State<AddBus> {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(
-                                          "${bloc.startDate.toLocal()}"
-                                              .split(' ')[0],
+                                        Text(locator.startDate!.day == DateTime.now().day ? "أدخل تاريخ اصدار الرخصة" : 
+                                            "${locator.startDate!.toLocal()}".split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
                                         ),
@@ -259,8 +271,7 @@ class _AddBusState extends State<AddBus> {
                                           ),
                                           width8,
                                           Text(
-                                            "${bloc.endDate.toLocal()}"
-                                                .split(' ')[0],
+                                            "${bloc.endDate.toLocal()}".split(' ')[0],
                                             style: const TextStyle(
                                                 fontFamily: inukFont),
                                           ),
@@ -275,9 +286,8 @@ class _AddBusState extends State<AddBus> {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(
-                                          "${bloc.endDate.toLocal()}"
-                                              .split(' ')[0],
+                                        Text(locator.startDate!.day == DateTime.now().day ? "أدخل تاريخ انتهاء الرخصة" : 
+                                          "${bloc.endDate.toLocal()}".split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
                                         ),
@@ -299,41 +309,55 @@ class _AddBusState extends State<AddBus> {
                                 fontSize: 20,
                                 onPressed: () {
                                   
-                                  bloc.add(RefrshDriverEvent());
-                                  if (busNumberController.text.isNotEmpty &&
+                                  if (
+                                    // busNumberController.text.isNotEmpty &&
                                       seatsNumberController.text.isNotEmpty &&
                                       busPlateController.text.isNotEmpty &&
-                                      seatsNumberController.text.isNotEmpty &&
-                                      dateIssusController.text.isNotEmpty &&
-                                      dateExpireController.text.isNotEmpty) {
+                                      bloc.dropdownAddBusValue.isNotEmpty
+                                      // &&
+                                      // seatsNumberController.text.isNotEmpty &&
+                                      // dateIssusController.text.isNotEmpty &&
+                                      // dateExpireController.text.isNotEmpty
+                                      ) {
                                     showDialog(
                                       context: context,
                                       builder: (context) => DialogBox(
                                         text: "هل أنت متأكد من إضافة باص ؟",
                                         onAcceptClick: () {
                                           bloc.add(AddBusEvent( bus: Bus(
-                                            supervisorId: "",
+                                            supervisorId: locator.currentUser.id!,
                                             seatsNumber: int.parse(seatsNumberController.text),
                                             busPlate: busPlateController.text,
-                                            dateIssue: bloc.startDate,
+                                            dateIssue: locator.startDate!,
                                             dateExpire: bloc.endDate,
-                                            driverId: bloc.dropdownValue,
-                                            )));
+                                            driverId: bloc.dropdownAddBusValue[0],
+                                            // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee", // bloc.dropdownValue,
+                                            ),
+                                            id: bloc.dropdownAddBusValue[0], 
+                                            //"8e2ee3f9-5d45-4a16-b7ed-710e05613cee", 
+                                            ));
                                           //! add new bus to bus table -- bloc --
                                           context.pop();
                                           context.pop();
                                           context.showSuccessSnackBar(
                                               "تم إضافة باص بنجاح");
+                                          
+                                           bloc.add(RefrshDriverEvent());
+                                          
                                         },
                                         onRefuseClick: () {
                                           context.pop();
                                         },
                                       ),
-                                    );
+                                    );                                 
+                                 
                                   } else {
                                     context.showErrorSnackBar(
                                         "الرجاء ملئ جميع الجقول");
                                   }
+
+                                  // bloc.add(RefrshDriverEvent());
+                                
                                 },
                               ),
                             ),

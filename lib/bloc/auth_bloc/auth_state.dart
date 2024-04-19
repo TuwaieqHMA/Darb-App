@@ -62,3 +62,17 @@ final class AuthErrorState extends AuthState {
 
   AuthErrorState({required this.msg});
 }
+
+final class ViewProfileState extends AuthState {
+
+}
+
+final class EditingProfileState extends AuthState {
+  
+}
+
+final class ChangedImageState extends AuthState {
+  final String? msg;
+
+  ChangedImageState({this.msg});
+}

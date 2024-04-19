@@ -1,4 +1,5 @@
 import 'package:darb_app/utils/colors.dart';
+import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 
 extension Screen on BuildContext {
@@ -60,7 +61,7 @@ extension Screen on BuildContext {
   ) {
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      margin: EdgeInsets.only(left: 16, right: 16, bottom: getHeight() - 200),
+      margin: EdgeInsets.only(left: 16, right: 16, bottom: getHeight() - 100),
       behavior: SnackBarBehavior.floating,
       content: Text(
         msg,
@@ -72,4 +73,27 @@ extension Screen on BuildContext {
     ));
   }
 
+  pushAndRemove(Widget screen) {
+    Navigator.pushAndRemoveUntil(this,
+        MaterialPageRoute(builder: (context) => screen), (route) => false);
+  }
+
+  showSnackBar(String msg,
+      {Color color = const Color.fromARGB(255, 51, 51, 51)}) {
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+
+  /// ----------- Snack Bar extensions ---------
+  // showErrorSnackBar(String message) {
+  //   showSnackBar(
+  //     message,
+  //     color: Colors.red,
+  //   );
+  // }
 }

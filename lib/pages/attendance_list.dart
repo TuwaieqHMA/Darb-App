@@ -5,8 +5,8 @@ import 'package:darb_app/widgets/chat_appbar.dart';
 import 'package:darb_app/widgets/grid_widget.dart';
 import 'package:flutter/material.dart';
 
-class AttendanceList extends StatelessWidget {
-  const AttendanceList({super.key});
+class AttendanceListPage extends StatelessWidget {
+  const AttendanceListPage({super.key});
 
   final int index = 1;
 

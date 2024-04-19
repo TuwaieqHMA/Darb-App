@@ -1,5 +1,8 @@
-import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/bus_model.dart';
+import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -11,11 +14,14 @@ import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class EditBus extends StatelessWidget {
-  EditBus({super.key, required this.isView});
+  EditBus({super.key, required this.isView, required this.bus,});
   final isView;
+  Bus bus;
+  // DarbUser driverName;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController busNumberController = TextEditingController();
@@ -30,6 +36,9 @@ class EditBus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
+    bloc.add(GetAllDriverHasNotBus());
+    final locator = GetIt.I.get<HomeData>();
+
     return Scaffold(
       backgroundColor: offWhiteColor,
       body: SafeArea(
@@ -70,6 +79,7 @@ class EditBus extends StatelessWidget {
                             isView ?  HeaderTextField(
                               controller: nameController,
                               headerText: "اسم السائق",
+                              isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                               isReadOnly: isView ? true : false,
@@ -111,21 +121,19 @@ class EditBus extends StatelessWidget {
                                             size: 30,
                                             color: signatureBlueColor,
                                           ),
-                                          items: bloc.items.map((e) {
+                                          items: locator.driverHasBusList.map((e) {
                                             return DropdownMenuItem(
-                                              value: e,
-                                              child: Text(e),
+                                              value: e.id,
+                                              child: Text(locator.driverHasBusList.isNotEmpty ? e.name : "جميع السائقين لديهم باص"),
                                             );
                                           }).toList(),
                                           onChanged: (value) {
-                                            bloc.add(SelectDriverEvent(
-                                                value.toString()));
+                                            bloc.add(SelectBusDriverEvent( value.toString()));
                                           },
                                         );
                                       }
                                       return DropdownButton(
-                                        disabledHint: const Text("hhh"),
-                                        hint: const Text("اختر سائق"),
+                                        hint: Text( (locator.driverHasBusList.isNotEmpty) ? "اختر سائق" : "جميع السائقين لديهم باص"),
                                         isExpanded: true,
                                         menuMaxHeight: 200,
                                         underline: const Text(""),
@@ -133,32 +141,35 @@ class EditBus extends StatelessWidget {
                                             fontSize: 16, fontFamily: inukFont),
                                         iconDisabledColor: signatureTealColor,
                                         borderRadius: BorderRadius.circular(15),
-                                        value: null,
+                                        value: bloc.dropdownAddBusValue.isNotEmpty ? bloc.dropdownAddBusValue : null,
+                                        // value:,
                                         icon: const Icon(
                                           Icons.keyboard_arrow_down_outlined,
                                           size: 30,
                                           color: signatureBlueColor,
                                         ),
-                                        items: bloc.items.map((e) {
+                                        items: locator.driverHasBusList.map((e) {
                                           return DropdownMenuItem(
                                             value: e,
-                                            child: Text(e),
+                                            child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
                                           );
                                         }).toList(),
                                         onChanged: (value) {
-                                          bloc.add(SelectDriverEvent(
-                                              value.toString()));
+                                          bloc.add(SelectBusDriverEvent(value.toString()));
                                         },
                                       );
                                     },
                                   ),
                                 ),
+                              
                               ],
                             ),
                             height16,
                             HeaderTextField(
                               controller: busNumberController,
                               headerText: "رقم الباص ",
+                              hintText: bus.id.toString(),
+                              isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                               isReadOnly: isView ? true : false,
@@ -167,6 +178,8 @@ class EditBus extends StatelessWidget {
                             HeaderTextField(
                               controller: seatsNumberController,
                               headerText: "عدد المقاعد",
+                              hintText: bus.seatsNumber.toString() ,                              
+                              isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                               isReadOnly: isView ? true : false,
@@ -175,6 +188,8 @@ class EditBus extends StatelessWidget {
                             HeaderTextField(
                               controller: busPlateController,
                               headerText: "لوحة الباص",
+                              hintText: bus.busPlate,
+                              isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
                               isReadOnly: isView ? true : false,
@@ -196,7 +211,7 @@ class EditBus extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: whiteColor,
                                     border: Border.all(
-                                        color: signatureTealColor, width: 3),
+                                        color: isView ? fadedBlueColor : signatureTealColor, width: 3),
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
@@ -213,7 +228,7 @@ class EditBus extends StatelessWidget {
                                           ),
                                           width8,
                                           Text(
-                                            "${bloc.startDate.toLocal()}"
+                                            "${locator.startDate!.toLocal()}"
                                                 .split(' ')[0],
                                             style: const TextStyle(
                                                 fontFamily: inukFont),
@@ -229,8 +244,9 @@ class EditBus extends StatelessWidget {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(
-                                          "${bloc.startDate.toLocal()}"
+                                        Text(  isView ? bus.dateIssue.toLocal().toString().split(' ')[0] : 
+
+                                          "${locator.startDate!.toLocal()}"
                                               .split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
@@ -258,7 +274,7 @@ class EditBus extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: whiteColor,
                                     border: Border.all(
-                                        color: signatureTealColor, width: 3),
+                                        color: isView ? fadedBlueColor : signatureTealColor, width: 3),
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
@@ -291,7 +307,8 @@ class EditBus extends StatelessWidget {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(
+                                        Text( isView ? bus.dateIssue.toLocal().toString().split(' ')[0] : 
+
                                           "${bloc.endDate.toLocal()}"
                                               .split(' ')[0],
                                           style: const TextStyle(

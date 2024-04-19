@@ -1,33 +1,37 @@
 class Message {
   Message({
     this.id,
-    this.createdAt,
+    required this.createdAt,
     required this.message,
     required this.userId,
     required this.chatId,
+    required this.isMine,
   });
   
   late final int? id;
-  late final DateTime? createdAt;
+  DateTime createdAt;
   late final String message;
   late final String userId;
   late final int chatId;
+  bool isMine;
   
-  Message.fromJson(Map<String, dynamic> json)
+  Message.fromJson({required Map<String, dynamic> json,
+  required String myUserID,})
       : id = json['id'],
         createdAt = DateTime.parse(json['created_at']),
         message = json['message'],
         userId = json['user_id'],
-        chatId = json['chat_id'];
+        chatId = json['chat_id'],
+         isMine = myUserID == json['user_id'];
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
+    final data = <String, dynamic>{};
     // _data['id'] = id; // No Need to send the id, since it's auto-generated
     // _data['created_at'] = createdAt.toIso8601String(); // No need to send the creation time since it's auto generated
-    _data['message'] = message;
-    _data['user_id'] = userId;
-    _data['chat_id'] = chatId;
-    return _data;
+    data['message'] = message;
+    data['user_id'] = userId;
+    data['chat_id'] = chatId;
+    return data;
   }
 }
 

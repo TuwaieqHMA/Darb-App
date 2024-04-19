@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/create_account_type_page.dart';
 import 'package:darb_app/pages/verify_email_page.dart';
@@ -33,7 +33,7 @@ class LoginPage extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: context.getWidth(),
-                    height: context.getHeight() * .68,
+                    height: context.getHeight() * .7,
                     padding: const EdgeInsets.only(
                         left: 16, right: 16, top: 46, bottom: 16),
                     decoration: const BoxDecoration(
@@ -48,8 +48,6 @@ class LoginPage extends StatelessWidget {
                         } else if (state is LoggedInState){
                           context.showSuccessSnackBar(state.msg);
                           context.push(const RedirectWidget(), false);
-                        }else if (state is SignedOutState){
-                          context.showErrorSnackBar(state.msg);
                         }
                       },
                       builder: (context, state) {
@@ -65,12 +63,15 @@ class LoginPage extends StatelessWidget {
                           children: [
                             HeaderTextField(
                               controller: emailController,
+                              hintText: "someone@email.com",
+                              hintTextDircetion: TextDirection.ltr,
                               headerText: "البريد الالكتروني",
                               textDirection: TextDirection.ltr,
                             ),
                             height8,
                             HeaderTextField(
                               controller: passwordController,
+                              hintText: "ادخل كلمة المرور الخاصة بك",
                               headerText: "كلمة المرور",
                               isObscured: true,
                             ),

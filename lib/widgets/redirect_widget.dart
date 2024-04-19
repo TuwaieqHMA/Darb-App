@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class RedirectWidget extends StatelessWidget {
                   return Container(
                     width: context.getWidth(),
                     height: context.getHeight(),
-                    color: whiteColor,
+                    color: offWhiteColor,
                     child: const Center(
                       child: CircularProgressIndicator(color: signatureYellowColor,),
                     ),
@@ -36,7 +36,7 @@ class RedirectWidget extends StatelessWidget {
                   return Container(
                     width: context.getWidth(),
                     height: context.getHeight(),
-                    color: whiteColor,
+                    color: offWhiteColor,
                   );
                 }
               },

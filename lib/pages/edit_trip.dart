@@ -1,4 +1,5 @@
-import 'package:darb_app/bloc/bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -11,6 +12,7 @@ import 'package:darb_app/widgets/label_of_textfield.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class EditTrip extends StatelessWidget {
@@ -28,6 +30,8 @@ class EditTrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
+
+    final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
       backgroundColor: offWhiteColor,
@@ -198,77 +202,158 @@ class EditTrip extends StatelessWidget {
                                 textFieldLabel(text: "اسم السائق "),
                         height16,
                         Container(
-                          padding: const EdgeInsets.only(right: 16),
-                          alignment: Alignment.centerRight,
-                          width: context.getWidth() * 0.9,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            border:
-                                Border.all(color: signatureTealColor, width: 3),
-                            borderRadius: BorderRadius.circular(
-                              10,
-                            ),
-                          ),
-                          child: BlocBuilder<SupervisorActionsBloc,
-                              SupervisorActionsState>(
-                            builder: (context, state) {
-                              if (state is SelectDriverState) {
-                                return DropdownButton(
-                                  isExpanded: true,
-                                  underline: const Text(""),
-                                  menuMaxHeight: 200,
-                                  style: const TextStyle(
-                                      fontSize: 16, fontFamily: inukFont),
-                                  iconDisabledColor: signatureTealColor,
-                                  borderRadius: BorderRadius.circular(15),
-                                  value: state.value, // bloc.dropdownValue,
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down_outlined,
-                                    size: 30,
-                                    color: signatureBlueColor,
-                                  ),
-                                  items: bloc.items.map((e) {
-                                    return DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    bloc.add(
-                                        SelectDriverEvent(value.toString()));
-                                  },
-                                );
-                              }
-                              return DropdownButton(
-                                disabledHint: const Text("hhh"),
-                                hint: const Text("اختر سائق"),
-                                isExpanded: true,
-                                menuMaxHeight: 200,
-                                underline: const Text(""),
-                                style: const TextStyle(
-                                    fontSize: 16, fontFamily: inukFont),
-                                iconDisabledColor: signatureTealColor,
-                                borderRadius: BorderRadius.circular(15),
-                                value: null,
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down_outlined,
-                                  size: 30,
-                                  color: signatureBlueColor,
+                              padding: const EdgeInsets.only(right: 16),
+                              alignment: Alignment.centerRight,
+                              width: context.getWidth() * 0.9,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                border: Border.all(
+                                    color: signatureTealColor, width: 3),
+                                borderRadius: BorderRadius.circular(
+                                  10,
                                 ),
-                                items: bloc.items.map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
+                              ),
+                              child: BlocBuilder<SupervisorActionsBloc,
+                                  SupervisorActionsState>(
+                                builder: (context, state) {
+                                  if (state is SelectDriverState 
+                                  || state is SuccessfulState
+                                  ) {
+                                    print("locator.driverHasBusList");
+                                    print(locator.driverHasBusList);
+                                    print(locator.driverHasBusList.length);
+                                    return DropdownButton(
+                                      hint: const Text("اختر سائق"),
+                                      isExpanded: true,
+                                      underline: const Text(""),
+                                      menuMaxHeight: 200,
+                                      style: const TextStyle(
+                                          fontSize: 16, fontFamily: inukFont),
+                                      borderRadius: BorderRadius.circular(15),
+                                      value: bloc.dropdownAddTripValue.isNotEmpty  ? bloc.dropdownAddTripValue[0] : null, //bloc.dropdownValue, //state.value, 
+                                      icon: const Icon(
+                                        Icons.keyboard_arrow_down_outlined,
+                                        size: 30,
+                                        color: signatureBlueColor,
+                                      ),
+                                      items: locator.driverHasBusList.map((e) { //! bloc.drivers
+                                        return DropdownMenuItem(
+                                          value: e.id,
+                                          child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
+                                          //(e.name),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        print("value ====  $value");
+                                        bloc.add(
+                                          SelectBusDriverEvent(value.toString(),),
+                                        );
+                                      },
+                                    );
+                                  }
+
+                                  return DropdownButton(
+                                    hint: Text( (locator.driverHasBusList.isNotEmpty) ? "اختر سائق" : "جميع السائقين لديهم باص"),
+                                    isExpanded: true,
+                                    menuMaxHeight: 200,
+                                    underline: const Text(""),
+                                    style: const TextStyle(
+                                        fontSize: 16, fontFamily: inukFont),
+                                    borderRadius: BorderRadius.circular(15),
+                                    value: bloc.dropdownAddTripValue.isNotEmpty  ? bloc.dropdownAddTripValue : null,
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down_outlined,
+                                      size: 30,
+                                      color: signatureBlueColor,
+                                    ),
+                                    items: locator.driverHasBusList.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e ,
+                                        child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      bloc.add(SelectBusDriverEvent(value.toString()));
+                                    },
                                   );
-                                }).toList(),
-                                onChanged: (value) {
-                                  bloc.add(SelectDriverEvent(value.toString()));
                                 },
-                              );
-                            },
-                          ),
-                        ),
+                              ),
+                            ),
+                           
+                        // Container(
+                        //   padding: const EdgeInsets.only(right: 16),
+                        //   alignment: Alignment.centerRight,
+                        //   width: context.getWidth() * 0.9,
+                        //   height: 55,
+                        //   decoration: BoxDecoration(
+                        //     color: whiteColor,
+                        //     border:
+                        //         Border.all(color: signatureTealColor, width: 3),
+                        //     borderRadius: BorderRadius.circular(
+                        //       10,
+                        //     ),
+                        //   ),
+                        //   child: BlocBuilder<SupervisorActionsBloc,
+                        //       SupervisorActionsState>(
+                        //     builder: (context, state) {
+                        //       if (state is SelectDriverState) {
+                        //         return DropdownButton(
+                        //           isExpanded: true,
+                        //           underline: const Text(""),
+                        //           menuMaxHeight: 200,
+                        //           style: const TextStyle(
+                        //               fontSize: 16, fontFamily: inukFont),
+                        //           iconDisabledColor: signatureTealColor,
+                        //           borderRadius: BorderRadius.circular(15),
+                        //           value: state.value, // bloc.dropdownValue,
+                        //           icon: const Icon(
+                        //             Icons.keyboard_arrow_down_outlined,
+                        //             size: 30,
+                        //             color: signatureBlueColor,
+                        //           ),
+                        //           items: bloc.items.map((e) {
+                        //             return DropdownMenuItem(
+                        //               value: e,
+                        //               child: Text(e),
+                        //             );
+                        //           }).toList(),
+                        //           onChanged: (value) {
+                        //             // bloc.add(
+                        //             //     SelectDriverEvent(value.toString()));
+                        //           },
+                        //         );
+                        //       }
+                        //       return DropdownButton(
+                        //         disabledHint: const Text("hhh"),
+                        //         hint: const Text("اختر سائق"),
+                        //         isExpanded: true,
+                        //         menuMaxHeight: 200,
+                        //         underline: const Text(""),
+                        //         style: const TextStyle(
+                        //             fontSize: 16, fontFamily: inukFont),
+                        //         iconDisabledColor: signatureTealColor,
+                        //         borderRadius: BorderRadius.circular(15),
+                        //         value: null,
+                        //         icon: const Icon(
+                        //           Icons.keyboard_arrow_down_outlined,
+                        //           size: 30,
+                        //           color: signatureBlueColor,
+                        //         ),
+                        //         items: bloc.items.map((e) {
+                        //           return DropdownMenuItem(
+                        //             value: e,
+                        //             child: Text(e),
+                        //           );
+                        //         }).toList(),
+                        //         onChanged: (value) {
+                        //           // bloc.add(SelectDriverEvent(value.toString()));
+                        //         },
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
+                        
                               ],
                             ),
                         height16,
@@ -314,7 +399,7 @@ class EditTrip extends StatelessWidget {
                                       ),
                                       width8,
                                       Text(
-                                        "${bloc.startDate.toLocal()}"
+                                        "${locator.startDate.toLocal()}"
                                             .split(' ')[0],
                                         style: const TextStyle(
                                             fontFamily: inukFont),
@@ -331,7 +416,7 @@ class EditTrip extends StatelessWidget {
                                     ),
                                     width8,
                                     Text(
-                                      "${bloc.startDate.toLocal()}"
+                                      "${locator.startDate.toLocal()}"
                                           .split(' ')[0],
                                       style:
                                           const TextStyle(fontFamily: inukFont),
