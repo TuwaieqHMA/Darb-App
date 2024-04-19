@@ -108,15 +108,14 @@ class EditDriver extends StatelessWidget {
                                       textColor: whiteColor,
                                       fontSize: 20,
                                       onPressed: () {
-                                        if (nameController.text.isNotEmpty &&
-                                            emailController.text.isNotEmpty &&
-                                            phoneController.text.isNotEmpty) {
+                                  
                                           showDialog(
                                               context: context,
                                               builder: (context) => DialogBox(
                                                     text:
                                                         "هل أنت متأكد من تعديل بيانات السائق ؟",
                                                     onAcceptClick: () {
+                                                      print("button pressed");
                                                       bloc.add(UpdateDriver(
                                                         id: driver.id!, 
                                                         name: nameController.text.isEmpty ? driver.name : nameController.text, 
@@ -130,7 +129,7 @@ class EditDriver extends StatelessWidget {
                                                       context.pop();
                                                     },
                                                   ));
-                                        }
+                                      
                                       },
                                     ),
                               isView ? const SizedBox.shrink() : height24,

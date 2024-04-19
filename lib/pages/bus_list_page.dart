@@ -69,7 +69,6 @@ class BusListPage extends StatelessWidget {
               print('DBService().drivers.length');
               if (locator.buses.isNotEmpty) {
                 return ListView.builder(
-                    // scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     itemCount: locator.buses.length,
                     itemBuilder: (context, index) {
@@ -80,7 +79,6 @@ class BusListPage extends StatelessWidget {
                         busPlate: locator.buses[index].busPlate, 
                         startDate: locator.buses[index].dateIssue, 
                         endDate: locator.buses[index].dateExpire,);
-
                     });
               }
               return Column(
@@ -98,10 +96,7 @@ class BusListPage extends StatelessWidget {
             }
             return const SizedBox.shrink();
           }),
-        
-          // BusCard(busId: 1, busPlate: "ك م م - 1221", startDate: DateTime.now(), endDate: DateTime.now().add(const Duration(days: 365)),),
-         // BusCard(busId: 4, busPlate: "ك م م - 1221", startDate: DateTime.now(), endDate: DateTime.now().add(const Duration(days: 365)),),
-        ],
+         ],
       ),
     );
   }

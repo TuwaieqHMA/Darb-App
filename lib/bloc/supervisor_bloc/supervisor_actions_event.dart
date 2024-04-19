@@ -25,6 +25,11 @@ final class SelectBusDriverEvent extends SupervisorActionsEvent {
   SelectBusDriverEvent(this.driverId);
 }
 
+final class SelectBusNumberEvent extends SupervisorActionsEvent {
+  String busId;
+  SelectBusNumberEvent(this.busId);
+}
+
 final class SelectTripDriverEvent extends SupervisorActionsEvent {
   String driverId;
   SelectTripDriverEvent(this.driverId);

@@ -17,8 +17,27 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class DBService {
   final supabase = Supabase.instance.client;
   late Stream<List<Message>> listOfMessages; // Fetched Messages
-  final List<Driver> driverData = [];
-  final List<AttendanceList> attendanceList = [];
+  // final List<Driver> driverData = [];
+  // final List<AttendanceList> attendanceList = [];
+  
+  final locator = GetIt.I.get<HomeData>();
+
+  Future<AuthResponse> signUp(
+      {required String email, required String password}) async {
+    return await supabase.auth.signUp(email: email, password: password);
+  }
+
+  Future signIn({required String email, required String password}) async {
+    await supabase.auth.signInWithPassword(email: email, password: password);
+  }
+
+  Future signOut() async {
+    await supabase.auth.signOut();
+  }
+
+  Future<Session?> getCurrentSession() async {
+    return supabase.auth.currentSession;
+  }
 
   final locator = GetIt.I.get<HomeData>();
 
@@ -39,43 +58,51 @@ class DBService {
     // print(user);
     locator.students.clear();
     for (var element in user) {
+    //  final stu = await supabase.from("Student").select().filter('supervisor_id', 'neq', "NULL");
+    //      //neq('supervisor_id', null ).match({'id': element['id'], });
+    //      for(var e in stu){
+    //       if(e['id'] == element['id']){
+
       locator.students.add(DarbUser.fromJson(element));
+        //   }
+        //  }
     }
   }
 
-  // Get Driver information
-  Future getDriverData() async {
-    final data = await supabase.from('Driver').select('*');
+  // // Get Driver information
+  // Future getDriverData() async {
+  //   final data = await supabase.from('Driver').select('*');
 
-    for (var element in data) {
-      if (element['on-trips'] == 0) {
-        if (locator.driverHasTrip.isEmpty) {
-          locator.driverHasTrip.add(Driver.fromJson(element));
-        }
-        if (locator.driverHasTrip.any((driver) => driver.id == element['id'])) {
-          locator.driverHasTrip.remove(Driver.fromJson(element));
-        } else {
-          locator.driverHasTrip.add(Driver.fromJson(element));
-        }
-      }
-      if (element['has_bus'] == false) {
-        if (locator.driverHasBus.isEmpty) {
-          locator.driverHasBus.add(element['id']);
-        }
-        if (locator.driverHasBus.any((driver) => driver == element['id'])) {
-          locator.driverHasBus.remove(element['id']);
-        } else {
-          locator.driverHasBus.add(element['id']);
-        }
-      }
-    }
-    await getDriversWithoutBus();
-  }
+  //   for (var element in data) {
+  //     if (element['on-trips'] == 0) {
+  //       if (locator.driverHasTrip.isEmpty) {
+  //         locator.driverHasTrip.add(Driver.fromJson(element));
+  //       }
+  //       if (locator.driverHasTrip.any((driver) => driver.id == element['id'])) {
+  //         locator.driverHasTrip.remove(Driver.fromJson(element));
+  //       } else {
+  //         locator.driverHasTrip.add(Driver.fromJson(element));
+  //       }
+  //     }
+  //     if (element['has_bus'] == false) {
+  //       if (locator.driverHasBus.isEmpty) {
+  //         locator.driverHasBus.add(element['id']);
+  //       }
+  //       if (locator.driverHasBus.any((driver) => driver == element['id'])) {
+  //         locator.driverHasBus.remove(element['id']);
+  //       } else {
+  //         locator.driverHasBus.add(element['id']);
+  //       }
+  //     }
+  //   }
+  //   await getDriversWithoutBus();
+  // }
+
 
   // Get driver does not has bus
   Future getDriversWithoutBus() async {
     final data = await supabase.from('Driver').select('*').eq('has_bus', false);
-
+    locator.driverHasBusList.clear();
     for (var e in data) {
       final withoutBus = await supabase.from('User').select().eq('id', e['id']);
       for (var driver in withoutBus) {
@@ -84,15 +111,35 @@ class DBService {
     }
   }
 
-  // Get driver has 2 trip
+  // Get driver does not has Trip
+  Future getDriversHasTrip() async {
+    final data = await supabase.from('Driver').select('*').eq('no_trips', 0);
+
+    for (var element in data) {
+      locator.driverHasTrip.add(element['id']); 
+    }
+  }
+
+  // Get driver has max trip
   Future getDriversWithoutTrip() async {
-    final data = await supabase.from('Driver').select('*').neq('no_trip', 10);
+    final data = await supabase.from('Driver').select('*').neq('no_trips', 10);
     for (var e in data) {
       final withoutBus = await supabase.from('User').select().eq('id', e['id']);
       for (var driver in withoutBus) {
         locator.driverHasBusList.add(DarbUser.fromJson(driver));
       }
     }
+  }
+
+  // Search for driver
+  Future searchForDriver(String driverName) async {
+    final data = await supabase.from('User').select('*').contains('name', driverName).eq('user_type', "Driver");
+    // for (var e in data) {
+    //   final withoutBus = await supabase.from('User').select().eq('id', e['id']);
+    //   for (var driver in withoutBus) {
+    //     locator.driverHasBusList.add(DarbUser.fromJson(driver));
+    //   }
+    // }
   }
 
   // Get Bus information
@@ -115,8 +162,9 @@ class DBService {
 
   // Delete student function
   Future deleteStudent(String studentIdd) async {
-    await supabase.from("User").delete().eq('id', studentIdd);
-    await supabase.from("Student").delete().eq('id', studentIdd);
+    await supabase.from("Student").update({'supervisor_id' : null}).eq('id', studentIdd);
+    // await supabase.from("User").delete().eq('id', studentIdd);
+    // await supabase.from("Student").delete().eq('id', studentIdd);
     await getAllUser();
   }
 
@@ -155,49 +203,92 @@ class DBService {
   // Get trip information
   Future getAllTrip() async {
     final data = await supabase.from('Trip').select('*');
+    locator.trips.clear();
+    locator.tripDriver.clear();
+    locator.numberOfSeat.clear();
     for (var element in data) {
-      if (locator.trips.isEmpty) {
+      // if (locator.trips.isEmpty) {
         locator.trips.add(Trip.fromJson(element));
-
-        for (var oneDriver in locator.drivers) {
-          if (oneDriver.id == element['driver_id']) {
-            locator.tripDriver.add(oneDriver);
-          }
-        }
-        for (var bus in locator.buses) {
-          if (bus.driverId == element['driver_id']) {
-            locator.seatNumber.add(bus);
-          }
-        }
-      }
-      for (var e in locator.trips) {
-        if (e.id != element['id']) {
-          locator.trips.add(Trip.fromJson(element));
-          for (var oneDriver in locator.drivers) {
-            if (oneDriver.id == element['id']) {
-              locator.tripDriver.add(oneDriver);
+        print(locator.trips.length);
+        print("locator.trips.length ${locator.trips.length}");
+        // for(var trip in locator.trips){
+          final tripDrivers = await supabase.from("User").select().eq('id', element[ 'driver_id']);
+          print(locator.tripDriver);
+          for(var e in tripDrivers){
+            if(locator.tripDriver.isEmpty){
+              locator.tripDriver.add(DarbUser.fromJson(e));
             }
+            // for(int i = 0 ; i <= locator.numberOfSeat.length ; i++) {
+              // for(var ee in locator.tripDriver) {
+              //   if(e['driver_id'] != ee.id) {
+              //     locator.tripDriver.add(DarbUser.fromJson(e));
+              //   }
+              // }
+            // locator.tripDriver.add(DarbUser.fromJson(e));
+          print(locator.tripDriver.length);
+          print(locator.tripDriver);
           }
-        }
-      }
+          final seat = await supabase.from("Bus").select().eq('driver_id', element[ 'driver_id']);//'e5e8213b-fe05-4e7e-a19f-3ff4e2739776');
+          for(var st in seat){
+            if(locator.numberOfSeat.isEmpty){
+              
+            locator.numberOfSeat.add(Bus.fromJson(st));
+            }
+            // for(int i = 0 ; i <= locator.numberOfSeat.length ; i++) {
+              for (var element in locator.numberOfSeat) {
+                
+              
+              if(st['driver_id'] != element.driverId){
+
+              locator.numberOfSeat.add(Bus.fromJson(st));
+            }
+            }
+            print(locator.numberOfSeat.length);
+            print('locator.numberOfSeat.length');
+            print(locator.numberOfSeat);
+          // }
+          }
+        // }
+
+        // for (var oneDriver in locator.drivers) {
+        //   if (oneDriver.id == element['driver_id']) {
+        //     locator.tripDriver.add(oneDriver);
+        //   }
+        // }
+        // for (var bus in locator.buses) {
+        //   if (bus.driverId == element['driver_id']) {
+        //     locator.seatNumber.add(bus);
+        //   }
+        // }
+      // }
+      // for (var e in locator.trips) {
+      //   if (e.id != element['id']) {
+      //     locator.trips.add(Trip.fromJson(element));
+      //     // for (var oneDriver in locator.drivers) {
+      //     //   if (oneDriver.id == element['id']) {
+      //     //     locator.tripDriver.add(oneDriver);
+      //     //   }
+      //     // }
+      //   }
+      // }
     }
   }
 
-  // Get Attendance information
-  Future getAttendance() async {
-    final data = await supabase.from('AttendanceList').select('*');
-    for (var element in data) {
-      attendanceList.add(AttendanceList.fromJson(element));
-    }
-    return attendanceList;
-  }
+  // // Get Attendance information
+  // Future getAttendance() async {
+  //   final data = await supabase.from('AttendanceList').select('*');
+  //   for (var element in data) {
+  //     attendanceList.add(AttendanceList.fromJson(element));
+  //   }
+  //   return attendanceList;
+  // }
 
   //  Add bus
   Future addBus(Bus bus, String id) async {
     final addBus = await supabase.from('Bus').insert(bus.toJson());
     final updateDriver =
         await supabase.from('Driver').update({'has_bus': true}).eq('id', id);
-    await getDriverData();
+    // await getDriverData(); //////!
   }
 
   //  Add trip
@@ -214,7 +305,7 @@ class DBService {
         .update({'no_trips': numberOfTrip}).eq('id', driver.id);
     // print("Add Trip");
     // print("update driver=========");
-    await getDriverData();
+    // await getDriverData(); //////////////!
     // print("update driver");
   }
 
@@ -229,6 +320,7 @@ class DBService {
     await supabase
         .from('User')
         .update({'name': name, 'phone': phone}).eq('id', driverId);
+        print("found update driver function");
     await getAllDriver();
   }
   //---------------Auth Actions---------------
