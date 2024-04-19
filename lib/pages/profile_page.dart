@@ -1,4 +1,6 @@
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'dart:io';
+
+import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/location_select_page.dart';
@@ -6,14 +8,20 @@ import 'package:darb_app/pages/login_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/bottom_button.dart';
+import 'package:darb_app/widgets/circle_custom_avatar.dart';
 import 'package:darb_app/widgets/circle_custom_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/page_app_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
+
 
 // ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
@@ -23,6 +31,7 @@ class ProfilePage extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   bool isEdit = false;
+  File? imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +44,7 @@ class ProfilePage extends StatelessWidget {
       listener: (context, state) {
         if (state is SignedOutState) {
           context.push(LoginPage(), false);
+          context.showSuccessSnackBar(state.msg);
         } else if (state is ViewProfileState) {
           isEdit = false;
           nameController.text = locator.currentUser.name;
@@ -43,6 +53,10 @@ class ProfilePage extends StatelessWidget {
           isEdit = true;
         }else if (state is AuthErrorState){
           context.showErrorSnackBar(state.msg);
+        }else if (state is ChangedImageState){
+          if(state.msg != null){
+            context.showSuccessSnackBar(state.msg!);
+          }
         }
       },
       builder: (context, state) {
@@ -63,6 +77,7 @@ class ProfilePage extends StatelessWidget {
                         text: "هل أنت متأكد من تسجيل خروجك",
                         onAcceptClick: () {
                           authBloc.add(SignOutEvent());
+                          context.pop();
                         },
                         onRefuseClick: () {
                           context.pop();
@@ -74,18 +89,49 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          body: (state is AuthLoadingState) ? const Center(child: CircularProgressIndicator(color: signatureYellowColor,),) :ListView(
+          body: (state is AuthLoadingState) ? const Center(child: CircularProgressIndicator(color: signatureYellowColor,),) : ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              CircleAvatar(
-                backgroundColor: lightGreenGlassColor,
-                radius: 60,
-                child: SvgPicture.asset(
-                  "assets/icons/person_profile_icon.svg",
-                  colorFilter: const ColorFilter.mode(
-                      lightGreenDeepColor, BlendMode.srcIn),
-                  width: 90,
-                  height: 90,
+              Center(
+                child: SizedBox(
+                  width: 150,
+                  height: 120,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children:[
+                      CircleAvatar(
+                      backgroundColor: lightGreenGlassColor,
+                      radius: 60,
+                      child: (imageFile != null) ? CircleCustomAvatar(child: Image.file(imageFile!, fit: BoxFit.fill,),) :  CachedNetworkImage(
+                        fit: BoxFit.contain,
+                        imageUrl: locator.currentUserImage, progressIndicatorBuilder: (context, url, progress) {
+                        return const Center(child: CircularProgressIndicator(color: signatureYellowColor,),);
+                      },
+                      imageBuilder: (context, imageProvider) {
+                        return CircleCustomAvatar(child: Image.network(locator.currentUserImage, fit: BoxFit.fill,),);
+                      },
+                      errorWidget: (context, url, error) {
+                        return SvgPicture.asset(
+                        "assets/icons/person_profile_icon.svg",
+                        colorFilter: const ColorFilter.mode(
+                            lightGreenDeepColor, BlendMode.srcIn),
+                            width: 80,
+                            height: 80,);
+                      },
+                      ),
+                    
+                    ),
+                    (isEdit) ? Align(
+                      alignment: Alignment.bottomRight,
+                      child: CircleCustomButton(icon: Icons.edit, backgroundColor: signatureYellowColor, iconColor: whiteColor, onPressed: () async{
+                        imageFile = await locator.getPickedImage();
+                        if(imageFile != null){
+                          authBloc.add(PickUserImageEvent());
+                        }
+                      },),
+                    ) : nothing
+                    ]
+                  ),
                 ),
               ),
               height32,
@@ -136,6 +182,9 @@ class ProfilePage extends StatelessWidget {
                             authBloc.add(EditProfileInfoEvent(
                                 name: nameController.text,
                                 phone: phoneController.text));
+                                if(imageFile != null){
+                                  authBloc.add(UploadUserImageEvent(imgFile: imageFile));
+                                }
                           },
                         ),
                         BottomButton(
@@ -145,6 +194,10 @@ class ProfilePage extends StatelessWidget {
                           width: context.getWidth() * .4,
                           onPressed: () {
                             authBloc.add(SwitchEditModeEvent(isEdit: isEdit));
+                            if(imageFile != null){
+                              imageFile = null;
+                              authBloc.add(PickUserImageEvent());
+                            }
                           },
                         ),
                       ],

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
@@ -32,6 +33,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ResendOtpEvent>(resendOtp);
     on<SwitchEditModeEvent>(switchEditMode);
     on<EditProfileInfoEvent>(editProfileInfo);
+    on<UploadUserImageEvent>(uploadUserImage);
+    on<GetUserImageEvent>(getUserImage);
+    on<PickUserImageEvent>(pickUserImage);
   }
 // Signup Method
   FutureOr<void> signup(SignUpEvent event, Emitter<AuthState> emit) async {
@@ -93,11 +97,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         try {
           await dbService.signIn(email: event.email, password: event.password);
           locator.currentUser = await dbService.getCurrentUserInfo();
+          getUserImage(GetUserImageEvent(), emit);
           emit(LoggedInState(msg: "تم تسجيل الدخول بنجاح"));
         } catch (e) {
           emit(AuthErrorState(
               msg:
-                  "هناك خطأفي عملية تسجيل الدخول، الرجاء التحقق من تأكيد بريدك"));
+                  "الايميل أو كلمة المرور خاطئة"));
           print(e);
         }
       } else {
@@ -122,6 +127,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (dbService.supabase.auth.currentSession != null) {
       locator.currentUser = await dbService.getCurrentUserInfo();
+      getUserImage(GetUserImageEvent(), emit);
       Widget widget;
       switch (locator.currentUser.userType) {
         case "Supervisor":
@@ -211,7 +217,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> resendOtp(
       ResendOtpEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
-    print(event.email);
     try {
       await dbService.resendOtp(event.email);
       emit(OtpResentState(msg: "تم إرسال الرمز بنجاح"));
@@ -243,5 +248,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }else {
       emit(AuthErrorState(msg: "الرجاء تعبئة جميع الحقول"));
     }
+  }
+
+  FutureOr<void> uploadUserImage(UploadUserImageEvent event, Emitter<AuthState> emit) async{
+    emit(AuthLoadingState());
+
+    if(event.imgFile != null){
+      try {
+        await dbService.uploadImage(event.imgFile!);
+        dbService.getCurrentUserImage();
+        emit(ChangedImageState(msg: "تم تحديث الصورة الخاصة بك بنجاح"));
+      } on StorageException catch(e) {
+        await dbService.updateImage(event.imgFile!);
+        emit(ChangedImageState(msg: "تم تحديث الصورة الخاصة بك بنجاح"));
+      } catch (e){
+        emit(AuthErrorState(msg: "حدث خطأ في تحديث الصورة الخاصة بك"));
+      }
+    }else {
+      emit(AuthErrorState(msg: "لم يتم إختيار صورة"));
+    }
+  }
+
+  FutureOr<void> getUserImage(GetUserImageEvent event, Emitter<AuthState> emit) {
+    try {
+      dbService.getCurrentUserImage();
+    } catch (e) {
+      emit(AuthErrorState(msg: "هناك مشكلة في تحميل الصورة الخاصة بك"));
+    }
+  }
+
+  FutureOr<void> pickUserImage(PickUserImageEvent event, Emitter<AuthState> emit) {
+    emit(ChangedImageState());
   }
 }

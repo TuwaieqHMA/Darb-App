@@ -70,3 +70,9 @@ final class ViewProfileState extends AuthState {
 final class EditingProfileState extends AuthState {
   
 }
+
+final class ChangedImageState extends AuthState {
+  final String? msg;
+
+  ChangedImageState({this.msg});
+}

@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/student_bloc.dart';
+import 'package:darb_app/bloc/location_bloc/location_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/location_select_page.dart';
 import 'package:darb_app/pages/student_home.dart';
@@ -12,13 +12,13 @@ class RedirectLocationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StudentBloc(),
+      create: (context) => LocationBloc(),
       child: Builder(
         builder: (context) {
-          final studentBloc = context.read<StudentBloc>();
+          final studentBloc = context.read<LocationBloc>();
           studentBloc.add(CheckStudentLocationAvailabilityEvent());
           return Scaffold(
-            body: BlocConsumer<StudentBloc, StudentState>(
+            body: BlocConsumer<LocationBloc, LocationState>(
               listener: (context, state) {
                 if(state is UserSelectedLocationState){
                   context.push(const StudentHome(), false);

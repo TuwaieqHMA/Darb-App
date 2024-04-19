@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/student_bloc.dart';
+import 'package:darb_app/bloc/location_bloc/location_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/student_home.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -16,8 +16,8 @@ class LocationSelectPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => (isEdit!) ? (StudentBloc()..add(GetUserPreviousLocationEvent())) : (StudentBloc()),
-      child: BlocConsumer<StudentBloc, StudentState>(
+      create: (context) => (isEdit!) ? (LocationBloc()..add(GetUserPreviousLocationEvent())) : (LocationBloc()),
+      child: BlocConsumer<LocationBloc, LocationState>(
         listener: (context, state) {
           if (state is UserSelectedLocationState){
             context.showSuccessSnackBar(state.msg!);
@@ -27,7 +27,7 @@ class LocationSelectPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          final studentBloc = context.read<StudentBloc>();
+          final locationBloc = context.read<LocationBloc>();
           if(state is StudentLoadingState){
             return const Scaffold(
               body: Center(child: CircularProgressIndicator(color: signatureYellowColor,),),
@@ -38,7 +38,7 @@ class LocationSelectPage extends StatelessWidget {
             apiKey: dotenv.env['googleCloudKey']!,
             onPlacePicked: (result) {
               final location = result.geometry!.location;
-              studentBloc.add(SelectLocationEvent(latLng: LatLng(location.lat, location.lng), isEdit: isEdit!));
+              locationBloc.add(SelectLocationEvent(latLng: LatLng(location.lat, location.lng), isEdit: isEdit!));
             },
             automaticallyImplyAppBarLeading: isEdit!,
             initialPosition: (state is LoadedUserPreviousLocationState) ? state.prevLocation :const LatLng(1, 1),

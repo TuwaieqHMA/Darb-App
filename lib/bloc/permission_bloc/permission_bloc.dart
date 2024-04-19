@@ -16,21 +16,16 @@ class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
   FutureOr<void> checkLocationPermission(CheckLocationPermissionEvent event, Emitter<PermissionState> emit) async{
     emit(PermissionLoadingState());
     if (await Permission.location.isGranted){
-      print("1");
       emit(LocationPermissionPreviouslyGrantedState());
       emit(PermissionLoadingState());
     }else if(await Permission.location.isDenied){
-      print("2");
       final status = await Permission.location.request();
       if(status.isGranted){
-        print("3");
         emit(LocationPermissionGrantedState(msg: "تم السماح بالوصول للموقع، شكراً لك"));
       }else {
-        print("4");
         emit(LocationPermissionDeniedState(msg: "تم رفض الوصول للموقع، الرجاء قبول الوصول لتتمكن من إستخدام خدمات التطبيق"));
       }
     }else {
-      print("5");
       emit(LocationPermissionDeniedState(msg: "تم رفض الوصول للموقع نهائياً، الرجاء تفعيل الموقع عن طريق إعدادات التطبيق"));
     }
   }

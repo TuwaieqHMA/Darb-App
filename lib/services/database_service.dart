@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
@@ -8,6 +9,7 @@ import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/message_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/models/student_model.dart';
+import 'package:darb_app/widgets/trip_card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -17,29 +19,8 @@ class DBService {
   late Stream<List<Message>> listOfMessages; // Fetched Messages
   final List<Driver> driverData = [];
   final List<AttendanceList> attendanceList = [];
-  
+
   final locator = GetIt.I.get<HomeData>();
-
-  Future<AuthResponse> signUp(
-      {required String email, required String password}) async {
-    return await supabase.auth.signUp(email: email, password: password);
-  }
-
-  Future signIn({required String email, required String password}) async {
-    await supabase.auth.signInWithPassword(email: email, password: password);
-  }
-
-  Future signOut() async {
-    await supabase.auth.signOut();
-  }
-
-  Future<Session?> getCurrentSession() async {
-    return supabase.auth.currentSession;
-  }
-
-  Future<String> getCurrentUserId() async {
-    return supabase.auth.currentUser!.id;
-  }
 
   // Get All basic user information
   Future getAllDriver() async {
@@ -243,11 +224,34 @@ class DBService {
         .update({'name': name, 'phone': phone}).eq('id', studentId);
     await getAllUser();
   }
+
   Future updateDriver(String driverId, String name, String phone) async {
     await supabase
         .from('User')
         .update({'name': name, 'phone': phone}).eq('id', driverId);
     await getAllDriver();
+  }
+  //---------------Auth Actions---------------
+
+  Future<AuthResponse> signUp(
+      {required String email, required String password}) async {
+    return await supabase.auth.signUp(email: email, password: password);
+  }
+
+  Future signIn({required String email, required String password}) async {
+    await supabase.auth.signInWithPassword(email: email, password: password);
+  }
+
+  Future signOut() async {
+    await supabase.auth.signOut();
+  }
+
+  Future<Session?> getCurrentSession() async {
+    return supabase.auth.currentSession;
+  }
+
+  Future<String> getCurrentUserId() async {
+    return supabase.auth.currentUser!.id;
   }
 
   Future<DarbUser> getCurrentUserInfo() async {
@@ -269,21 +273,44 @@ class DBService {
     await supabase.from("Driver").insert(driver.toJson());
   }
 
-  Future<void> sendOtp(String email) async{
+  Future<void> sendOtp(String email) async {
     await supabase.auth.signInWithOtp(email: email);
   }
 
-  Future<void> verifyOtp(String otp, String email) async{
-    await supabase.auth.verifyOTP(type: OtpType.email, token: otp, email: email);
+  Future<void> verifyOtp(String otp, String email) async {
+    await supabase.auth
+        .verifyOTP(type: OtpType.email, token: otp, email: email);
   }
 
-  Future<void> changePassword(String password) async{
-    await supabase.auth.updateUser(UserAttributes(password: password,),);
+  Future<void> changePassword(String password) async {
+    await supabase.auth.updateUser(
+      UserAttributes(
+        password: password,
+      ),
+    );
   }
+
   Future<void> resendOtp(String email) async {
     await sendOtp(email);
   }
- 
+
+  Future<void> updateUserInfo(String name, String phone) async {
+    await supabase.from("User").update({'name': name, 'phone': phone}).eq(
+        'id', await getCurrentUserId());
+  }
+
+  Future<void> uploadImage(File file) async {
+    await supabase.storage.from("user_images").upload(locator.currentUser.id!, file);
+  }
+
+  Future<void> updateImage(File file) async {
+    await supabase.storage.from("user_images").update(locator.currentUser.id!, file);
+  }
+
+  void getCurrentUserImage() {
+    locator.currentUserImage = supabase.storage.from("user_images").getPublicUrl(locator.currentUser.id!);
+  }
+
   //------------------------------------------------------------
   // --------- Fetching user and session info Operations ------
 
@@ -321,9 +348,7 @@ class DBService {
         .from('chats')
         .stream(primaryKey: ['id'])
         .order('created_at')
-        .map((chats) => chats
-            .map((chat) => Chat.fromJson(chat))
-            .toList());
+        .map((chats) => chats.map((chat) => Chat.fromJson(chat)).toList());
     return chatStream;
   }
 
@@ -336,17 +361,48 @@ class DBService {
     });
   }
 
-  Future<void> updateUserInfo(String name, String phone) async {
-    await supabase.from("User").update({'name': name, 'phone': phone}).eq('id', await getCurrentUserId());
-  }
   //---------------------------Student Actions---------------------------
   Future<Student> getStudentInfo() async {
-    return Student.fromJson(await supabase.from("Student").select('latitude, longitude').eq('id', await getCurrentUserId()).single());
+    return Student.fromJson(await supabase
+        .from("Student")
+        .select()
+        .eq('id', await getCurrentUserId())
+        .single());
   }
 
   Future<void> updateUserLocation(LatLng coordinates) async {
-    await supabase.from("Student").update({'latitude': coordinates.latitude, 'longitude': coordinates.longitude}).eq('id', await getCurrentUserId());
+    await supabase.from("Student").update({
+      'latitude': coordinates.latitude,
+      'longitude': coordinates.longitude
+    }).eq('id', await getCurrentUserId());
+  }
+
+  Future<List<TripCard>> getAllStudentTrips() async {
+    List<Trip> tripList = [];
+    List<TripCard> tripCardList = [];
+    List<Map<String, dynamic>> mapTriplist = await supabase.rpc('get_student_trips', params: {'studentid': locator.currentUser.id});
+    if(mapTriplist.isNotEmpty){
+      for (Map<String, dynamic> tripMap in mapTriplist){
+        tripList.add(Trip.fromJson(tripMap));
+      }
+      for(Trip trip in tripList){
+        String driverName = "";
+        int noOfPassengers = await supabase.rpc('get_trip_student_count', params: {'tripid': trip.id});
+        Map<String,dynamic> driverNameMap = await supabase.from("User").select('name').eq('id', trip.driverId).single();
+        driverName = driverNameMap['name'];
+        tripCardList.add(TripCard(trip: trip, driverName: driverName, noOfPassengers: noOfPassengers,));
+      }
+    }
+    return tripCardList;
+    // List<Trip> tripList = [];
+    // List<Map<String,dynamic>> mapTripIdList = await supabase.from("AttendanceList").select("trip_id").eq('student_id', locator.currentUser.id!);
+    // if(mapTripIdList.isNotEmpty){
+    //   for(var item in mapTripIdList){
+    //   tripList.add(item["trip_id"]);
+    // }
+    // return true;
+    // }else{
+    //   return false;
+    // }
   }
 }
-
-  

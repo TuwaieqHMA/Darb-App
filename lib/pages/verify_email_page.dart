@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/verify_otp_page.dart';
 import 'package:darb_app/utils/colors.dart';

@@ -65,3 +65,17 @@ final class EditProfileInfoEvent extends AuthEvent {
 
   EditProfileInfoEvent({required this.name, required this.phone});
 }
+
+final class UploadUserImageEvent extends AuthEvent {
+  final File? imgFile;
+
+  UploadUserImageEvent({required this.imgFile});
+}
+
+final class GetUserImageEvent extends AuthEvent {
+
+}
+
+final class PickUserImageEvent extends AuthEvent {
+  
+}
