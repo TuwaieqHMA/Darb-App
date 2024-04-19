@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:darb_app/data_layer/home_data_layer.dart';
-import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/chat_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
@@ -22,24 +21,7 @@ class DBService {
   
   final locator = GetIt.I.get<HomeData>();
 
-  Future<AuthResponse> signUp(
-      {required String email, required String password}) async {
-    return await supabase.auth.signUp(email: email, password: password);
-  }
 
-  Future signIn({required String email, required String password}) async {
-    await supabase.auth.signInWithPassword(email: email, password: password);
-  }
-
-  Future signOut() async {
-    await supabase.auth.signOut();
-  }
-
-  Future<Session?> getCurrentSession() async {
-    return supabase.auth.currentSession;
-  }
-
-  final locator = GetIt.I.get<HomeData>();
 
   // Get All basic user information
   Future getAllDriver() async {
