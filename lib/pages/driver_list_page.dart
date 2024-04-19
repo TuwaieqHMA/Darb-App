@@ -2,6 +2,7 @@ import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/edit_driver.dart';
+import 'package:darb_app/services/database_service.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/custom_search_bar.dart';
@@ -22,6 +23,7 @@ class DriverListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
     bloc.add(GetAllDriver());
+    bloc.add(GetAllTripDriver());
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
@@ -51,6 +53,10 @@ class DriverListPage extends StatelessWidget {
               child: CustomSearchBar(
                 controller: searchController,
                 hintText: "ابحث عن سائق...",
+                // onChanged: 
+                // DBService().searchForDriver(searchController.text);
+                  // bloc.add();
+                
               ),
             ),
           ),
@@ -58,6 +64,9 @@ class DriverListPage extends StatelessWidget {
       ),
       body: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
         listener: (context, state) {
+          if(state is LoadingState){
+
+          }
           if(state is SuccessfulState){
              context.showSuccessSnackBar(state.msg);
           }
@@ -82,8 +91,8 @@ class DriverListPage extends StatelessWidget {
                   ),
                 );
               }
-              if (state is GetUsersState) {
-                print(locator.drivers.length);
+              if (state is GetUsersState || state is GetAllTripDriverState) {
+                print(locator.drivers.length );
                 print('DBService().drivers.length');
                 if (locator.drivers.isNotEmpty) {
                   return ListView.builder(
@@ -94,7 +103,7 @@ class DriverListPage extends StatelessWidget {
                         return PersonCard(
                           user: locator.drivers[index],
                           name: locator.drivers[index].name,
-                          isSigned: true, //! get this value from driver table
+                          isSigned: (locator.driverHasTrip.contains(locator.drivers[index].id)) ? false : true, 
                           onView: () {
                             context.push(
                                 EditDriver(
@@ -117,6 +126,7 @@ class DriverListPage extends StatelessWidget {
                               builder: (context) => DialogBox(
                                 text: "هل أنت متأكد من حذف السائق ؟",
                                 onAcceptClick: () {
+                                  print("delete pressed");
                                   bloc.add(DeleteDriver(
                                       driverId: locator.drivers[index].id
                                           .toString()));

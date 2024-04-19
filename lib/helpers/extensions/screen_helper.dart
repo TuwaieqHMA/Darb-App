@@ -1,4 +1,5 @@
 import 'package:darb_app/utils/colors.dart';
+import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 
 extension Screen on BuildContext {
@@ -71,6 +72,7 @@ extension Screen on BuildContext {
       backgroundColor: signatureBlueColor,
     ));
   }
+
   pushAndRemove(Widget screen) {
     Navigator.pushAndRemoveUntil(this,
         MaterialPageRoute(builder: (context) => screen), (route) => false);
@@ -85,6 +87,7 @@ extension Screen on BuildContext {
       ),
     );
   }
+
 
   /// ----------- Snack Bar extensions ---------
   // showErrorSnackBar(String message) {

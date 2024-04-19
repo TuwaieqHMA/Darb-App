@@ -13,17 +13,21 @@ class HomeData {
   TextDirection currentDirctionallity = TextDirection.rtl;
   int currentPageIndex = 0;
   
-  DateTime startDate = DateTime.now();
+  DateTime startDate = DateTime.now(); 
   DateTime endDate = DateTime.now();
 
   final List<DarbUser> drivers = [];
+  // final List<DarbUser> tripDriver = [];
   final List<String> driverHasBus = [];
   late List<DarbUser> driverHasBusList = [];
-  late List<Driver> driverHasTrip = [];
+  late List<String> driverHasTrip = [];
   final List<DarbUser> students = [];
   final List<Bus> buses = [];
+  final List<Bus> numberOfSeat = [];
+  List<Bus> seat = [];
   final List<Trip> trips = [
-  // Trip(id: 12, driverId: "89", district: "kk", date : DateTime.now().add( const Duration(days: 2)), timeFrom: const TimeOfDay(hour: 1, minute: 12),timeTo: const TimeOfDay(hour: 12, minute: 1), isToSchool: false, supervisorId: "12345")
+    // .add( const Duration(days: 2))
+  //  Trip(id: 12, driverId: "89", district: "kk", date : DateTime.now(), timeFrom: const TimeOfDay(hour: 1, minute: 12),timeTo: const TimeOfDay(hour: 12, minute: 1), isToSchool: false, supervisorId: "12345")
   ];
   final List<DarbUser> tripDriver = [
     // DarbUser(name: "salam", email: "sdfghj", phone: "3456789", userType: "Driver", id: "89")

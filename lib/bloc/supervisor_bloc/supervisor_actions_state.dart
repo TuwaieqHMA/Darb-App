@@ -23,6 +23,10 @@ final class ChangeTripTypeState extends SupervisorActionsState {}
 final class GetUsersState extends SupervisorActionsState {}
 final class GetAllBusState extends SupervisorActionsState {}
 final class GetAllTripState extends SupervisorActionsState {}
+final class GetAllTripDriverState extends SupervisorActionsState {
+  List<Driver> driver = [];
+  GetAllTripDriverState(this.driver);
+}
 
 
 final class SelectDayState extends SupervisorActionsState {
@@ -39,9 +43,14 @@ final class SelectStartAndExpireTimeState extends SupervisorActionsState {
 }
 
 final class SelectDriverState extends SupervisorActionsState {
-  List value  ;
+  List value ;
   SelectDriverState(this.value);
 }  
+
+final class SelectBusNumberState extends SupervisorActionsState {
+  List value;
+  SelectBusNumberState(this.value);
+}
 
 final class SuccessAddBusState extends SupervisorActionsState {
   String mas;

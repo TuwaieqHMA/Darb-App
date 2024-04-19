@@ -14,6 +14,7 @@ import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AddBus extends StatefulWidget {
   const AddBus({super.key});
@@ -35,6 +36,7 @@ class _AddBusState extends State<AddBus> {
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
     bloc.add(GetAllDriverHasNotBus());
+    bloc.add(GetAllBus());
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
@@ -91,9 +93,12 @@ class _AddBusState extends State<AddBus> {
                               child: BlocBuilder<SupervisorActionsBloc,
                                   SupervisorActionsState>(
                                 builder: (context, state) {
-                                  if (state is SelectDriverState || state is SuccessfulState) {
+                                  if (state is SelectDriverState 
+                                  || state is SuccessfulState
+                                  ) {
                                     print("locator.driverHasBusList");
                                     print(locator.driverHasBusList);
+                                    print(locator.driverHasBusList.length);
                                     return DropdownButton(
                                       hint: const Text("اختر سائق"),
                                       isExpanded: true,
@@ -102,7 +107,6 @@ class _AddBusState extends State<AddBus> {
                                       style: const TextStyle(
                                           fontSize: 16, fontFamily: inukFont),
                                       borderRadius: BorderRadius.circular(15),
-
                                       value: bloc.dropdownAddBusValue.isNotEmpty  ? bloc.dropdownAddBusValue[0] : null, //bloc.dropdownValue, //state.value, 
                                       icon: const Icon(
                                         Icons.keyboard_arrow_down_outlined,
@@ -112,21 +116,21 @@ class _AddBusState extends State<AddBus> {
                                       items: locator.driverHasBusList.map((e) { //! bloc.drivers
                                         return DropdownMenuItem(
                                           value: e.id,
-                                          child: Text(e.name),
+                                          child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
+                                          //(e.name),
                                         );
                                       }).toList(),
                                       onChanged: (value) {
                                         print("value ====  $value");
                                         bloc.add(
-                                          SelectBusDriverEvent(
-                                            value.toString(),
-                                          ),
+                                          SelectBusDriverEvent(value.toString(),),
                                         );
                                       },
                                     );
                                   }
+
                                   return DropdownButton(
-                                    hint: const Text("اختر سائق"),
+                                    hint: Text( (locator.driverHasBusList.isNotEmpty) ? "اختر سائق" : "جميع السائقين لديهم باص"),
                                     isExpanded: true,
                                     menuMaxHeight: 200,
                                     underline: const Text(""),
@@ -141,18 +145,18 @@ class _AddBusState extends State<AddBus> {
                                     ),
                                     items: locator.driverHasBusList.map((e) {
                                       return DropdownMenuItem(
-                                        value: e,
-                                        child: Text(e.name),
+                                        value: e ,
+                                        child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
                                       );
                                     }).toList(),
                                     onChanged: (value) {
-                                      bloc.add(
-                                          SelectBusDriverEvent(value.toString()));
+                                      bloc.add(SelectBusDriverEvent(value.toString()));
                                     },
                                   );
                                 },
                               ),
                             ),
+                           
                             height16,
                             HeaderTextField(
                               controller: busNumberController,
@@ -209,7 +213,7 @@ class _AddBusState extends State<AddBus> {
                                             size: 23,
                                           ),
                                           width8,
-                                          Text( "${bloc.startDate.toLocal()}".split(' ')[0],
+                                          Text( "${locator.startDate!.toLocal()}".split(' ')[0],
                                             style: const TextStyle(
                                                 fontFamily: inukFont),
                                           ),
@@ -224,8 +228,8 @@ class _AddBusState extends State<AddBus> {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(bloc.startDate.day == DateTime.now().day ? "أدخل تاريخ اصدار الرخصة" : 
-                                            "${bloc.startDate.toLocal()}".split(' ')[0],
+                                        Text(locator.startDate!.day == DateTime.now().day ? "أدخل تاريخ اصدار الرخصة" : 
+                                            "${locator.startDate!.toLocal()}".split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
                                         ),
@@ -282,7 +286,7 @@ class _AddBusState extends State<AddBus> {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(bloc.startDate.day == DateTime.now().day ? "أدخل تاريخ انتهاء الرخصة" : 
+                                        Text(locator.startDate!.day == DateTime.now().day ? "أدخل تاريخ انتهاء الرخصة" : 
                                           "${bloc.endDate.toLocal()}".split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
@@ -324,7 +328,7 @@ class _AddBusState extends State<AddBus> {
                                             supervisorId: locator.currentUser.id!,
                                             seatsNumber: int.parse(seatsNumberController.text),
                                             busPlate: busPlateController.text,
-                                            dateIssue: bloc.startDate,
+                                            dateIssue: locator.startDate!,
                                             dateExpire: bloc.endDate,
                                             driverId: bloc.dropdownAddBusValue[0],
                                             // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee", // bloc.dropdownValue,
@@ -346,6 +350,7 @@ class _AddBusState extends State<AddBus> {
                                         },
                                       ),
                                     );                                 
+                                 
                                   } else {
                                     context.showErrorSnackBar(
                                         "الرجاء ملئ جميع الجقول");
