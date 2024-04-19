@@ -20,7 +20,7 @@ class SupervisorHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
-    bloc.add(GetAllTrip());
+    // bloc.add(GetAllTrip());
 
     final locator = GetIt.I.get<HomeData>();
 
@@ -82,7 +82,7 @@ class SupervisorHomePage extends StatelessWidget {
                               height16,
                             ],
                           )
-                        : const SizedBox.shrink(); // const Center(child: Text("لا توجد رحلات متاحة لهذا اليوم", style: TextStyle(color: signatureBlueColor, fontSize: 16, fontFamily: inukFont),));
+                        : nothing; // const Center(child: Text("لا توجد رحلات متاحة لهذا اليوم", style: TextStyle(color: signatureBlueColor, fontSize: 16, fontFamily: inukFont),));
                   });
             }
             return Column(
@@ -98,7 +98,7 @@ class SupervisorHomePage extends StatelessWidget {
               ],
             );
           }
-          return const SizedBox.shrink();
+          return nothing;
         }),
 
         // ===========================================

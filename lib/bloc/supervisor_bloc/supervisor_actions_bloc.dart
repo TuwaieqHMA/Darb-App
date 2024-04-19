@@ -6,6 +6,7 @@ import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
+import 'package:darb_app/models/student_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/services/database_service.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -30,7 +31,8 @@ class SupervisorActionsBloc
 
   List dropdownAddBusValue = [];
   List dropdownAddBusNumberValue = [];
-  List dropdownAddTripValue = [];
+  String dropdownAddTripValue =  '';
+  String dropdownAddTripValueId =  '';
 
   SupervisorActionsBloc() : super(SupervisorActionsInitial()) {
     on<SupervisorActionsEvent>((event, emit) {
@@ -57,6 +59,8 @@ class SupervisorActionsBloc
     on<RefrshDriverEvent>(refreshDriver);
     on<AddBusEvent>(addBus);
     on<AddTripEvent>(addTrip);
+    on<SearchForStudentByIdEvent>(searchForStudentById);
+    on<AddStudentToSupervisorEvent>(addStudentToSupervisor);
   }
 
   FutureOr<void> changeTripType(
@@ -67,7 +71,7 @@ class SupervisorActionsBloc
 
   FutureOr<void> selectDay( SelectDayEvent event, Emitter<SupervisorActionsState> emit) async {
     await selectDate(event.context, event.num);
-    emit(SelectDayState(locator.startDate!, endDate, startTripDate));
+    emit(SelectDayState(locator.startDate, endDate, startTripDate));
     // emit(SelectDriverState(dropdownAddBusValue));
     
     // emit(SelectDriverState(dropdownAddTripValue));
@@ -145,7 +149,7 @@ class SupervisorActionsBloc
 
   // select one driver -- to add bus 
   FutureOr<void> selectBusDriver( SelectBusDriverEvent event, Emitter<SupervisorActionsState> emit) {
-    dropdownAddBusValue.clear();
+    // dropdownAddBusValue.clear();
     dropdownAddBusValue.add(event.driverId); 
     emit(SelectDriverState(dropdownAddBusValue));
   }
@@ -160,9 +164,10 @@ class SupervisorActionsBloc
   
   // select one driver to add trip 
   FutureOr<void> selectTripDriver( SelectTripDriverEvent event, Emitter<SupervisorActionsState> emit) {
-    dropdownAddTripValue.clear();
-    dropdownAddTripValue.add(event.driverId); 
-    emit(SelectDriverState(dropdownAddTripValue));  
+    // dropdownAddTripValue.clear();
+    // dropdownAddTripValueId = event.driverId.id!; 
+    dropdownAddTripValue = event.driverId; 
+    emit(SelectTripDriverState(dropdownAddTripValue));  
   }
 
   FutureOr<void> addBus(AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
@@ -178,7 +183,7 @@ class SupervisorActionsBloc
   FutureOr<void> refreshDriver(RefrshDriverEvent event, Emitter<SupervisorActionsState> emit) {
     dropdownAddBusValue = [];
     dropdownAddBusNumberValue = [];
-    dropdownAddTripValue = [];
+    // dropdownAddTripValue =;
     // startDate = DateTime.now();
     startTripDate = DateTime.now();
     endDate = DateTime.now();
@@ -266,4 +271,25 @@ class SupervisorActionsBloc
   }
 
 
+
+  FutureOr<void> searchForStudentById(SearchForStudentByIdEvent event, Emitter<SupervisorActionsState> emit) async {
+    emit(LoadingState());
+    try{
+      List<DarbUser> students = await DBService().SearchForStudentById(event.studentId);
+      emit(GetStudentState(student:  students));      
+    }catch(e){
+      print("Search for student without supervisor : $e");
+    }
+  }
+
+  FutureOr<void> addStudentToSupervisor(AddStudentToSupervisorEvent event, Emitter<SupervisorActionsState> emit) async {
+    try{
+      await DBService().AddStudentToSupervisor(event.student);
+      emit(AddStudentToSupervisorState());
+      emit(SuccessfulState("تم ربط الطالب بالمشرف بنجاح"));
+    }catch(e){
+      print("Add student to supervisor : $e");
+      emit(ErrorState("حدث خطأ أثناء إضافة الطالب"));
+    }
+  }
 }

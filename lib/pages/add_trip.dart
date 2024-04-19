@@ -1,6 +1,7 @@
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -216,12 +217,9 @@ class AddTrip extends StatelessWidget {
                             child: BlocBuilder<SupervisorActionsBloc,
                                 SupervisorActionsState>(
                               builder: (context, state) {
-                                if (state is SelectDriverState ||
-                                    state is SuccessfulState) {
-                                  print("locator.driverHasBusList");
-                                  print(locator.driverHasBusList);
-                                  print(locator.driverHasBusList.length);
+                                if (state is SelectDriverState ||state is SuccessfulState) {
                                   return DropdownButton(
+
                                     hint: const Text("اختر سائق"),
                                     isExpanded: true,
                                     underline: const Text(""),
@@ -230,8 +228,8 @@ class AddTrip extends StatelessWidget {
                                         fontSize: 16, fontFamily: inukFont),
                                     borderRadius: BorderRadius.circular(15),
                                     value: bloc.dropdownAddTripValue.isNotEmpty
-                                        ? bloc.dropdownAddTripValue[0]
-                                        : null, //bloc.dropdownValue, //state.value,
+                                        ? bloc.dropdownAddTripValue
+                                        : "uio", //bloc.dropdownValue, //state.value,
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       size: 30,
@@ -250,9 +248,7 @@ class AddTrip extends StatelessWidget {
                                     }).toList(),
                                     onChanged: (value) {
                                       print("value ====  $value");
-                                      bloc.add(
-                                        SelectTripDriverEvent(
-                                          value.toString(),
+                                      bloc.add(SelectTripDriverEvent(value.toString(),
                                         ),
                                       );
                                     },
@@ -272,7 +268,7 @@ class AddTrip extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(15),
                                   value: bloc.dropdownAddTripValue.isNotEmpty
                                       ? bloc.dropdownAddTripValue
-                                      : null,
+                                      : "ooo",
                                   icon: const Icon(
                                     Icons.keyboard_arrow_down_outlined,
                                     size: 30,
@@ -280,7 +276,7 @@ class AddTrip extends StatelessWidget {
                                   ),
                                   items: locator.driverHasBusList.map((e) {
                                     return DropdownMenuItem(
-                                      value: e,
+                                      value: e.name,
                                       child: Text(
                                           locator.driverHasBusList.isNotEmpty
                                               ? e.name
@@ -288,8 +284,9 @@ class AddTrip extends StatelessWidget {
                                     );
                                   }).toList(),
                                   onChanged: (value) {
-                                    bloc.add(SelectTripDriverEvent(
-                                        value.toString()));
+                                    print(value);
+                                    print("فقهح ============================== value");
+                                    bloc.add(SelectTripDriverEvent(value!));
                                   },
                                 );
                               },

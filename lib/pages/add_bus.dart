@@ -115,7 +115,7 @@ class _AddBusState extends State<AddBus> {
                                       ),
                                       items: locator.driverHasBusList.map((e) { //! bloc.drivers
                                         return DropdownMenuItem(
-                                          value: e.id,
+                                          value: e.name,
                                           child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
                                           //(e.name),
                                         );
@@ -137,7 +137,7 @@ class _AddBusState extends State<AddBus> {
                                     style: const TextStyle(
                                         fontSize: 16, fontFamily: inukFont),
                                     borderRadius: BorderRadius.circular(15),
-                                    value: bloc.dropdownAddBusValue.isNotEmpty  ? bloc.dropdownAddBusValue : null,
+                                    value: bloc.dropdownAddBusValue.isNotEmpty  ? bloc.dropdownAddBusValue[0] : null,
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       size: 30,
@@ -145,7 +145,7 @@ class _AddBusState extends State<AddBus> {
                                     ),
                                     items: locator.driverHasBusList.map((e) {
                                       return DropdownMenuItem(
-                                        value: e ,
+                                        value: e.name ,
                                         child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
                                       );
                                     }).toList(),
@@ -213,7 +213,7 @@ class _AddBusState extends State<AddBus> {
                                             size: 23,
                                           ),
                                           width8,
-                                          Text( "${locator.startDate!.toLocal()}".split(' ')[0],
+                                          Text( "${locator.startDate.toLocal()}".split(' ')[0],
                                             style: const TextStyle(
                                                 fontFamily: inukFont),
                                           ),
@@ -228,8 +228,8 @@ class _AddBusState extends State<AddBus> {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(locator.startDate!.day == DateTime.now().day ? "أدخل تاريخ اصدار الرخصة" : 
-                                            "${locator.startDate!.toLocal()}".split(' ')[0],
+                                        Text(locator.startDate.day == DateTime.now().day ? "أدخل تاريخ اصدار الرخصة" : 
+                                            "${locator.startDate.toLocal()}".split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
                                         ),
@@ -286,7 +286,7 @@ class _AddBusState extends State<AddBus> {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(locator.startDate!.day == DateTime.now().day ? "أدخل تاريخ انتهاء الرخصة" : 
+                                        Text(locator.startDate.day == DateTime.now().day ? "أدخل تاريخ انتهاء الرخصة" : 
                                           "${bloc.endDate.toLocal()}".split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
@@ -328,7 +328,7 @@ class _AddBusState extends State<AddBus> {
                                             supervisorId: locator.currentUser.id!,
                                             seatsNumber: int.parse(seatsNumberController.text),
                                             busPlate: busPlateController.text,
-                                            dateIssue: locator.startDate!,
+                                            dateIssue: locator.startDate,
                                             dateExpire: bloc.endDate,
                                             driverId: bloc.dropdownAddBusValue[0],
                                             // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee", // bloc.dropdownValue,

@@ -26,7 +26,7 @@ final class SelectBusDriverEvent extends SupervisorActionsEvent {
 }
 
 final class SelectBusNumberEvent extends SupervisorActionsEvent {
-  String busId;
+  List busId;
   SelectBusNumberEvent(this.busId);
 }
 
@@ -43,6 +43,16 @@ final class RefrshDriverEvent extends SupervisorActionsEvent {
 final class GetAllTrip extends SupervisorActionsEvent{}
 final class GetAllDriver extends SupervisorActionsEvent{}
 final class GetAllStudent extends SupervisorActionsEvent{}
+
+final class SearchForStudentByIdEvent extends SupervisorActionsEvent{
+  String studentId;
+  SearchForStudentByIdEvent({required this.studentId});
+}
+
+final class AddStudentToSupervisorEvent extends SupervisorActionsEvent{
+  DarbUser student;
+  AddStudentToSupervisorEvent({required this.student});
+}
 
 final class UpdateStudent extends SupervisorActionsEvent{
   String id;  

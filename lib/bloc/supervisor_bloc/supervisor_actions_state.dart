@@ -21,6 +21,11 @@ final class ErrorState extends SupervisorActionsState {
 
 final class ChangeTripTypeState extends SupervisorActionsState {}
 final class GetUsersState extends SupervisorActionsState {}
+final class GetStudentState extends SupervisorActionsState {
+  List<DarbUser> student;
+  GetStudentState({required this.student});
+}
+final class AddStudentToSupervisorState extends SupervisorActionsState {}
 final class GetAllBusState extends SupervisorActionsState {}
 final class GetAllTripState extends SupervisorActionsState {}
 final class GetAllTripDriverState extends SupervisorActionsState {
@@ -42,6 +47,10 @@ final class SelectStartAndExpireTimeState extends SupervisorActionsState {
   SelectStartAndExpireTimeState(this.startTime, this.endTime);
 }
 
+final class SelectTripDriverState extends SupervisorActionsState {
+  String value ;
+  SelectTripDriverState(this.value);
+}  
 final class SelectDriverState extends SupervisorActionsState {
   List value ;
   SelectDriverState(this.value);
