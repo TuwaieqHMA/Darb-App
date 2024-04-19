@@ -1,9 +1,9 @@
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/chat_model.dart';
 import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/message_model.dart';
-import 'package:darb_app/bloc/chat_bloc.dart';
+import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
 import 'package:darb_app/widgets/chat_bubble.dart';
 import 'package:darb_app/widgets/message_bar.dart';
 import 'package:darb_app/pages/login_page.dart';

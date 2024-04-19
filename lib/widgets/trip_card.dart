@@ -8,12 +8,13 @@ import 'package:darb_app/widgets/icon_text_bar.dart';
 import 'package:flutter/material.dart';
 class TripCard extends StatelessWidget {
   const TripCard({
-    super.key, required this.trip, required this.driverName, required this.noOfPassengers,
+    super.key, required this.trip, required this.driverName, required this.noOfPassengers, this.onTap,
   });
 
   final Trip trip;
   final String driverName;
   final int noOfPassengers;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +88,7 @@ class TripCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: GoToButton(
                     text: "التفاصيل",
-                    onTap: () {},
+                    onTap: onTap,
                   ),
                 )
               ],

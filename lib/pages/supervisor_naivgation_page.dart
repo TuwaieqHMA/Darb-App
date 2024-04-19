@@ -1,4 +1,4 @@
-import 'package:darb_app/bloc/navigation_bloc.dart';
+import 'package:darb_app/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/supervisor_add_type_page.dart';

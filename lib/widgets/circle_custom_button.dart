@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class CircleCustomButton extends StatelessWidget {
   const CircleCustomButton({
-    super.key, this.onPressed, required this.icon, this.iconColor, this.backgroundColor,
+    super.key, this.onPressed, required this.icon, this.iconColor, this.backgroundColor, this.iconSize,
   });
 
   final Function()? onPressed;
   final IconData icon;
   final Color? iconColor;
   final Color? backgroundColor;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class CircleCustomButton extends StatelessWidget {
         icon:  Icon(
           icon,
           color: iconColor,
+          size: iconSize,
         ),
         style: ButtonStyle(
             backgroundColor:

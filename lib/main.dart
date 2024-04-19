@@ -1,6 +1,6 @@
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/pages/attendance_list.dart';
-import 'package:darb_app/bloc/chat_bloc.dart';
+import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
 import 'package:darb_app/pages/chat_page.dart';
 import 'package:darb_app/pages/driver_home.dart';
 import 'package:darb_app/pages/map_page.dart';
@@ -8,7 +8,7 @@ import 'package:darb_app/pages/map_student.dart';
 import 'package:darb_app/pages/startup_page.dart';
 import 'package:darb_app/pages/student_home.dart';
 import 'package:darb_app/pages/user_location_page.dart';
-import 'package:darb_app/bloc/auth_bloc.dart';
+import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/pages/add_bus.dart';
 import 'package:darb_app/pages/add_driver.dart';
@@ -30,9 +30,7 @@ Future main() async {
   await databaseSetup();
   await setup();
 
-  runApp(
-     const MainApp(),
-  );
+  await checkConnectionSetup();
 }
 
 final FlutterLocalization localization = FlutterLocalization.instance;

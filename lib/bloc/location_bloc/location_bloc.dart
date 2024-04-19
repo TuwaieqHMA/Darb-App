@@ -6,18 +6,18 @@ import 'package:darb_app/services/database_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 
-part 'student_event.dart';
-part 'student_state.dart';
+part 'location_event.dart';
+part 'location_state.dart';
 
-class StudentBloc extends Bloc<StudentEvent, StudentState> {
+class LocationBloc extends Bloc<LocationEvent, LocationState> {
   final dbService = DBService();
-  StudentBloc() : super(StudentInitial()) {
+  LocationBloc() : super(LocationInitial()) {
     on<CheckStudentLocationAvailabilityEvent>(checkStudentLocationAvailability);
     on<SelectLocationEvent>(selectLocation);
     on<GetUserPreviousLocationEvent>(getUserPreviousLocation);
   }
 
-  FutureOr<void> checkStudentLocationAvailability(CheckStudentLocationAvailabilityEvent event, Emitter<StudentState> emit) async{
+  FutureOr<void> checkStudentLocationAvailability(CheckStudentLocationAvailabilityEvent event, Emitter<LocationState> emit) async{
     emit(StudentLoadingState());
     
     try {
@@ -33,7 +33,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
-  FutureOr<void> selectLocation(SelectLocationEvent event, Emitter<StudentState> emit) async{
+  FutureOr<void> selectLocation(SelectLocationEvent event, Emitter<LocationState> emit) async{
     emit(StudentLoadingState());
     Student student = await dbService.getStudentInfo();
     if(student.latitude != event.latLng.latitude && student.longitude != event.latLng.longitude){
@@ -49,7 +49,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     
   }
 
-  FutureOr<void> getUserPreviousLocation(GetUserPreviousLocationEvent event, Emitter<StudentState> emit) async{
+  FutureOr<void> getUserPreviousLocation(GetUserPreviousLocationEvent event, Emitter<LocationState> emit) async{
     emit(StudentLoadingState());
 
     Student student = await dbService.getStudentInfo();
