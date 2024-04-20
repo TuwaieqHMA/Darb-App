@@ -71,7 +71,16 @@ class TrackingPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               height16,
-              BlocBuilder<TripDetailsBloc, TripDetailsState>(
+              BlocConsumer<TripDetailsBloc, TripDetailsState>(
+                listener: (context, state) {
+                  if (state is ChangedAttendanceStatusState){
+                    showDialog(context: context, builder: (context) {
+                      return AlertDialog(
+                        title: Text(state.msg),
+                      );
+                    },);
+                  }
+                },
                 builder: (context, state) {
                   if (state is TripDetailsErrorState) {
                     return NoItemText(
