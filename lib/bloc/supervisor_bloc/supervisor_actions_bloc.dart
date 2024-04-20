@@ -6,7 +6,6 @@ import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
-import 'package:darb_app/models/student_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/services/database_service.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -24,12 +23,12 @@ class SupervisorActionsBloc
   int seletctedType = 1;
   // DateTime startDate = DateTime.now();
   DateTime startTripDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  // DateTime endDate = DateTime.now();
 
   TimeOfDay startTime = TimeOfDay.now();
   TimeOfDay endTime = TimeOfDay.now();
 
-  List dropdownAddBusValue = [];
+  List<DarbUser> dropdownAddBusValue = [];
   List dropdownAddBusNumberValue = [];
   String dropdownAddTripValue =  '';
   String dropdownAddTripValueId =  '';
@@ -38,6 +37,8 @@ class SupervisorActionsBloc
     on<SupervisorActionsEvent>((event, emit) {
       // TODO: implement event handler
     });
+
+    
 
     on<ChangeTripTypeEvent>(changeTripType);
     on<SelectDayEvent>(selectDay);
@@ -56,6 +57,7 @@ class SupervisorActionsBloc
     on<GetAllDriverHasNotBus>(getAllDriverHasNotBus);
     on<SelectStartAndExpireTimeEvent>(selectStartTimeOfTrip);
     on<SelectBusDriverEvent>(selectBusDriver);
+    on<GetDriverBusNameEvent>(getBusDriver);
     // on<SelectBusNumberEvent>(selectBusNumber);
     on<SelectTripDriverEvent>(selectTripDriver);
     on<RefrshDriverEvent>(refreshDriver);
@@ -76,9 +78,14 @@ class SupervisorActionsBloc
 
   FutureOr<void> selectDay( SelectDayEvent event, Emitter<SupervisorActionsState> emit) async {
     await selectDate(event.context, event.num);
-    emit(SelectDayState(locator.startDate, endDate, startTripDate));
-    // emit(SelectDriverState(dropdownAddBusValue));
-    
+    if(locator.startDate.month > locator.endDate.month && locator.startDate.day > locator.endDate.day){
+      emit(ErrorState("تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار"));
+    }
+    emit(SelectDayState(locator.startDate, locator.endDate, startTripDate));
+    emit(SelectDriverState(dropdownAddBusValue));
+    emit( SuccessGetDriverState());
+
+    // emit(SelectDriverState(dropdownAddBusValue));    
     // emit(SelectDriverState(dropdownAddTripValue));
   }
 
@@ -89,7 +96,7 @@ class SupervisorActionsBloc
   }
 
   //  Date Picker
-  Future<void> selectDate(BuildContext context, int num) async {
+  Future<void> selectDate(BuildContext context, int num, ) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       builder: (context, child) {
@@ -110,7 +117,7 @@ class SupervisorActionsBloc
         );
       },
       initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
+      firstDate: num == 1 ? DateTime.now().subtract(const Duration(days: 365 * 9)) : DateTime.now(),
       lastDate: DateTime(2036, 1),
     );
     if (picked != null) {
@@ -120,9 +127,11 @@ class SupervisorActionsBloc
         startTripDate = picked;
       }
       else{
-        endDate = picked;
+        if(locator.startDate.month <= picked.month && locator.startDate.day < picked.day){
+          locator.endDate = picked;
+        }
       }
-    }
+    }    
   }
 
   //  Time Picker
@@ -154,7 +163,7 @@ class SupervisorActionsBloc
 
   // select one driver -- to add bus 
   FutureOr<void> selectBusDriver( SelectBusDriverEvent event, Emitter<SupervisorActionsState> emit) {
-    // dropdownAddBusValue.clear();
+    dropdownAddBusValue.clear();
     dropdownAddBusValue.add(event.driverId); 
     emit(SelectDriverState(dropdownAddBusValue));
   }
@@ -178,6 +187,8 @@ class SupervisorActionsBloc
   FutureOr<void> addBus(AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
     try {
       final addNewBus =  await DBService().addBus(event.bus, event.id);
+      emit(SelectDriverState(dropdownAddBusValue));
+      emit( SuccessGetDriverState());
       emit(SuccessAddBusState(mas: "تم إضافة الباص بنحاج "));
     } catch (e) {
       print(e);
@@ -191,7 +202,7 @@ class SupervisorActionsBloc
     // dropdownAddTripValue =;
     // startDate = DateTime.now();
     startTripDate = DateTime.now();
-    endDate = DateTime.now();
+    // endDate = DateTime.now();
   }
    FutureOr<void> getAllCurrentTrip(GetAllSupervisorCurrentTrip event, Emitter<SupervisorActionsState> emit) async {
      emit(LoadingCurrentTripState());
@@ -245,7 +256,7 @@ class SupervisorActionsBloc
   FutureOr<void> getAllDriverHasNotBus(GetAllDriverHasNotBus event, Emitter<SupervisorActionsState> emit) async {
     final driver = await DBService().getDriversWithoutBus();
     //getDriverData();
-    // emit(SuccessfulState("msg driver"));
+    emit(SuccessGetDriverState());
   }
 
   FutureOr<void> getAllDriver(GetAllDriver event, Emitter<SupervisorActionsState> emit) async {
@@ -372,5 +383,12 @@ class SupervisorActionsBloc
     }catch(e){
       print("Error for driver search : $e");
     }
+  }
+
+  FutureOr<void> getBusDriver(GetDriverBusNameEvent event, Emitter<SupervisorActionsState> emit) async {
+    await DBService().getDriverBusName(event.busData);
+    // locator.busDriverName = data;
+    emit(SelectDriverState(locator.busDriverName));
+    emit(SuccessGetDriverState());
   }
 }

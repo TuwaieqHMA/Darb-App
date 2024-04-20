@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/chat_model.dart';
@@ -98,18 +99,28 @@ class DBService {
 
   // Get driver does not has bus
   Future getDriversWithoutBus() async {
-    final data = await supabase.from('Driver').select('*').eq('has_bus', false);
-    // locator.driverHasBusList.clear();
-    List<DarbUser> drivers = [];
-    for (var e in data) {
-      final withoutBus = await supabase.from('User').select().eq('id', e['id']);
-      for (var driver in withoutBus) {
-        drivers.add(DarbUser.fromJson(driver));
-      }
+    List<DarbUser> busDriver = [];
+    final driver = await supabase.rpc('fetch_driver_without_bus');
+    for (var element in driver) {
+      busDriver.add(DarbUser.fromJson(element));      
     }
-    locator.driverHasBusList = drivers;
+    locator.driverHasBusList = busDriver;
   }
-
+  // Get driver bus name
+  Future getDriverBusName(Bus driverId) async {
+    final data = await supabase.from("User").select().eq('id', driverId.driverId);
+    // supabase.rpc('get_diver_bus_name',  params: {'driverid' : driverId.driverId});
+    List<DarbUser> drivername  = [];
+    for (var element in data) {
+      drivername.add(DarbUser.fromJson(element));
+      print(drivername.length);
+      print(drivername[0].name);
+    }
+    locator.busDriverName = drivername;
+    print(locator.busDriverName[0].name);
+  }
+  
+   
   // Get driver does not has Trip
   Future getDriversHasTrip() async {
     final data = await supabase.from('Driver').select('*').eq('no_trips', 0);
@@ -355,14 +366,6 @@ class DBService {
   }
 
 
-  // // Get Attendance information
-  // Future getAttendance() async {
-  //   final data = await supabase.from('AttendanceList').select('*');
-  //   for (var element in data) {
-  //     attendanceList.add(AttendanceList.fromJson(element));
-  //   }
-  //   return attendanceList;
-  // }
 
   //  Add bus
   Future addBus(Bus bus, String id) async {

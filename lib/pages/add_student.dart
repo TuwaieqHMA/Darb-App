@@ -28,13 +28,13 @@ class AddStudent extends StatelessWidget {
       body: SafeArea(
         child: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
           listener: (context, state) {
-            if(state is SuccessfulState){
+            if (state is SuccessfulState) {
               context.pop();
               context.pop();
-              return context.showSuccessSnackBar(state.msg);
+              context.showSuccessSnackBar(state.msg);
             }
-            if(state is ErrorAddBusState){
-              return context.showErrorSnackBar(state.mas);
+            if (state is ErrorAddBusState) {
+              context.showErrorSnackBar(state.mas);
             }
           },
           child: Stack(
@@ -138,36 +138,36 @@ class AddStudent extends StatelessWidget {
                                               isStudent: true,
                                               text: " إضافة طالب",
                                               onTap: () {
-                                                 showDialog(
-                                      context: context,
-                                      builder: (context) => DialogBox(
-                                        text: "هل أنت متأكد من إضافة طالب ؟",
-                                        onAcceptClick: () {
-                                                bloc.add(AddStudentToSupervisorEvent(student: state.student[0]));
-                                                print(state.student[0].id);
-                                                print('state.student[0].id');
-                                          
-                                        },
-                                        onRefuseClick: () {
-                                          context.pop();
-                                        },
-                                      ),
-                                    );                                 
-                                 
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      DialogBox(
+                                                    text: "هل أنت متأكد من إضافة طالب ؟",
+                                                    onAcceptClick: () {
+                                                      bloc.add(
+                                                          AddStudentToSupervisorEvent(student: state.student[0]));
+                                                    },
+                                                    onRefuseClick: () {
+                                                      context.pop();
+                                                    },
+                                                  ),
+                                                );
                                               },
                                             ),
                                           ],
                                         ),
                                       );
                                     }
-                                    return const Text("لا يوجد طالب بهذا الرمز");
+                                    return const Text(
+                                        "لا يوجد طالب بهذا الرمز");
                                   }
                                   return nothing;
                                 },
                               )
                             ],
                           ),
-                          Image.asset("assets/images/add_student.png",
+                          Image.asset(
+                            "assets/images/add_student.png",
                             width: context.getWidth(),
                             height: context.getHeight() * .35,
                           ),

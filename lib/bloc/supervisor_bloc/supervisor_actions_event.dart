@@ -21,8 +21,13 @@ final class SelectStartAndExpireTimeEvent extends SupervisorActionsEvent {
 }
 
 final class SelectBusDriverEvent extends SupervisorActionsEvent {
-  String driverId;
+  DarbUser driverId;
   SelectBusDriverEvent(this.driverId);
+}
+
+final class GetDriverBusNameEvent extends SupervisorActionsEvent {
+  Bus busData;
+  GetDriverBusNameEvent(this.busData);
 }
 
 final class SelectBusNumberEvent extends SupervisorActionsEvent {

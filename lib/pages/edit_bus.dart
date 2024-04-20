@@ -18,8 +18,14 @@ import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class EditBus extends StatelessWidget {
-  EditBus({super.key, required this.isView, required this.bus,});
+  EditBus({
+    super.key,
+    required this.isView,
+    required this.isEdit,
+    required this.bus,
+  });
   final isView;
+  final isEdit;
   Bus bus;
   // DarbUser driverName;
 
@@ -49,11 +55,16 @@ class EditBus extends StatelessWidget {
             ),
             ListView(
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     height24,
-                    CircleBackButton(),
+                    CircleBackButton(
+                      onTap: () {
+                        bloc.add(GetAllBus());
+                        context.pop();
+                      },
+                    ),
                   ],
                 ),
                 height16,
@@ -76,94 +87,113 @@ class EditBus extends StatelessWidget {
                         Column(
                           children: [
                             height32,
-                            isView ?  HeaderTextField(
-                              controller: nameController,
-                              headerText: "اسم السائق",
-                              isEnabled: isView ? false : true,
-                              headerColor: signatureTealColor,
-                              textDirection: TextDirection.rtl,
-                              isReadOnly: isView ? true : false,
-                            ) :
-                            Column(
-                              children: [
-                                textFieldLabel(text: "اسم السائق "),
-                                height16,
-                                Container(
-                                  padding: const EdgeInsets.only(right: 16),
-                                  alignment: Alignment.centerRight,
-                                  width: context.getWidth() * 0.9,
-                                  height: 55,
-                                  decoration: BoxDecoration(
-                                    color: whiteColor,
-                                    border: Border.all(
-                                        color: signatureTealColor, width: 3),
-                                    borderRadius: BorderRadius.circular(
-                                      10,
-                                    ),
-                                  ),
-                                  child: BlocBuilder<SupervisorActionsBloc,
-                                      SupervisorActionsState>(
+                            isView
+                                ? BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
                                     builder: (context, state) {
-                                      if (state is SelectDriverState) {
-                                        return DropdownButton(
-                                          isExpanded: true,
-                                          underline: const Text(""),
-                                          menuMaxHeight: 200,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontFamily: inukFont),
-                                          iconDisabledColor: signatureTealColor,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          value: state.value, 
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_down_outlined,
-                                            size: 30,
-                                            color: signatureBlueColor,
-                                          ),
-                                          items: locator.driverHasBusList.map((e) {
-                                            return DropdownMenuItem(
-                                              value: e.id,
-                                              child: Text(locator.driverHasBusList.isNotEmpty ? e.name : "جميع السائقين لديهم باص"),
-                                            );
-                                          }).toList(),
-                                          onChanged: (value) {
-                                            bloc.add(SelectBusDriverEvent( value.toString()));
-                                          },
-                                        );
-                                      }
-                                      return DropdownButton(
-                                        hint: Text( (locator.driverHasBusList.isNotEmpty) ? "اختر سائق" : "جميع السائقين لديهم باص"),
-                                        isExpanded: true,
-                                        menuMaxHeight: 200,
-                                        underline: const Text(""),
-                                        style: const TextStyle(
-                                            fontSize: 16, fontFamily: inukFont),
-                                        iconDisabledColor: signatureTealColor,
-                                        borderRadius: BorderRadius.circular(15),
-                                        value: bloc.dropdownAddBusValue.isNotEmpty ? bloc.dropdownAddBusValue : null,
-                                        // value:,
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_down_outlined,
-                                          size: 30,
-                                          color: signatureBlueColor,
-                                        ),
-                                        items: locator.driverHasBusList.map((e) {
-                                          return DropdownMenuItem(
-                                            value: e,
-                                            child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
-                                          );
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          bloc.add(SelectBusDriverEvent(value.toString()));
-                                        },
+                                      if(state is SuccessGetDriverState){
+                                      return HeaderTextField(
+                                        controller: nameController,
+                                        hintText: locator.busDriverName[0].name,
+                                        headerText: "اسم السائق",
+                                        isEnabled: isView ? false : true,
+                                        headerColor: signatureTealColor,
+                                        textDirection: TextDirection.rtl,
+                                        isReadOnly: isView ? true : false,
                                       );
+                                      }return nothing;
                                     },
+                                  )
+                                : Column(
+                                    children: [
+                                      textFieldLabel(text: "اسم السائق "),
+                                      height16,
+                                      Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 16),
+                                        alignment: Alignment.centerRight,
+                                        width: context.getWidth() * 0.9,
+                                        height: 55,
+                                        decoration: BoxDecoration(
+                                          color: whiteColor,
+                                          border: Border.all(
+                                              color: signatureTealColor,
+                                              width: 3),
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                        child: BlocBuilder<
+                                            SupervisorActionsBloc,
+                                            SupervisorActionsState>(
+                                          builder: (context, state) {
+                                            if (state is SelectDriverState || state is SuccessGetDriverState) {
+                                              return DropdownButton(
+                                                hint: Text(locator.busDriverName.isEmpty ? " حدث خطأ أثناء جلب السائق" :locator.busDriverName[0].name),
+                                                isExpanded: true,
+                                                underline: const Text(""),
+                                                menuMaxHeight: 200,
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontFamily: inukFont),
+                                             
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                value: bloc.dropdownAddBusValue.isNotEmpty ? bloc.dropdownAddBusValue[0] : null , 
+                                                icon: const Icon(
+                                                  Icons
+                                                      .keyboard_arrow_down_outlined,
+                                                  size: 30,
+                                                  color: signatureBlueColor,
+                                                ),
+                                                items: locator.driverHasBusList.map((e) {
+                                                  return DropdownMenuItem(
+                                                    value: e,
+                                                    child: Text(locator.driverHasBusList.isNotEmpty 
+                                                        ? e.name
+                                                        : "جميع السائقين لديهم باص"),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  if (value is DarbUser) {
+                                                    bloc.add(SelectBusDriverEvent(
+                                                        value));
+                                                  }
+                                                },
+                                              );
+                                            }
+                                            return DropdownButton(
+                                              hint: Text( (locator.busDriverName.isNotEmpty) ? locator.busDriverName[0].name : "حدث خطأ أثناء جلب اسم السائق"),
+                                              isExpanded: true,
+                                              menuMaxHeight: 200,
+                                              underline: const Text(""),
+                                              style: const TextStyle(
+                                                  fontSize: 16, fontFamily: inukFont),
+                                              iconDisabledColor: signatureTealColor,
+                                              borderRadius: BorderRadius.circular(15),
+                                              value:  locator.busDriverName.isNotEmpty ? locator.busDriverName[0].name : null,
+                                              icon: const Icon(
+                                                Icons.keyboard_arrow_down_outlined,
+                                                size: 30,
+                                                color: signatureBlueColor,
+                                              ),
+                                              items: locator.driverHasBusList.map((e) {
+                                                return DropdownMenuItem(
+                                                  value: e,
+                                                  child: Text(locator.driverHasBusList.isNotEmpty ? e.name : "جميع السائقين لديهم باص"),
+                                                );
+                                              }).toList(),
+                                              onChanged: (value) {
+                                                if(value is DarbUser){
+                                                bloc.add(SelectBusDriverEvent(value));
+                                              }
+                                              },
+                                            );
+                                          
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              
-                              ],
-                            ),
                             height16,
                             HeaderTextField(
                               controller: busNumberController,
@@ -178,7 +208,7 @@ class EditBus extends StatelessWidget {
                             HeaderTextField(
                               controller: seatsNumberController,
                               headerText: "عدد المقاعد",
-                              hintText: bus.seatsNumber.toString() ,                              
+                              hintText: bus.seatsNumber.toString(),
                               isEnabled: isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
@@ -211,7 +241,10 @@ class EditBus extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: whiteColor,
                                     border: Border.all(
-                                        color: isView ? fadedBlueColor : signatureTealColor, width: 3),
+                                        color: isView
+                                            ? fadedBlueColor
+                                            : signatureTealColor,
+                                        width: 3),
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
@@ -228,7 +261,7 @@ class EditBus extends StatelessWidget {
                                           ),
                                           width8,
                                           Text(
-                                            "${locator.startDate!.toLocal()}"
+                                            "${locator.startDate.toLocal()}"
                                                 .split(' ')[0],
                                             style: const TextStyle(
                                                 fontFamily: inukFont),
@@ -244,10 +277,14 @@ class EditBus extends StatelessWidget {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text(  isView ? bus.dateIssue.toLocal().toString().split(' ')[0] : 
-
-                                          "${locator.startDate!.toLocal()}"
-                                              .split(' ')[0],
+                                        Text(
+                                          // isView ?
+                                               bus.dateIssue
+                                                  .toLocal()
+                                                  .toString()
+                                                  .split(' ')[0],
+                                              // : "${locator.startDate.toLocal()}"
+                                              //     .split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
                                         ),
@@ -274,7 +311,10 @@ class EditBus extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: whiteColor,
                                     border: Border.all(
-                                        color: isView ? fadedBlueColor : signatureTealColor, width: 3),
+                                        color: isView
+                                            ? fadedBlueColor
+                                            : signatureTealColor,
+                                        width: 3),
                                     borderRadius: BorderRadius.circular(
                                       10,
                                     )),
@@ -291,7 +331,7 @@ class EditBus extends StatelessWidget {
                                           ),
                                           width8,
                                           Text(
-                                            "${bloc.endDate.toLocal()}"
+                                            "${locator.endDate.toLocal()}"
                                                 .split(' ')[0],
                                             style: const TextStyle(
                                                 fontFamily: inukFont),
@@ -307,10 +347,16 @@ class EditBus extends StatelessWidget {
                                           size: 23,
                                         ),
                                         width8,
-                                        Text( isView ? bus.dateIssue.toLocal().toString().split(' ')[0] : 
-
-                                          "${bloc.endDate.toLocal()}"
+                                        Text(
+                                          // isView ?
+                                          bus.dateExpire
+                                              .toLocal()
+                                              .toString()
                                               .split(' ')[0],
+                                          // :
+
+                                          // "${locator.endDate.toLocal()}"
+                                          //     .split(' ')[0],
                                           style: const TextStyle(
                                               fontFamily: inukFont),
                                         ),

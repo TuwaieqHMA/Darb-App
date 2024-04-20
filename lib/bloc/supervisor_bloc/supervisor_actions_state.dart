@@ -34,12 +34,14 @@ final class GetOneStudentState extends SupervisorActionsState {
 
 final class AddStudentToSupervisorState extends SupervisorActionsState {}
 final class GetAllBusState extends SupervisorActionsState {}
+final class SuccessGetDriverState extends SupervisorActionsState {}
 final class GetAllCurrentTripState extends SupervisorActionsState {}
 final class GetAllFutureTripState extends SupervisorActionsState {}
 final class GetAllTripDriverState extends SupervisorActionsState {
   List<Driver> driver = [];
   GetAllTripDriverState(this.driver);
 }
+
 
 
 final class SelectDayState extends SupervisorActionsState {

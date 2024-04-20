@@ -35,7 +35,6 @@ class BusCard extends StatelessWidget {
 
     return BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
       listener: (context, state) {
-        // TODO: implement listener
         if(state is SuccessfulState){
            context.showSuccessSnackBar(state.msg);
         }
@@ -88,20 +87,22 @@ class BusCard extends StatelessWidget {
             ),
             MoreButton(
               onViewClick: () {
+                bloc.add(GetDriverBusNameEvent(bus));
                 context.push(
                     EditBus(
                       bus: bus ,
-                      // driverName: ,
                       isView: true,
+                      isEdit: false,
                     ),
                     true);
               },
               onEditClick: () {
+                 bloc.add(GetDriverBusNameEvent(bus));
                 context.push(
                     EditBus(
                       bus: bus,
-                      // driverName: ,
                       isView: false,
+                      isEdit: true,
                     ),
                     true);
               },
