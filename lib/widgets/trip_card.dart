@@ -1,20 +1,24 @@
 import 'package:darb_app/helpers/extensions/format_helper.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/trip_model.dart';
+import 'package:darb_app/pages/attendance_list.dart';
+import 'package:darb_app/pages/tracking_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/go_to_button.dart';
 import 'package:darb_app/widgets/icon_text_bar.dart';
 import 'package:flutter/material.dart';
+// ignore: must_be_immutable
 class TripCard extends StatelessWidget {
-  const TripCard({
-    super.key, required this.trip, required this.driverName, required this.noOfPassengers, this.onTap,
+  TripCard({
+    super.key, required this.trip, required this.driverName, required this.noOfPassengers, this.isCurrent = false, this.isStudent = true,
   });
 
   final Trip trip;
   final String driverName;
   final int noOfPassengers;
-  final Function()? onTap;
+  bool? isCurrent;
+  bool? isStudent;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,7 @@ class TripCard extends StatelessWidget {
       width: context.getWidth(),
       height: 136,
       padding: const EdgeInsets.all(16),
+      margin: (isCurrent!) ? null : const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
           color: whiteColor,
           borderRadius: BorderRadius.circular(20),
@@ -88,7 +93,13 @@ class TripCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: GoToButton(
                     text: "التفاصيل",
-                    onTap: onTap,
+                    onTap: (){
+                      if(isCurrent!){
+                        context.push((isStudent!) ? const TrackingPage() : const AttendanceListPage(), true);
+                      }else {
+                        context.push((isStudent!) ? const TrackingPage() : const AttendanceListPage(), true);
+                      }
+                    },
                   ),
                 )
               ],

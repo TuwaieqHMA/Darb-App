@@ -1,14 +1,19 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:darb_app/models/trip_model.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
+import 'package:darb_app/helpers/extensions/format_helper.dart';
 import 'package:darb_app/services/database_service.dart';
+import 'package:darb_app/widgets/trip_card.dart';
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 
 part 'student_event.dart';
 part 'student_state.dart';
 
 class StudentBloc extends Bloc<StudentEvent, StudentState> {
+  final locator = GetIt.I.get<HomeData>();
   final dbService = DBService();
   StudentBloc() : super(StudentInitial()) {
     on<StudentEvent>((event, emit) {});
@@ -23,9 +28,9 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
 
     try {
       final student = await dbService.getStudentInfo();
-      print(student.supervisorId);
       if (student.supervisorId != null) {
         emit(StudentSignedState());
+        await getAllStudentTrips(GetAllStudentTripsEvent(), emit);
       } else {
         emit(StudentNotSignedState());
       }
@@ -34,13 +39,24 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     }
   }
 
-  FutureOr<void> getAllStudentTrips(GetAllStudentTripsEvent event, Emitter<StudentState> emit) {
+  FutureOr<void> getAllStudentTrips(GetAllStudentTripsEvent event, Emitter<StudentState> emit) async{
     emit(TripLoadingState());
 
     try {
-      dbService.getAllStudentTrips();
+      List<TripCard> tripCardList = await dbService.getAllStudentTrips();
+      TripCard? currentTrip;
+      for(TripCard tripCard in tripCardList){
+        if(formatDate(tripCard.trip.date) == formatDate(DateTime.now()) && locator.isGivenTimeInCurrentTime(tripCard.trip.timeFrom, tripCard.trip.timeTo)){
+          tripCard.isCurrent = true;
+          currentTrip = tripCard;
+          tripCardList.removeWhere((element) => element.trip.id == tripCard.trip.id,);
+          break;
+        }
+      }
+      emit(LoadedTripsState(tripCardList: tripCardList, currentTrip: currentTrip));
     } catch (e) {
       print(e);
+      emit(StudentErrorState(msg: "هناك مشكلة في تحميل الرحلات الخاصة بك"));
     }
   }
 }
