@@ -1,3 +1,4 @@
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/pages/chat_view.dart';
@@ -5,6 +6,7 @@ import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/widgets/icon_text_bar.dart';
 import 'package:darb_app/widgets/svg_text_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class DriverInfoCard extends StatelessWidget {
   const DriverInfoCard({
@@ -17,6 +19,7 @@ class DriverInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locator = GetIt.I.get<HomeData>();
     return Container(
         height: context.getWidth() * 0.360,
         width: context.getWidth(),
@@ -42,7 +45,7 @@ class DriverInfoCard extends StatelessWidget {
             InkWell(
               onTap: () {
                 if(isCurrent!){
-                  context.push(const ChatView(), true);
+                  context.push(ChatView(driverId: driver.id!, studentId: locator.currentUser.id!,), true);
                 }
               },
               child: IconTextBar(text: (isCurrent!) ? "التحدث مع السائق" : "غير متاح", icon: Icons.chat_bubble_rounded, iconColor: blueColor, direction: TextDirection.ltr, textDecoration: (isCurrent!) ? TextDecoration.underline : null, textColor: (isCurrent!) ? blueColor : redColor,)),
