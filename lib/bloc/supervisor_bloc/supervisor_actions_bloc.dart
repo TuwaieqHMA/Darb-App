@@ -41,7 +41,8 @@ class SupervisorActionsBloc
 
     on<ChangeTripTypeEvent>(changeTripType);
     on<SelectDayEvent>(selectDay);
-    on<GetAllTrip>(getAllTrip);
+    on<GetAllSupervisorCurrentTrip>(getAllCurrentTrip);
+    on<GetAllSupervisorFutureTrip>(getAllFutureTrip);
     on<GetAllDriver>(getAllDriver);
     on<GetAllTripDriver>(getAllTripDriver);
     on<GetAllBus>(getAllBus);
@@ -50,6 +51,7 @@ class SupervisorActionsBloc
     on<UpdateStudent>(updateStudent);
     on<UpdateDriver>(updateDriver);
     on<DeleteDriver>(deleteDriver);
+    on<DeleteTrip>(deleteTrip);
     on<GetAllStudent>(getAllStudent);
     on<GetAllDriverHasNotBus>(getAllDriverHasNotBus);
     on<SelectStartAndExpireTimeEvent>(selectStartTimeOfTrip);
@@ -61,6 +63,9 @@ class SupervisorActionsBloc
     on<AddTripEvent>(addTrip);
     on<SearchForStudentByIdEvent>(searchForStudentById);
     on<AddStudentToSupervisorEvent>(addStudentToSupervisor);
+    on<SearchForStudentEvent>(searchForStudent);
+    on<SearchForDriverEvent>(searchForDriver);
+    on<SearchForBusEvent>(searchForBus);
   }
 
   FutureOr<void> changeTripType(
@@ -188,18 +193,34 @@ class SupervisorActionsBloc
     startTripDate = DateTime.now();
     endDate = DateTime.now();
   }
-
-  FutureOr<void> getAllTrip(GetAllTrip event, Emitter<SupervisorActionsState> emit) async {
-    emit(LoadingState());
-    final user = await DBService().getAllTrip();
-    emit(GetAllTripState());
+   FutureOr<void> getAllCurrentTrip(GetAllSupervisorCurrentTrip event, Emitter<SupervisorActionsState> emit) async {
+     emit(LoadingCurrentTripState());
+    final trips = await DBService().getAllCurrentTrip();
+    emit(GetAllCurrentTripState());
   }
+  
+  FutureOr<void> getAllFutureTrip(GetAllSupervisorFutureTrip event, Emitter<SupervisorActionsState> emit) async{
+     emit(LoadingFutureTripState());
+    final trips = await DBService().getAllFutureTrip();
+    emit(GetAllFutureTripState());
+  }
+
+  // FutureOr<void> getAllSupervisorCurrentTrip(GetAllTrip event, Emitter<SupervisorActionsState> emit) async {
+  //   emit(LoadingState());
+  //   final trips = await DBService().getAllCurrentTrip();
+  //   emit(GetAllCurrentTripState());
+  // }
+  // FutureOr<void> getAllSupervisorFutureTrip(GetAllTrip event, Emitter<SupervisorActionsState> emit) async {
+  //   emit(LoadingState());
+  //   final trips = await DBService().getAllCurrentTrip();
+  //   emit(GetAllCurrentTripState());
+  // }
 
 
   FutureOr<void> getAllStudent(GetAllStudent event, Emitter<SupervisorActionsState> emit)  async {
     emit(LoadingState());
-    final user = await DBService().getAllUser();
-    emit(GetUsersState());
+    await DBService().getAllUser();
+    emit(GetAllStudentState(student: locator.students));
   }
 
   FutureOr<void> getAllBus(GetAllBus event, Emitter<SupervisorActionsState> emit) async {
@@ -243,7 +264,7 @@ class SupervisorActionsBloc
   FutureOr<void> deleteStudent(DeleteStudent event, Emitter<SupervisorActionsState> emit) async {
     await DBService().deleteStudent(event.studentId);
     emit(SuccessfulState("تم حذف الطالب بنجاح"));
-    emit(GetUsersState());
+    emit(GetAllStudentState(student: locator.students));
   }
 
   FutureOr<void> deleteDriver(DeleteDriver event, Emitter<SupervisorActionsState> emit) async {
@@ -255,7 +276,7 @@ class SupervisorActionsBloc
   FutureOr<void> updateStudent(UpdateStudent event, Emitter<SupervisorActionsState> emit) async{
     await DBService().updateStudent(event.id, event.name, event.phone);
     emit(SuccessfulState("تم تعديل بيانات الطالب بنجاح"));
-    emit(GetUsersState());
+    emit(GetAllStudentState(student: locator.students));
   }
 
   FutureOr<void> getAllTripDriver(GetAllTripDriver event, Emitter<SupervisorActionsState> emit) async {
@@ -276,7 +297,7 @@ class SupervisorActionsBloc
     emit(LoadingState());
     try{
       List<DarbUser> students = await DBService().SearchForStudentById(event.studentId);
-      emit(GetStudentState(student:  students));      
+      emit(GetOneStudentState(student:  students));      
     }catch(e){
       print("Search for student without supervisor : $e");
     }
@@ -290,6 +311,66 @@ class SupervisorActionsBloc
     }catch(e){
       print("Add student to supervisor : $e");
       emit(ErrorState("حدث خطأ أثناء إضافة الطالب"));
+    }
+  }
+
+ 
+
+
+  FutureOr<void> deleteTrip(DeleteTrip event, Emitter<SupervisorActionsState> emit) async {
+    try{
+      await DBService().deleteTrip(event.tripId, event.driver, event.driverId);
+      emit(GetAllCurrentTripState());
+      emit(GetAllFutureTripState());
+      emit(SuccessfulState("تم حذف الرحلة بنجاح "));
+    }catch(e){
+      print("delete trip error : $e");
+      emit(ErrorState("حدث خطأ أثناء حذف الرحلة"));
+    }
+  }
+
+
+//  -------------- search bloc -----------------
+  FutureOr<void> searchForStudent(SearchForStudentEvent event, Emitter<SupervisorActionsState> emit) async {
+     try{
+      final student = await DBService().searchForStudent(event.studentName);
+      List<DarbUser> studentList = [];
+      for(var e in student){
+        studentList.add(e);
+      }
+      emit(SearchForStudentState(student: studentList));
+
+    }catch(e){
+      print("Error for student search : $e");
+    }
+  }
+
+  FutureOr<void> searchForDriver(SearchForDriverEvent event, Emitter<SupervisorActionsState> emit) async {
+    try{
+      final driver = await DBService().searchForDriver(event.driverName);
+      List<DarbUser> driverList = [];
+      for(var e in driver){
+        driverList.add(e);
+      }
+      emit(SearchForDriverState(drivers: driverList));
+
+    }catch(e){
+      print("Error for driver search : $e");
+    }
+    
+  }
+
+  FutureOr<void> searchForBus(SearchForBusEvent event, Emitter<SupervisorActionsState> emit) async {
+     try{
+      final bus = await DBService().searchForBus(event.busNumber);
+      List<Bus> busList = [];
+      for(var e in bus){
+        busList.add(e);
+      }
+      emit(SearchForBusState(bus: busList));
+
+    }catch(e){
+      print("Error for driver search : $e");
     }
   }
 }

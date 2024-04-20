@@ -52,6 +52,12 @@ class StudentListPage extends StatelessWidget {
               child: CustomSearchBar(
                 controller: searchController,
                 hintText: "ابحث عن طالب...",
+                onChanged: (value) {
+                  if(value.isEmpty){
+                    bloc.add(GetAllStudent());
+                  }
+                  bloc.add(SearchForStudentEvent(studentName: searchController.text));
+                },
               ),
             ),
           ),
@@ -62,7 +68,6 @@ class StudentListPage extends StatelessWidget {
           if (state is SuccessfulState) {
             context.showSuccessSnackBar(state.msg);
           }
-          // TODO: implement listener
         },
         child: ListView(
           padding: const EdgeInsets.symmetric(
@@ -83,35 +88,55 @@ class StudentListPage extends StatelessWidget {
                   ),
                 );
               }
-              if (state is GetUsersState) {
-                print('student.length============================');
-                print(locator.students.length);
-                print('student.length');
-                if (locator.students.isNotEmpty) {
+              if(state is SearchForStudentState){
                   return ListView.builder(
                       shrinkWrap: true,
-                      itemCount: locator.students.length,
+                      itemCount: state.student.length,
                       itemBuilder: (context, index) {
                         return PersonCard(
-                          user: locator.students[index],
-                          name: locator.students[index].name, //"حامد اليحيوي",
-
+                          user: state.student[index],
+                          name: state.student[index].name, 
                           onView: () {
-                            context.push(
-                                EditStudent(
-                                  isView: true,
-                                  student: locator.students[index],
-
-                                ),
-                                true);
+                            context.push( EditStudent(isView: true, student: state.student[index], ), true);
                           },
                           onEdit: () {
-                            context.push(
-                                EditStudent(
-                                  isView: false,
-                                  student: locator.students[index],
-                                ),
-                                true);
+                            context.push( EditStudent(isView: false, student: locator.students[index],), true);
+                          },
+                          onDelete: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => DialogBox(
+                                text: "هل أنت متأكد من حذف الطالب ؟",
+                                onAcceptClick: () {
+                                  bloc.add(DeleteStudent(
+                                      studentId: locator.students[index].id
+                                          .toString()));
+                                  context.pop();
+                                },
+                                onRefuseClick: () {
+                                  context.pop();
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      });
+                
+              }
+              if (state is GetAllStudentState) {
+                if (state.student.isNotEmpty) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.student.length,
+                      itemBuilder: (context, index) {
+                        return PersonCard(
+                          user: state.student[index],
+                          name: state.student[index].name, 
+                          onView: () {
+                            context.push( EditStudent(isView: true, student: locator.students[index], ), true);
+                          },
+                          onEdit: () {
+                            context.push( EditStudent(isView: false, student: locator.students[index],), true);
                           },
                           onDelete: () {
                             showDialog(

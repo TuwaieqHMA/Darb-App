@@ -9,6 +9,7 @@ import 'package:darb_app/widgets/circle_back_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
+import 'package:darb_app/widgets/trip_card.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,8 @@ import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class EditTrip extends StatelessWidget {
-  EditTrip({super.key, required this.isView});
+  EditTrip({super.key, required this.isView, required this.trip});
+  TripCard  trip;
   final bool isView;
 
   TextEditingController busNumberController = TextEditingController();

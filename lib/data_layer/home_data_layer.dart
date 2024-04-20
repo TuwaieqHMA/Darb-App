@@ -6,6 +6,7 @@ import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/pages/supervisor_home_page.dart';
 import 'package:darb_app/pages/supervisor_list_page.dart';
+import 'package:darb_app/widgets/trip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -24,11 +25,13 @@ class HomeData {
   final List<String> driverHasBus = [];
   late List<DarbUser> driverHasBusList = [];
   late List<String> driverHasTrip = [];
-  final List<DarbUser> students = [];
+  List<DarbUser> students = [];
   final List<Bus> buses = [];
   final List<Bus> numberOfSeat = [];
   List<Bus> seat = [];
-  final List<Trip> trips = [
+  List<TripCard> supervisorCurrentTrips = [];
+  List<TripCard> supervisorFutureTrips = [];
+  List<Trip> trips = [
     // Trip(id: 12, driverId: "89", district: "kk", date : DateTime.now().add( const Duration(days: 2)), timeFrom: const TimeOfDay(hour: 1, minute: 12),timeTo: const TimeOfDay(hour: 12, minute: 1), isToSchool: false, supervisorId: "12345")
     // .add( const Duration(days: 2))
   //  Trip(id: 12, driverId: "89", district: "kk", date : DateTime.now(), timeFrom: const TimeOfDay(hour: 1, minute: 12),timeTo: const TimeOfDay(hour: 12, minute: 1), isToSchool: false, supervisorId: "12345")
