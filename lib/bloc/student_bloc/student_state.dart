@@ -26,8 +26,8 @@ final class StudentNotSignedState extends StudentState {
 }
 
 final class LoadedTripsState extends StudentState {
-  final Trip? currentTrip;
-  final List<Trip> tripList;
+  final TripCard? currentTrip;
+  final List<TripCard> tripCardList;
 
-  LoadedTripsState({required this.tripList, required this.currentTrip});
+  LoadedTripsState({required this.tripCardList, required this.currentTrip});
 }

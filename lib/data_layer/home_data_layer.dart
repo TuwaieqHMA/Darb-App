@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
-import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/pages/supervisor_home_page.dart';
 import 'package:darb_app/pages/supervisor_list_page.dart';
@@ -62,4 +61,13 @@ class HomeData {
       return null;
     }
   }
+
+  bool isGivenTimeInCurrentTime(TimeOfDay timeFrom, TimeOfDay timeTo) {
+  final TimeOfDay now = TimeOfDay.now();
+  int currentTimeInMinutes = now.hour * 60 + now.minute;
+  int startTimeInMinutes = timeFrom.hour * 60 + timeFrom.minute;
+  int endTimeInMinutes = timeTo.hour * 60 + timeTo.minute;
+  
+  return startTimeInMinutes <= currentTimeInMinutes && currentTimeInMinutes <= endTimeInMinutes;
+}
 }

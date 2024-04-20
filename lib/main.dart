@@ -1,3 +1,5 @@
+import 'package:darb_app/bloc/driver_bloc/driver_bloc.dart';
+import 'package:darb_app/bloc/student_bloc/student_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/pages/attendance_list.dart';
 import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
@@ -69,9 +71,11 @@ class _MainAppState extends State<MainApp> {
         BlocProvider(create: (context) => AuthBloc()),
          BlocProvider(
           create: (context) => ChatBloc()..add(GetMessagesEvent()),
-        ),],
+        ),
+        BlocProvider(create: (context) => StudentBloc()..add(CheckStudentSignStatusEvent()),),
+        BlocProvider(create: (context) => DriverBloc()..add(GetAllDriverTripsEvent()),)
+        ],
       child: MaterialApp(
-        
         debugShowCheckedModeBanner: false,
         supportedLocales: localization.supportedLocales,
         localizationsDelegates: localization.localizationsDelegates,

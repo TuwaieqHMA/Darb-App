@@ -468,15 +468,22 @@ class DBService {
       }
     }
     return tripCardList;
-    // List<Trip> tripList = [];
-    // List<Map<String,dynamic>> mapTripIdList = await supabase.from("AttendanceList").select("trip_id").eq('student_id', locator.currentUser.id!);
-    // if(mapTripIdList.isNotEmpty){
-    //   for(var item in mapTripIdList){
-    //   tripList.add(item["trip_id"]);
-    // }
-    // return true;
-    // }else{
-    //   return false;
-    // }
   }
+  //---------------------------Driver Actions---------------------------
+  Future<List<TripCard>> getAllDriverTrips() async {
+    List<Trip> tripList = [];
+    List<TripCard> tripCardList = [];
+    List<Map<String, dynamic>> mapTriplist = await supabase.from("Trip").select().eq('driver_id', locator.currentUser.id!);
+    if(mapTriplist.isNotEmpty){
+      for (Map<String, dynamic> tripMap in mapTriplist){
+        tripList.add(Trip.fromJson(tripMap));
+      }
+      for(Trip trip in tripList){
+        int noOfPassengers = await supabase.rpc('get_trip_student_count', params: {'tripid': trip.id});
+        tripCardList.add(TripCard(trip: trip, driverName: locator.currentUser.name, noOfPassengers: noOfPassengers,));
+      }
+    }
+    return tripCardList;
+  }
+
 }
