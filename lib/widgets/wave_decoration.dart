@@ -1,9 +1,8 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class WaveDecoration extends StatelessWidget {
   WaveDecoration({super.key, required this.containerColor});
   Color containerColor;
