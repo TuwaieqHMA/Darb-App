@@ -1,38 +1,68 @@
+import 'package:darb_app/bloc/driver_bloc/driver_bloc.dart';
+import 'package:darb_app/bloc/student_bloc/student_bloc.dart';
+import 'package:darb_app/bloc/trip_details_bloc/trip_details_bloc.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
-import 'package:darb_app/pages/chat_view.dart';
-import 'package:darb_app/pages/profile_page.dart';
+import 'package:darb_app/models/trip_model.dart';
+import 'package:darb_app/pages/map_student.dart';
 import 'package:darb_app/utils/colors.dart';
+import 'package:darb_app/utils/enums.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
-import 'package:darb_app/widgets/appbar_home.dart';
 import 'package:darb_app/widgets/bottom_button.dart';
-import 'package:darb_app/widgets/circle_back_button.dart';
-import 'package:darb_app/widgets/icon_text_bar.dart';
+import 'package:darb_app/widgets/container_tracking.dart';
+import 'package:darb_app/widgets/dialog_box.dart';
+import 'package:darb_app/widgets/driver_info_card.dart';
+import 'package:darb_app/widgets/no_item_text.dart';
+import 'package:darb_app/widgets/page_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class TrackingPage extends StatelessWidget {
-  const TrackingPage({super.key});
+  const TrackingPage({
+    super.key,
+    required this.trip,
+    this.isCurrent = false,
+  });
+
+  final Trip trip;
+  final bool? isCurrent;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: whiteColor,
-      appBar: PreferredSize(
-          preferredSize: Size(context.getWidth(), context.getHeight() * .10),
-          child: AppBarHome(
-              tital: 'مرحباً، الاء', icon: const CircleBackButton())),
-      body:  Center(
-        child: Container(
-        
-          child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
+    final locator = GetIt.I.get<HomeData>();
+    return BlocProvider(
+      create: (context) =>
+          TripDetailsBloc()..add(GetDriverInfoEvent(driverId: trip.driverId)),
+      child: PopScope(
+        canPop: true,
+        onPopInvoked: (didPop) async {
+          if (didPop && locator.currentUser.userType == "Student") {
+            final studentBloc = context.read<StudentBloc>();
+            studentBloc.add(GetAllStudentTripsEvent());
+          } else if (didPop && locator.currentUser.userType == "Driver") {
+            final driverBloc = context.read<DriverBloc>();
+            driverBloc.add(GetAllDriverTripsEvent());
+          }
+        },
+        child: Scaffold(
+          backgroundColor: whiteColor,
+          appBar: PreferredSize(
+              preferredSize:
+                  Size(context.getWidth(), context.getHeight() * .10),
+              child: const PageAppBar(
+                title: "تفاصيل الرحلة",
+                backgroundColor: signatureBlueColor,
+                textColor: whiteColor,
+              )),
+          body: ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              const Text(
-                "صباح الخير !",
-                style: TextStyle(
+              Text(
+                (TimeOfDay.now().hour < 12) ? "صباح الخير" : "مساء الخير",
+                style: const TextStyle(
                   color: signatureBlueColor,
                   fontFamily: inukFont,
                   fontSize: 40,
@@ -40,118 +70,135 @@ class TrackingPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              height32,
-              Container(
-              height: context.getWidth() * 0.360,
-               width:420,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: whiteColor,
-                boxShadow: [
-            BoxShadow(
-              color: blackColor.withOpacity(0.1),
-              blurRadius: 8,
-              spreadRadius: 4,
-            ),
-          ],),
-          child: TextButton(onPressed: (){
-            context.push(ChatView(), true);
-          }, child:const Text('التحدث مع السائق',style: TextStyle(
-                      color: Color(0xff928785),
-                      decoration: TextDecoration.underline,
-                    ),),)
-          ),
-           height32,
-              SizedBox(
-                
-                child: Row(
-                  children: [
-                   Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset(
-              'assets/images/1BUS.png',
-              height: 40,
-            ),
-            Image.asset('assets/images/Line 7.png'),
-            Row(
-              children:[Image.asset(
-                'assets/images/Map_Pin.png',
-                height: 20,
-              ),Image.asset(
-                'assets/images/2BUS.png',
-                height: 35,
-              ),], 
-            ),
-            Image.asset('assets/images/Line 7.png'),
-            Image.asset(
-              'assets/images/3BUS.png',
-              height: 40,
-            ),
-                       ],
-                    ),
-                    width8,
-                    const Column(children: [
-                       ContainerTracking(text: "11:40 ص", color: signatureYellowColor, height: 40,),
-                       height120,
-                        ContainerTracking(text: "20 دقيقة", color:signatureTealColor, height: 80,),
-                        height80,
-                         ContainerTracking(text: "12:00 م", color: signatureYellowColor, height: 40,),                          
-                            
-                    ],)
-                  ],
-                ),
+              height16,
+              BlocBuilder<TripDetailsBloc, TripDetailsState>(
+                builder: (context, state) {
+                  if (state is TripDetailsErrorState) {
+                    return NoItemText(
+                      text: "هناك خطأ في تحميل بيانات السائق",
+                      height: context.getWidth() * 0.360,
+                    );
+                  } else if (state is DriverInfoLoadingState) {
+                    return NoItemText(
+                      isLoading: true,
+                      height: context.getWidth() * 0.360,
+                    );
+                  } else {
+                    return DriverInfoCard(
+                        driver: locator.currentTripDriver,
+                        isCurrent: isCurrent);
+                  }
+                },
               ),
-              height70,
-             Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
-        child: BottomButton(
-          text: "  تتبع الباص ",
-          onPressed: () {},
-          textColor: whiteColor,
-          fontSize: 24,
-        
+              height32,
+              SizedBox(
+                width: context.getWidth(),
+                height: context.getHeight() * .39,
+                child: Stack(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Image.asset(
+                      "assets/images/line.png",
+                      width: 10,
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ContainerTracking(
+                        text: trip.timeFrom.format(context),
+                        color: signatureYellowColor,
+                        height: 40,
+                        img: 'assets/images/1BUS.png',
+                      ),
+                      ContainerTracking(
+                        text:
+                            "${locator.getTimeDifference(trip.timeFrom, trip.timeTo)} دقيقة",
+                        color: signatureTealColor,
+                        height: 40,
+                        img: 'assets/images/2BUS.png',
+                      ),
+                      ContainerTracking(
+                        text: trip.timeTo.format(context),
+                        color: signatureYellowColor,
+                        height: 40,
+                        img: 'assets/images/3BUS.png',
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
+              height32,
+              (isCurrent!)
+                  ? BottomButton(
+                      text: "تتبع الباص",
+                      onPressed: () {
+                        context.push(const MapStudent(), true);
+                      },
+                      textColor: whiteColor,
+                      fontSize: 24,
+                    )
+                  : BlocConsumer<TripDetailsBloc, TripDetailsState>(
+                      listener: (context, state) {
+                        if (state is RecievedAttendanceStatusState) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              final tripDetailsBloc =
+                                  context.read<TripDetailsBloc>();
+                              return DialogBox(
+                                text:
+                                    "حالة حضورك الان هي: ${state.status == AttendanceStatus.assueredPrecense ? "حضور مؤكد" : "غائب"}",
+                                acceptText: (state.status ==
+                                        AttendanceStatus.assueredPrecense)
+                                    ? "تغيير لغائب"
+                                    : "تغيير لحاضر",
+                                onAcceptClick: () {
+                                  context.pop();
+                                  tripDetailsBloc.add(
+                                      ChangeAttendanceStatusEvent(
+                                          currentStatus: state.status,
+                                          tripId: trip.id));
+                                },
+                                onRefuseClick: () {
+                                  context.pop();
+                                  tripDetailsBloc.add(GetDriverInfoEvent(
+                                      driverId: trip.driverId));
+                                },
+                              );
+                            },
+                          );
+                        } else if (state is TripDetailsErrorState) {
+                          context.showErrorSnackBar(state.msg);
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is AttendanceStatusLoadingState) {
+                          return const NoItemText(
+                            isLoading: true,
+                            height: 50,
+                          );
+                        } else {
+                          return BottomButton(
+                            text: "تحديث حالة الحضور",
+                            color: signatureTealColor,
+                            onPressed: () {
+                              final tripDetailsBloc =
+                                  context.read<TripDetailsBloc>();
+                              tripDetailsBloc.add(
+                                  GetCurrentAttendanceStatusEvent(
+                                      tripId: trip.id!));
+                            },
+                            textColor: whiteColor,
+                            fontSize: 24,
+                          );
+                        }
+                      },
+                    ),
+            ],
+          ),
         ),
       ),
-            ],
-            
-          ),
-        ),
-      ), 
-      
-      
     );
-    
-  }
-
-}
-
-class ContainerTracking extends StatelessWidget {
-  const ContainerTracking({
-    super.key, required this.text, required this.color, required this.height,
-  });
-final String text;
-final Color color;
-final double height;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: context.getWidth() * 0.800,
-      decoration:BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color:offWhiteColor,
-        border:  Border(right: BorderSide(
-          color: color,width: 6)) ),
-          child:  Text(
-                  "    $text",
-                  style: const TextStyle(
-                    color: signatureBlueColor,
-                    fontFamily: inukFont,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.start,
-                ),);
   }
 }

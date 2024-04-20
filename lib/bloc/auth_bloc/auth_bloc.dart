@@ -258,7 +258,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await dbService.uploadImage(event.imgFile!);
         dbService.getCurrentUserImage();
         emit(ChangedImageState(msg: "تم تحديث الصورة الخاصة بك بنجاح"));
-      } on StorageException catch(e) {
+      } on StorageException catch(_) {
         await dbService.updateImage(event.imgFile!);
         emit(ChangedImageState(msg: "تم تحديث الصورة الخاصة بك بنجاح"));
       } catch (e){

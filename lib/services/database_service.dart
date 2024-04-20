@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:darb_app/data_layer/home_data_layer.dart';
+import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/chat_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
@@ -8,6 +9,7 @@ import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/message_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/models/student_model.dart';
+import 'package:darb_app/utils/enums.dart';
 import 'package:darb_app/widgets/trip_card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -485,5 +487,35 @@ class DBService {
     }
     return tripCardList;
   }
+  //---------------------------Trip Actions---------------------------
+  Future<DarbUser> getDriverUserInfo(String driverId) async{
+    return DarbUser.fromJson(await supabase
+        .from("User")
+        .select()
+        .match({"id": driverId}).single());
 
+  }
+
+  Future<AttendanceList> getStudentAttendanceStatus(int tripId) async {
+    return AttendanceList.fromJson(await supabase.from("AttendanceList").select().match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    }).single());
+  }
+
+  Future<AttendanceStatus> changeAttendanceStatus(int tripId, AttendanceStatus currentStatus) async {
+    if(currentStatus == AttendanceStatus.assueredPrecense){
+      await supabase.from("AttendanceList").update({'status': "غائب"}).match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    });
+      return AttendanceStatus.absent;
+    }else {
+      await supabase.from("AttendanceList").update({'status': "حضور مؤكد"}).match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    });
+      return AttendanceStatus.assueredPrecense;
+    }
+  }
 }

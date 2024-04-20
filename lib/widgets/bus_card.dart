@@ -4,14 +4,12 @@ import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/pages/edit_bus.dart';
 import 'package:darb_app/utils/colors.dart';
-import 'package:darb_app/utils/fonts.dart';
-import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/icon_text_bar.dart';
 import 'package:darb_app/widgets/more_button.dart';
+import 'package:darb_app/widgets/svg_text_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 class BusCard extends StatelessWidget {
   const BusCard({
@@ -63,20 +61,7 @@ class BusCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    SvgPicture.asset("assets/icons/circle_bus_icon.svg"),
-                    width8,
-                    Text(
-                      "$busId",
-                      style: const TextStyle(
-                        color: blackColor,
-                        fontFamily: inukFont,
-                        fontSize: 16,
-                      ),
-                    )
-                  ],
-                ),
+                SvgTextBar(text: "$busId", svgUrl: "assets/icons/circle_bus_icon.svg",),
                 IconTextBar(text: busPlate, icon: Icons.call_to_action_rounded),
                 IconTextBar(
                     text: formatDate(startDate),
@@ -128,3 +113,5 @@ class BusCard extends StatelessWidget {
     );
   }
 }
+
+

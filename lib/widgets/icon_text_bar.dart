@@ -8,24 +8,29 @@ import 'package:flutter/widgets.dart';
 
 class IconTextBar extends StatelessWidget {
   const IconTextBar({
-    super.key, required this.text, required this.icon, this.fontSize = 16,
+    super.key, required this.text, required this.icon, this.fontSize = 16, this.iconColor = signatureYellowColor, this.textDecoration, this.direction, this.textColor = blackColor,
   });
 
   final String text;
   final IconData icon;
   final double? fontSize;
+  final Color? iconColor;
+  final TextDecoration? textDecoration;
+  final Color? textColor;
+  final TextDirection? direction;
   
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      textDirection: direction,
       children: [
-        Icon(icon, color: signatureYellowColor, size: 23,),
+        Icon(icon, color: iconColor, size: 23,),
         width8,
         SizedBox(
           width: context.getWidth() * .3,
           child: Text(
-            text, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: blackColor, fontFamily: inukFont, fontSize: fontSize, ),),
+            text, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: textColor, fontFamily: inukFont, fontSize: fontSize, decoration: textDecoration, decorationColor: textColor), textDirection: direction,),
         )
       ],
     );

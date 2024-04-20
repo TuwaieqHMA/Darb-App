@@ -95,9 +95,9 @@ class TripCard extends StatelessWidget {
                     text: "التفاصيل",
                     onTap: (){
                       if(isCurrent!){
-                        context.push((isStudent!) ? const TrackingPage() : const AttendanceListPage(), true);
+                        context.push((isStudent!) ? TrackingPage(isCurrent: true, trip: trip,) : const AttendanceListPage(), true);
                       }else {
-                        context.push((isStudent!) ? const TrackingPage() : const AttendanceListPage(), true);
+                        context.push((isStudent!) ? TrackingPage(trip: trip,) : const AttendanceListPage(), true);
                       }
                     },
                   ),
