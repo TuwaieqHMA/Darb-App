@@ -30,14 +30,14 @@ final class GetDriverBusNameEvent extends SupervisorActionsEvent {
   GetDriverBusNameEvent(this.busData);
 }
 
-final class SelectBusNumberEvent extends SupervisorActionsEvent {
-  List busId;
-  SelectBusNumberEvent(this.busId);
-}
+// final class SelectBusNumberEvent extends SupervisorActionsEvent {
+//   List busId;
+//   SelectBusNumberEvent(this.busId);
+// }
 
 final class SelectTripDriverEvent extends SupervisorActionsEvent {
-  String driverId;
-  SelectTripDriverEvent(this.driverId);
+  DarbUser driver;
+  SelectTripDriverEvent(this.driver);
 }
 
 final class RefrshDriverEvent extends SupervisorActionsEvent {

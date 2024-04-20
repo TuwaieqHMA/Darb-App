@@ -58,7 +58,7 @@ final class SelectStartAndExpireTimeState extends SupervisorActionsState {
 }
 
 final class SelectTripDriverState extends SupervisorActionsState {
-  String value ;
+  List value ;
   SelectTripDriverState(this.value);
 }  
 final class SelectDriverState extends SupervisorActionsState {

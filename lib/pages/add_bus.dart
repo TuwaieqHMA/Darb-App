@@ -47,7 +47,7 @@ class _AddBusState extends State<AddBus> {
             if (state is SuccessfulState) {
               context.pop();
               context.pop();
-              context.showSuccessSnackBar("تم إضافة باص بنجاح");
+              context.showSuccessSnackBar(state.msg);
               locator.startDate = DateTime.now();
               locator.endDate = DateTime.now();
             }

@@ -140,6 +140,7 @@ class DriverListPage extends StatelessWidget {
               if (state is GetUsersState || state is GetAllTripDriverState) {
                 if (locator.drivers.isNotEmpty) {
                   return ListView.builder(
+                    
                       shrinkWrap: true,
                       itemCount: locator.drivers.length,
                       itemBuilder: (context, index) {

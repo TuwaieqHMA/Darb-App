@@ -4,6 +4,7 @@ import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
+import 'package:darb_app/widgets/no_item_text.dart';
 import 'package:darb_app/widgets/trip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +32,7 @@ class SupervisorHomePage extends StatelessWidget {
         }
       },
       child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         shrinkWrap: true,
         children: [
@@ -91,7 +93,7 @@ class SupervisorHomePage extends StatelessWidget {
                 ],
               );
             }
-            return nothing;
+            return const NoItemText( text: "لا توجد رحلات حالياً");
           }),
 
           // ===========================================

@@ -132,13 +132,12 @@ class DBService {
 
   // Get driver has max trip
   Future getDriversWithoutTrip() async {
-    final data = await supabase.from('Driver').select('*').neq('no_trips', 10);
+    List<DarbUser> tripDriver = [];
+    final data = await supabase.rpc('fetch_available_driver_for_trip');
     for (var e in data) {
-      final withoutBus = await supabase.from('User').select().eq('id', e['id']);
-      for (var driver in withoutBus) {
-        locator.driverHasBusList.add(DarbUser.fromJson(driver));
-      }
+      tripDriver.add(DarbUser.fromJson(e));
     }
+    locator.tripDrivers = tripDriver ;
   }
 
   // Search for driver
@@ -206,25 +205,33 @@ class DBService {
     await supabase.from("Trip").delete().eq('id', tripId);
     final int numTrip = driver.noTrips! - 1;
     await supabase.from("Driver").update({"no_trips": numTrip}).eq('id', driverId.id!);
-    // await supabase.from("AttendanceList").delete().eq('trip_id', tripId); //! when we have AttendanceList data
     await getAllCurrentTrip();
     await getAllFutureTrip();
   }
 
-  //Get trip Driver
-  Future getOneDriver(String id) async {
-    final driver = await supabase.from('User').select('name').eq('id', id);
-    for (var element in driver) {
-      if (locator.tripDriver.isEmpty) {
-        locator.tripDriver.add(DarbUser.fromJson(element));
-      }
-      for (var e in locator.tripDriver) {
-        if (e.id != element['id']) {
-          locator.tripDriver.add(DarbUser.fromJson(element));
-        }
-      }
+  // Get Driver Data
+  Future getOneDriverData(DarbUser user) async {
+    locator.driverData.clear();
+    final data = await supabase.from("Driver").select().eq('id', user.id!);
+    for (var element in data) {
+      locator.driverData.add(Driver.fromJson(element));      
     }
   }
+
+  //Get trip Driver
+  // Future getOneDriver(String id) async {
+  //   final driver = await supabase.from('User').select('name').eq('id', id);
+  //   for (var element in driver) {
+  //     if (locator.tripDrivers.isEmpty) {
+  //       locator.tripDrivers.add(DarbUser.fromJson(element));
+  //     }
+  //     for (var e in locator.tripDrivers) {
+  //       if (e.id != element['id']) {
+  //         locator.tripDrivers.add(DarbUser.fromJson(element));
+  //       }
+  //     }
+  //   }
+  // }
 
   // Get trip information
   Future getAllCurrentTrip() async {

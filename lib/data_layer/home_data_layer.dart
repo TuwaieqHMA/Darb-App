@@ -21,7 +21,7 @@ class HomeData {
   DateTime endDate = DateTime.now();
 
   final List<DarbUser> drivers = [];
-  // final List<DarbUser> tripDriver = [];
+  final List<Driver> driverData = [];
   final List<String> driverHasBus = [];
   late List<DarbUser> driverHasBusList = [];
   late List<String> driverHasTrip = [];
@@ -29,17 +29,11 @@ class HomeData {
   List<DarbUser> students = [];
   final List<Bus> buses = [];
   final List<Bus> numberOfSeat = [];
-  List<Bus> seat = [];
+  // List<Bus> seat = [];
   List<TripCard> supervisorCurrentTrips = [];
   List<TripCard> supervisorFutureTrips = [];
-  List<Trip> trips = [
-    // Trip(id: 12, driverId: "89", district: "kk", date : DateTime.now().add( const Duration(days: 2)), timeFrom: const TimeOfDay(hour: 1, minute: 12),timeTo: const TimeOfDay(hour: 12, minute: 1), isToSchool: false, supervisorId: "12345")
-    // .add( const Duration(days: 2))
-  //  Trip(id: 12, driverId: "89", district: "kk", date : DateTime.now(), timeFrom: const TimeOfDay(hour: 1, minute: 12),timeTo: const TimeOfDay(hour: 12, minute: 1), isToSchool: false, supervisorId: "12345")
-  ];
-  final List<DarbUser> tripDriver = [
-    // DarbUser(name: "salam", email: "sdfghj", phone: "3456789", userType: "Driver", id: "89")
-  ];
+  List<Trip> trips = [];
+  List<DarbUser> tripDrivers = [];
 
   final List<Bus> seatNumber = [
     // Bus(busPlate: "111", driverId: "89", supervisorId: "111", seatsNumber: 6, dateExpire: DateTime.now(), dateIssue:DateTime.now() )
