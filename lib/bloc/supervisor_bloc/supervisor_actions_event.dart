@@ -85,8 +85,7 @@ final class DeleteBus extends SupervisorActionsEvent{
 final class DeleteTrip extends SupervisorActionsEvent{
   String tripId;
   Driver driver;
-  DarbUser driverId;
-  DeleteTrip({ required this.tripId, required this.driver, required this.driverId});
+  DeleteTrip({ required this.tripId, required this.driver,});
 }
 
 final class DeleteStudent extends SupervisorActionsEvent{

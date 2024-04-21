@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
@@ -15,7 +14,6 @@ import 'package:darb_app/widgets/trip_card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 class DBService {
   final supabase = Supabase.instance.client;
@@ -203,10 +201,10 @@ class DBService {
     await getAllDriver();
   }
 
-  Future deleteTrip(String tripId, Driver driver, DarbUser driverId) async {
+  Future deleteTrip(String tripId, Driver driver,) async {
     await supabase.from("Trip").delete().eq('id', tripId);
     final int numTrip = driver.noTrips! - 1;
-    await supabase.from("Driver").update({"no_trips": numTrip}).eq('id', driverId.id!);
+    await supabase.from("Driver").update({"no_trips": numTrip}).eq('id', driver.id);
     await getAllCurrentTrip();
     await getAllFutureTrip();
   }
@@ -258,7 +256,6 @@ class DBService {
         tripCardList.add(TripCard(
           trip: trip,
           driverName: driverData.name,
-          driverId: driverData,
           driver: driver,
           noOfPassengers: noOfPassengers,
         ));
@@ -364,7 +361,6 @@ class DBService {
         tripCardList.add(TripCard(
           trip: trip,
           driverName: driverData.name,
-          driverId: driverData,
           driver: driver,
           noOfPassengers: noOfPassengers,
         ));

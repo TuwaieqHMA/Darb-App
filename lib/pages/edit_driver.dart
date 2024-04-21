@@ -1,7 +1,6 @@
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/darb_user_model.dart';
-import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/bottom_button.dart';
@@ -14,14 +13,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/circle_back_button.dart';
 
 // ignore: must_be_immutable
-class EditDriver extends StatelessWidget {
+class EditDriver extends StatefulWidget {
   EditDriver({super.key, required this.isView, required this.driver});
   final bool isView;
   DarbUser driver;
 
+  @override
+  State<EditDriver> createState() => _EditDriverState();
+}
+
+class _EditDriverState extends State<EditDriver> {
   TextEditingController nameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +73,7 @@ class EditDriver extends StatelessWidget {
                           height24,
                           Center(
                             child: Text(
-                              isView ? "بيانات السائق" : "تعديل السائق",
+                              widget.isView ? "بيانات السائق" : "تعديل السائق",
                               style: const TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,
@@ -72,36 +86,36 @@ class EditDriver extends StatelessWidget {
                               HeaderTextField(
                                 controller: nameController,
                                 headerText: "الاسم",
-                                hintText: driver.name,
-                                isEnabled: isView ? false : true,
+                                hintText: widget.driver.name,
+                                isEnabled: widget.isView ? false : true,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: isView ? true : false,
+                                isReadOnly: widget.isView ? true : false,
                               ),
                               height16,
                               HeaderTextField(
                                 controller: emailController,
                                 headerText: "البريد الالكتروني ",
-                                hintText: driver.email,
+                                hintText: widget.driver.email,
                                 isEnabled:  false,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: isView ? true : false,
+                                isReadOnly: widget.isView ? true : false,
                               ),
                               height16,
                               HeaderTextField(
                                 controller: phoneController,
                                 headerText: "الجوال",
-                                hintText: driver.phone,
-                                isEnabled: isView ? false : true,
+                                hintText: widget.driver.phone,
+                                isEnabled: widget.isView ? false : true,
                                 keyboardType: TextInputType.phone,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: isView ? true : false,
+                                isReadOnly: widget.isView ? true : false,
                               ),
                               height32,
                               height8,
-                              isView
+                              widget.isView
                                   ? const SizedBox.shrink()
                                   : BottomButton(
                                       text: "تعديل بيانات السائق",
@@ -117,9 +131,9 @@ class EditDriver extends StatelessWidget {
                                                     onAcceptClick: () {
                                                       print("button pressed");
                                                       bloc.add(UpdateDriver(
-                                                        id: driver.id!, 
-                                                        name: nameController.text.isEmpty ? driver.name : nameController.text, 
-                                                        phone: phoneController.text.isEmpty ? driver.phone : phoneController.text));
+                                                        id: widget.driver.id!, 
+                                                        name: nameController.text.isEmpty ? widget.driver.name : nameController.text, 
+                                                        phone: phoneController.text.isEmpty ? widget.driver.phone : phoneController.text));
                                                       
                                                       context.pop();
                                                       context.pop();
@@ -132,8 +146,8 @@ class EditDriver extends StatelessWidget {
                                       
                                       },
                                     ),
-                              isView ? const SizedBox.shrink() : height24,
-                              isView
+                              widget.isView ? const SizedBox.shrink() : height24,
+                              widget.isView
                                   ? const SizedBox.shrink()
                                   : BottomButton(
                                       text: "إلغاء",

@@ -17,7 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class EditBus extends StatelessWidget {
+class EditBus extends StatefulWidget {
   EditBus({
     super.key,
     required this.isView,
@@ -27,17 +27,39 @@ class EditBus extends StatelessWidget {
   final isView;
   final isEdit;
   Bus bus;
-  // DarbUser driverName;
 
+  @override
+  State<EditBus> createState() => _EditBusState();
+}
+
+class _EditBusState extends State<EditBus> {
+  // DarbUser driverName;
   TextEditingController nameController = TextEditingController();
+
   TextEditingController busNumberController = TextEditingController();
+
   TextEditingController seatsNumberController = TextEditingController();
+
   TextEditingController busPlateController = TextEditingController();
+
   TextEditingController dateIssusController = TextEditingController();
+
   TextEditingController dateExpireController = TextEditingController();
 
   DateTime startDate = DateTime.now();
+
   DateTime endDate = DateTime.now().add(const Duration(days: 365));
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    busNumberController.dispose();
+    seatsNumberController.dispose();
+    busPlateController.dispose();
+    dateIssusController.dispose();
+    dateExpireController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +99,7 @@ class EditBus extends StatelessWidget {
                         height16,
                         Center(
                           child: Text(
-                            isView ? "بيانات الباص" : "تعديل الباص",
+                            widget.isView ? "بيانات الباص" : "تعديل الباص",
                             style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
@@ -87,7 +109,7 @@ class EditBus extends StatelessWidget {
                         Column(
                           children: [
                             height32,
-                            isView
+                            widget.isView
                                 ? BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
                                     builder: (context, state) {
                                       if(state is SuccessGetDriverState){
@@ -95,17 +117,17 @@ class EditBus extends StatelessWidget {
                                         controller: nameController,
                                         hintText: locator.busDriverName[0].name,
                                         headerText: "اسم السائق",
-                                        isEnabled: isView ? false : true,
+                                        isEnabled: widget.isView ? false : true,
                                         headerColor: signatureTealColor,
                                         textDirection: TextDirection.rtl,
-                                        isReadOnly: isView ? true : false,
+                                        isReadOnly: widget.isView ? true : false,
                                       );
                                       }return nothing;
                                     },
                                   )
                                 : Column(
                                     children: [
-                                      textFieldLabel(text: "اسم السائق "),
+                                      TextFieldLabel(text: "اسم السائق "),
                                       height16,
                                       Container(
                                         padding:
@@ -198,37 +220,37 @@ class EditBus extends StatelessWidget {
                             HeaderTextField(
                               controller: busNumberController,
                               headerText: "رقم الباص ",
-                              hintText: bus.id.toString(),
-                              isEnabled: isView ? false : true,
+                              hintText: widget.bus.id.toString(),
+                              isEnabled: widget.isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
-                              isReadOnly: isView ? true : false,
+                              isReadOnly: widget.isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
                               controller: seatsNumberController,
                               headerText: "عدد المقاعد",
-                              hintText: bus.seatsNumber.toString(),
-                              isEnabled: isView ? false : true,
+                              hintText: widget.bus.seatsNumber.toString(),
+                              isEnabled: widget.isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
-                              isReadOnly: isView ? true : false,
+                              isReadOnly: widget.isView ? true : false,
                             ),
                             height16,
                             HeaderTextField(
                               controller: busPlateController,
                               headerText: "لوحة الباص",
-                              hintText: bus.busPlate,
-                              isEnabled: isView ? false : true,
+                              hintText: widget.bus.busPlate,
+                              isEnabled: widget.isView ? false : true,
                               headerColor: signatureTealColor,
                               textDirection: TextDirection.rtl,
-                              isReadOnly: isView ? true : false,
+                              isReadOnly: widget.isView ? true : false,
                             ),
                             height16,
-                            textFieldLabel(text: " تاريخ اصدار الرخصة "),
+                            TextFieldLabel(text: " تاريخ اصدار الرخصة "),
                             height8,
                             InkWell(
-                              onTap: isView
+                              onTap: widget.isView
                                   ? () {}
                                   : () {
                                       bloc.add(SelectDayEvent(context, 1));
@@ -241,7 +263,7 @@ class EditBus extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: whiteColor,
                                     border: Border.all(
-                                        color: isView
+                                        color: widget.isView
                                             ? fadedBlueColor
                                             : signatureTealColor,
                                         width: 3),
@@ -279,7 +301,7 @@ class EditBus extends StatelessWidget {
                                         width8,
                                         Text(
                                           // isView ?
-                                               bus.dateIssue
+                                               widget.bus.dateIssue
                                                   .toLocal()
                                                   .toString()
                                                   .split(' ')[0],
@@ -295,10 +317,10 @@ class EditBus extends StatelessWidget {
                               ),
                             ),
                             height16,
-                            textFieldLabel(text: " تاريخ انتهاء الرخصة "),
+                            TextFieldLabel(text: " تاريخ انتهاء الرخصة "),
                             height8,
                             InkWell(
-                              onTap: isView
+                              onTap: widget.isView
                                   ? () {}
                                   : () {
                                       bloc.add(SelectDayEvent(context, 2));
@@ -311,7 +333,7 @@ class EditBus extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: whiteColor,
                                     border: Border.all(
-                                        color: isView
+                                        color: widget.isView
                                             ? fadedBlueColor
                                             : signatureTealColor,
                                         width: 3),
@@ -349,7 +371,7 @@ class EditBus extends StatelessWidget {
                                         width8,
                                         Text(
                                           // isView ?
-                                          bus.dateExpire
+                                          widget.bus.dateExpire
                                               .toLocal()
                                               .toString()
                                               .split(' ')[0],
@@ -368,7 +390,7 @@ class EditBus extends StatelessWidget {
                             ),
                             height32,
                             height8,
-                            isView
+                            widget.isView
                                 ? const SizedBox.shrink()
                                 : BottomButton(
                                     text: "تعديل بيانات الباص",
@@ -405,8 +427,8 @@ class EditBus extends StatelessWidget {
                                       }
                                     },
                                   ),
-                            isView ? const SizedBox.shrink() : height24,
-                            isView
+                            widget.isView ? const SizedBox.shrink() : height24,
+                            widget.isView
                                 ? const SizedBox.shrink()
                                 : BottomButton(
                                     text: "إلغاء",

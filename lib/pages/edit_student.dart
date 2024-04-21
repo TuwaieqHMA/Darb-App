@@ -12,15 +12,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
-class EditStudent extends StatelessWidget {
+class EditStudent extends StatefulWidget {
   EditStudent({super.key, required this.isView, required this.student});
   final bool isView;
   DarbUser student;
 
+  @override
+  State<EditStudent> createState() => _EditStudentState();
+}
+
+class _EditStudentState extends State<EditStudent> {
   TextEditingController nameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
+
   TextEditingController addressController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +75,7 @@ class EditStudent extends StatelessWidget {
                           height24,
                           Center(
                             child: Text(
-                              isView ? "بيانات الطالب" : "تعديل الطالب",
+                              widget.isView ? "بيانات الطالب" : "تعديل الطالب",
                               style: const TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,
@@ -71,17 +88,17 @@ class EditStudent extends StatelessWidget {
                               HeaderTextField(
                                 controller: nameController,
                                 headerText: "الاسم",
-                                hintText: student.name,                                
-                                isEnabled: isView ? false : true,
+                                hintText: widget.student.name,                                
+                                isEnabled: widget.isView ? false : true,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: isView ? true : false,
+                                isReadOnly: widget.isView ? true : false,
                               ),
                               height16,
                               HeaderTextField(
                                 controller: emailController,
                                 headerText: "البريد الالكتروني ",
-                                hintText: student.email,
+                                hintText: widget.student.email,
                                 isEnabled: false,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
@@ -91,16 +108,16 @@ class EditStudent extends StatelessWidget {
                               HeaderTextField(
                                 controller: phoneController,
                                 headerText: "رقم الجوال",
-                                hintText: student.phone,
-                                isEnabled: isView ? false : true,
+                                hintText: widget.student.phone,
+                                isEnabled: widget.isView ? false : true,
                                 keyboardType: TextInputType.phone,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: isView ? true : false,
+                                isReadOnly: widget.isView ? true : false,
                               ),
                               height32,
                               height8,
-                              isView
+                              widget.isView
                                   ? const SizedBox.shrink()
                                   : BottomButton(
                                       text: "تعديل بيانات الطالب",
@@ -115,14 +132,14 @@ class EditStudent extends StatelessWidget {
                                             onAcceptClick: () {
                                               bloc.add(
                                                 UpdateStudent(
-                                                    id: student.id!,
+                                                    id: widget.student.id!,
                                                     name: nameController
                                                             .text.isEmpty
-                                                        ? student.name
+                                                        ? widget.student.name
                                                         : nameController.text,
                                                     phone: phoneController
                                                             .text.isEmpty
-                                                        ? student.phone
+                                                        ? widget.student.phone
                                                         : phoneController.text),
                                               );
 
@@ -136,8 +153,8 @@ class EditStudent extends StatelessWidget {
                                         );
                                       },
                                     ),
-                              isView ? const SizedBox.shrink() : height24,
-                              isView
+                              widget.isView ? const SizedBox.shrink() : height24,
+                              widget.isView
                                   ? const SizedBox.shrink()
                                   : BottomButton(
                                       text: "إلغاء",

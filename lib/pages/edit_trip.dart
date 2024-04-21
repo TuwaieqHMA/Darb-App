@@ -2,6 +2,7 @@ import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/darb_user_model.dart';
+import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -10,25 +11,47 @@ import 'package:darb_app/widgets/circle_back_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
-import 'package:darb_app/widgets/trip_card.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class EditTrip extends StatelessWidget {
+class EditTrip extends StatefulWidget {
   EditTrip({super.key, required this.isView, required this.trip});
-  TripCard  trip;
+  Trip trip;
   final bool isView;
 
+  @override
+  State<EditTrip> createState() => _EditTripState();
+}
+
+class _EditTripState extends State<EditTrip> {
   TextEditingController busNumberController = TextEditingController();
+
   TextEditingController tripTypeController = TextEditingController();
+
   TextEditingController nameController = TextEditingController();
+
   TextEditingController locationController = TextEditingController();
+
   TextEditingController dateController = TextEditingController();
+
   TextEditingController dateStartController = TextEditingController();
+
   TextEditingController dateEndController = TextEditingController();
+
+  @override
+  void dispose() {
+    busNumberController.dispose();
+    tripTypeController.dispose();
+    nameController.dispose();
+    locationController.dispose();
+    dateController.dispose();
+    dateStartController.dispose();
+    dateEndController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +85,7 @@ class EditTrip extends StatelessWidget {
                         height24,
                         Center(
                           child: Text(
-                            isView ? "بيانات الرحلة" : "تعديل الرحلة",
+                            widget.isView ? "بيانات الرحلة" : "تعديل الرحلة",
                             style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
@@ -70,7 +93,7 @@ class EditTrip extends StatelessWidget {
                           ),
                         ),
                         height32,
-                        textFieldLabel(text: "نوع الرحلة"),
+                        TextFieldLabel(text: "نوع الرحلة"),
                         height8,
                         BlocBuilder<SupervisorActionsBloc,
                             SupervisorActionsState>(
@@ -147,7 +170,7 @@ class EditTrip extends StatelessWidget {
                                     value: 1,
                                     groupValue: bloc.seletctedType,
                                     onChanged: (value) {
-                                      isView
+                                      widget.isView
                                           ? () {}
                                           : bloc.add(
                                               ChangeTripTypeEvent(num: value!));
@@ -172,7 +195,7 @@ class EditTrip extends StatelessWidget {
                                     value: 2,
                                     groupValue: bloc.seletctedType,
                                     onChanged: (value) {
-                                      isView
+                                      widget.isView
                                           ? () {}
                                           : bloc.add(
                                               ChangeTripTypeEvent(num: value!));
@@ -189,20 +212,20 @@ class EditTrip extends StatelessWidget {
                           headerText: "رقم الباص",
                           headerColor: signatureTealColor,
                           textDirection: TextDirection.rtl,
-                          isReadOnly: isView ? true : false,
+                          isReadOnly: widget.isView ? true : false,
                         ),
                         height16,
-                        isView
+                        widget.isView
                             ? HeaderTextField(
                                 controller: nameController,
                                 headerText: "اسم السائق  ",
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: isView ? true : false,
+                                isReadOnly: widget.isView ? true : false,
                               )
                             : Column(
                               children: [
-                                textFieldLabel(text: "اسم السائق "),
+                                TextFieldLabel(text: "اسم السائق "),
                         height16,
                         Container(
                               padding: const EdgeInsets.only(right: 16),
@@ -369,13 +392,13 @@ class EditTrip extends StatelessWidget {
                           headerText: "الحي",
                           headerColor: signatureTealColor,
                           textDirection: TextDirection.rtl,
-                          isReadOnly: isView ? true : false,
+                          isReadOnly: widget.isView ? true : false,
                         ),
                         height16,
-                        textFieldLabel(text: "اليوم "),
+                        TextFieldLabel(text: "اليوم "),
                         height8,
                         InkWell(
-                          onTap: isView
+                          onTap: widget.isView
                               ? () {}
                               : () {
                                   bloc.add(SelectDayEvent(context, 1));
@@ -433,10 +456,10 @@ class EditTrip extends StatelessWidget {
                               })),
                         ),
                         height16,
-                        textFieldLabel(text: "بداية الرحلة"),
+                        TextFieldLabel(text: "بداية الرحلة"),
                         height8,
                         InkWell(
-                          onTap: isView
+                          onTap: widget.isView
                               ? () {}
                               : () {
                                   bloc.add(SelectStartAndExpireTimeEvent(
@@ -494,10 +517,10 @@ class EditTrip extends StatelessWidget {
                           ),
                         ),
                         height16,
-                        textFieldLabel(text: "نهاية الرحلة"),
+                        TextFieldLabel(text: "نهاية الرحلة"),
                         height8,
                         InkWell(
-                          onTap: isView
+                          onTap: widget.isView
                               ? () {}
                               : () {
                                   bloc.add(SelectStartAndExpireTimeEvent(
@@ -555,7 +578,7 @@ class EditTrip extends StatelessWidget {
                           ),
                         ),
                         height32,
-                        isView
+                        widget.isView
                             ? const SizedBox.shrink()
                             : BottomButton(
                                 text: "تعديل بيانات الرحلة ",
@@ -585,8 +608,8 @@ class EditTrip extends StatelessWidget {
                                   }
                                 },
                               ),
-                        isView ? const SizedBox.shrink() : height24,
-                        isView
+                        widget.isView ? const SizedBox.shrink() : height24,
+                        widget.isView
                             ? const SizedBox.shrink()
                             : BottomButton(
                                 text: "إلغاء",

@@ -13,10 +13,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class DriverListPage extends StatelessWidget {
-  DriverListPage({super.key});
+class DriverListPage extends StatefulWidget {
+  const DriverListPage({super.key});
 
+  @override
+  State<DriverListPage> createState() => _DriverListPageState();
+}
+
+class _DriverListPageState extends State<DriverListPage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +103,7 @@ class DriverListPage extends StatelessWidget {
               if(state is SearchForDriverState){ 
                 return ListView.builder(
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: state.drivers.length,
                       itemBuilder: (context, index) {
                         return PersonCard(
@@ -139,8 +151,8 @@ class DriverListPage extends StatelessWidget {
               if (state is GetUsersState || state is GetAllTripDriverState) {
                 if (locator.drivers.isNotEmpty) {
                   return ListView.builder(
-                    
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: locator.drivers.length,
                       itemBuilder: (context, index) {
                         return PersonCard(

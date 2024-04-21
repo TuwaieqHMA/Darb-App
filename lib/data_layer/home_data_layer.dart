@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
+import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/pages/supervisor_home_page.dart';
 import 'package:darb_app/pages/supervisor_list_page.dart';

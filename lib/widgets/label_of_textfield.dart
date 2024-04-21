@@ -1,10 +1,10 @@
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class textFieldLabel extends StatelessWidget {
-  textFieldLabel({super.key, required this.text});
+// ignore: must_be_immutable
+class TextFieldLabel extends StatelessWidget {
+  TextFieldLabel({super.key, required this.text});
   String text;
 
   @override

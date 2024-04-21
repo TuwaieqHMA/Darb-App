@@ -1,8 +1,8 @@
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
-import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/utils/colors.dart';
+import 'package:darb_app/utils/enums.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/no_item_text.dart';
@@ -68,8 +68,7 @@ class SupervisorHomePage extends StatelessWidget {
                       return Column(
                         children: [
                           TripCard(
-                            isfromSupervisor: true,
-                            selectedTrip: locator.supervisorCurrentTrips[index],
+                            userType: UserType.supervisor,
                             trip: locator.supervisorCurrentTrips[index].trip,
                             driverName: locator
                                 .supervisorCurrentTrips[index].driverName,
@@ -132,8 +131,7 @@ class SupervisorHomePage extends StatelessWidget {
                       return Column(
                         children: [
                           TripCard(
-                            isfromSupervisor: true,
-                            selectedTrip: locator.supervisorFutureTrips[index],
+                            userType: UserType.supervisor,
                             trip: locator.supervisorFutureTrips[index].trip,
                             driverName:
                                 locator.supervisorFutureTrips[index].driverName,

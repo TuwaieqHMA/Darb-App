@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
@@ -327,7 +326,7 @@ class SupervisorActionsBloc
 
   FutureOr<void> deleteTrip(DeleteTrip event, Emitter<SupervisorActionsState> emit) async {
     try{
-      await DBService().deleteTrip(event.tripId, event.driver, event.driverId);
+      await DBService().deleteTrip(event.tripId, event.driver,);
       emit(GetAllCurrentTripState());
       emit(GetAllFutureTripState());
       emit(SuccessfulState("تم حذف الرحلة بنجاح "));
