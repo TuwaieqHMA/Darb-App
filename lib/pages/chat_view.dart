@@ -14,7 +14,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class ChatView extends StatelessWidget {
-  const ChatView({super.key});
+  const ChatView({super.key, required this.studentId, required this.driverId});
+
+  final String studentId;
+  final String driverId;
 
   @override
   Widget build(BuildContext context) {

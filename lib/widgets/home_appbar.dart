@@ -5,9 +5,7 @@ import 'package:darb_app/pages/profile_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
@@ -61,7 +59,7 @@ class HomeAppBar extends StatelessWidget {
                           style: TextStyle(
                               overflow: TextOverflow.ellipsis,
                               color: textColor ?? skyblueColor,
-                              fontSize: context.getWidth() * .08,
+                              fontSize: context.getWidth() * .07,
                               fontFamily: inukFont),
                         );
                       },

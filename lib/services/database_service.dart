@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:darb_app/data_layer/home_data_layer.dart';
+import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/chat_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
@@ -9,6 +10,7 @@ import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/message_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/models/student_model.dart';
+import 'package:darb_app/utils/enums.dart';
 import 'package:darb_app/widgets/trip_card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -627,16 +629,53 @@ class DBService {
       }
     }
     return tripCardList;
-    // List<Trip> tripList = [];
-    // List<Map<String,dynamic>> mapTripIdList = await supabase.from("AttendanceList").select("trip_id").eq('student_id', locator.currentUser.id!);
-    // if(mapTripIdList.isNotEmpty){
-    //   for(var item in mapTripIdList){
-    //   tripList.add(item["trip_id"]);
-    // }
-    // return true;
-    // }else{
-    //   return false;
-    // }
+  }
+  //---------------------------Driver Actions---------------------------
+  Future<List<TripCard>> getAllDriverTrips() async {
+    List<Trip> tripList = [];
+    List<TripCard> tripCardList = [];
+    List<Map<String, dynamic>> mapTriplist = await supabase.from("Trip").select().eq('driver_id', locator.currentUser.id!);
+    if(mapTriplist.isNotEmpty){
+      for (Map<String, dynamic> tripMap in mapTriplist){
+        tripList.add(Trip.fromJson(tripMap));
+      }
+      for(Trip trip in tripList){
+        int noOfPassengers = await supabase.rpc('get_trip_student_count', params: {'tripid': trip.id});
+        tripCardList.add(TripCard(trip: trip, driverName: locator.currentUser.name, noOfPassengers: noOfPassengers,));
+      }
+    }
+    return tripCardList;
+  }
+  //---------------------------Trip Actions---------------------------
+  Future<DarbUser> getDriverUserInfo(String driverId) async{
+    return DarbUser.fromJson(await supabase
+        .from("User")
+        .select()
+        .match({"id": driverId}).single());
+
+  }
+
+  Future<AttendanceList> getStudentAttendanceStatus(int tripId) async {
+    return AttendanceList.fromJson(await supabase.from("AttendanceList").select().match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    }).single());
+  }
+
+  Future<AttendanceStatus> changeAttendanceStatus(int tripId, AttendanceStatus currentStatus) async {
+    if(currentStatus == AttendanceStatus.assueredPrecense){
+      await supabase.from("AttendanceList").update({'status': "غائب"}).match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    });
+      return AttendanceStatus.absent;
+    }else {
+      await supabase.from("AttendanceList").update({'status': "حضور مؤكد"}).match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    });
+      return AttendanceStatus.assueredPrecense;
+    }
   }
 
 }

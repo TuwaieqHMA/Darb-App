@@ -6,7 +6,10 @@ import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/pages/edit_trip.dart';
+import 'package:darb_app/pages/attendance_list.dart';
+import 'package:darb_app/pages/tracking_page.dart';
 import 'package:darb_app/utils/colors.dart';
+import 'package:darb_app/utils/enums.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/go_to_button.dart';
@@ -15,9 +18,10 @@ import 'package:darb_app/widgets/more_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+// ignore: must_be_immutable
 class TripCard extends StatelessWidget {
-  const TripCard({
-    super.key, required this.trip, this.selectedTrip, required this.driverName, this.driverId,  this.driver, required this.noOfPassengers, this.onTap, this.isfromSupervisor = false
+  TripCard({
+    super.key, required this.trip, required this.driverName, required this.noOfPassengers, this.isCurrent = false, this.userType = UserType.student, this.onView, this.onEdit, this.onDelete,
   });
 
   final Trip trip;
@@ -26,8 +30,8 @@ class TripCard extends StatelessWidget {
   final Driver? driver;
   final DarbUser? driverId;
   final int noOfPassengers;
-  final bool isfromSupervisor;
-  final Function()? onTap;
+  bool? isCurrent;
+  UserType? userType;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,7 @@ class TripCard extends StatelessWidget {
       width: context.getWidth(),
       height: 136,
       padding: const EdgeInsets.all(16),
+      margin: (isCurrent!) ? null : const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
           color: whiteColor,
           borderRadius: BorderRadius.circular(20),
@@ -102,15 +107,23 @@ class TripCard extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: isfromSupervisor ?
-                   MoreButton(
+                  child: (userType != UserType.supervisor) ? GoToButton(
+                    text: "التفاصيل",
+                    onTap: (){
+                      if(isCurrent!){
+                        context.push((userType == UserType.student) ? TrackingPage(isCurrent: true, trip: trip,) : AttendanceListPage(trip: trip, noOfPassengers: noOfPassengers, isCurrent: true,), true);
+                      }else {
+                        context.push((userType == UserType.student) ? TrackingPage(trip: trip,) : AttendanceListPage(trip: trip, noOfPassengers: noOfPassengers,), true);
+                      }
+                    },
+                  ) : MoreButton(
                     onViewClick: () {
-                            context.push( EditTrip(isView:  true, trip: selectedTrip!, ), true);
+                            context.push(EditTrip(isView:  true, trip: selectedTrip!, ), true);
                           },
-                          onEditClick: () {
-                            context.push( EditTrip(isView: false, trip: selectedTrip!,), true); // edit trip
+                    onEditClick: onEditClick: () {
+                            context.push(EditTrip(isView: false, trip: selectedTrip!,), true); // edit trip
                           },
-                          onDeleteClick: () {
+                    onDeleteClick: onDeleteClick: () {
                             showDialog(
                               context: context,
                               builder: (context) => DialogBox(
@@ -125,12 +138,7 @@ class TripCard extends StatelessWidget {
                               ),
                             );
                           },
-                  )
-                  : GoToButton(
-                    text: "التفاصيل",
-                    onTap: onTap,
                   ),
-                )
               ],
             ),
           ),

@@ -2,7 +2,6 @@ import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/pages/edit_driver.dart';
-import 'package:darb_app/services/database_service.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/custom_search_bar.dart';
