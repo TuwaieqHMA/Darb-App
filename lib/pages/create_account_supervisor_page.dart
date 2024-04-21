@@ -12,14 +12,33 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
-class CreateAccountSupervisorPage extends StatelessWidget {
+class CreateAccountSupervisorPage extends StatefulWidget {
   CreateAccountSupervisorPage({super.key});
 
+  @override
+  State<CreateAccountSupervisorPage> createState() => _CreateAccountSupervisorPageState();
+}
+
+class _CreateAccountSupervisorPageState extends State<CreateAccountSupervisorPage> {
   TextEditingController nameController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController rePasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    rePasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

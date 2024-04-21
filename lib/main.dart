@@ -73,8 +73,8 @@ class _MainAppState extends State<MainApp> {
          BlocProvider(
           create: (context) => ChatBloc()..add(GetMessagesEvent()),
         ),
-        BlocProvider(create: (context) => StudentBloc()..add(CheckStudentSignStatusEvent()),),
-        BlocProvider(create: (context) => DriverBloc()..add(GetAllDriverTripsEvent()),),
+        BlocProvider(create: (context) => StudentBloc(),),
+        BlocProvider(create: (context) => DriverBloc(),),
         BlocProvider(create: (context) => TripDetailsBloc(),)
         ],
       child: MaterialApp(

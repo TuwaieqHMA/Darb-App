@@ -15,9 +15,7 @@ import 'package:darb_app/widgets/circle_custom_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/page_app_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
@@ -25,14 +23,31 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 
 // ignore: must_be_immutable
-class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   TextEditingController nameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
+
   bool isEdit = false;
+
   File? imageFile;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +81,8 @@ class ProfilePage extends StatelessWidget {
         onPopInvoked: (didPop) async {
           if (didPop && locator.currentUser.userType == "Student") {
             final studentBloc = context.read<StudentBloc>();
-            studentBloc.add(GetAllStudentTripsEvent());
+            studentBloc.add(CheckStudentSignStatusEvent());
+            
           }else if (didPop && locator.currentUser.userType == "Driver"){
             final driverBloc = context.read<DriverBloc>();
             driverBloc.add(GetAllDriverTripsEvent());

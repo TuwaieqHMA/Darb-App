@@ -4,3 +4,9 @@ enum AttendanceStatus {
   absent,
 
 }
+
+enum UserType {
+  supervisor,
+  student,
+  driver,
+}
