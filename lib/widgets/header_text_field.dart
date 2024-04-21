@@ -79,6 +79,9 @@ class HeaderTextField extends StatelessWidget {
           obscureText: isObscured!,
           onChanged: onChange,
           onTap: onTap,
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
         ),
       ],
     );

@@ -49,7 +49,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     emit(AttendanceStatusLoadingState());
 
     try {
-      AttendanceStatus newStatus = await dbService.changeAttendanceStatus(event.tripId!, event.currentStatus);
+      AttendanceStatus newStatus = await dbService.changeAttendanceStatus(event.tripId!, event.currentStatus, null);
       emit(ChangedAttendanceStatusState(msg: "تم تغيير حالة حضورك إلى ${newStatus == AttendanceStatus.assueredPrecense ? "حضور مؤكد" : "غائب"}"));
     } catch (e) {
       emit(TripDetailsErrorState(msg: "حدث خطأ في تغيير حالة حضورك"));
