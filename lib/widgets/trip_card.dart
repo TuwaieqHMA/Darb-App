@@ -1,15 +1,23 @@
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/format_helper.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/darb_user_model.dart';
+import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
+import 'package:darb_app/pages/edit_trip.dart';
 import 'package:darb_app/pages/attendance_list.dart';
 import 'package:darb_app/pages/tracking_page.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/enums.dart';
 import 'package:darb_app/utils/spaces.dart';
+import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/go_to_button.dart';
 import 'package:darb_app/widgets/icon_text_bar.dart';
 import 'package:darb_app/widgets/more_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 // ignore: must_be_immutable
 class TripCard extends StatelessWidget {
   TripCard({
@@ -17,16 +25,19 @@ class TripCard extends StatelessWidget {
   });
 
   final Trip trip;
+  final TripCard? selectedTrip;
   final String driverName;
+  final Driver? driver;
+  final DarbUser? driverId;
   final int noOfPassengers;
   bool? isCurrent;
   UserType? userType;
-  final Function()? onView;
-  final Function()? onEdit;
-  final Function()? onDelete;
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SupervisorActionsBloc>();
+    final locator = GetIt.I.get<HomeData>();
+
     return Container(
       width: context.getWidth(),
       height: 136,
@@ -106,11 +117,28 @@ class TripCard extends StatelessWidget {
                       }
                     },
                   ) : MoreButton(
-                    onViewClick: onView,
-                    onEditClick: onEdit,
-                    onDeleteClick: onDelete,
+                    onViewClick: () {
+                            context.push(EditTrip(isView:  true, trip: selectedTrip!, ), true);
+                          },
+                    onEditClick: onEditClick: () {
+                            context.push(EditTrip(isView: false, trip: selectedTrip!,), true); // edit trip
+                          },
+                    onDeleteClick: onDeleteClick: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => DialogBox(
+                                text: "هل أنت متأكد من حذف الرحلة ؟",
+                                onAcceptClick: () {
+                                  bloc.add(DeleteTrip(tripId: selectedTrip!.trip.id!.toString(), driver: selectedTrip!.driver!, driverId: selectedTrip!.driverId!)); //! delete trip 
+                                  context.pop();
+                                },
+                                onRefuseClick: () {
+                                  context.pop();
+                                },
+                              ),
+                            );
+                          },
                   ),
-                )
               ],
             ),
           ),

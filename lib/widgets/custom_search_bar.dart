@@ -1,22 +1,30 @@
+import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
     super.key,
-    required this.controller, this.hintText, this.onChanged, this.onEditingComplete,
+    required this.controller, this.hintText, this.onChanged, this.onEditingComplete, this.keyboardType, this.inputFormatters,
   });
 
   final TextEditingController controller;
   final String? hintText;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
   final Function(String value)? onChanged;
   final Function()? onEditingComplete;
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SupervisorActionsBloc>();
     return TextField(
       controller: controller,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       style: const TextStyle(color: blackColor, fontFamily: inukFont, fontSize: 16, fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         fillColor: whiteColor,

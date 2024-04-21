@@ -1,6 +1,7 @@
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -41,13 +42,14 @@ class AddTrip extends StatelessWidget {
               context.pop();
               context.pop();
               context.showSuccessSnackBar(state.msg);
+              
+              locator.startDate = DateTime.now();
+              
             }
             if (state is ErrorState) {
               context.pop();
               context.showSuccessSnackBar(state.msg);
             }
-
-            // TODO: implement listener
           },
           child: Stack(
             children: [
@@ -216,11 +218,7 @@ class AddTrip extends StatelessWidget {
                             child: BlocBuilder<SupervisorActionsBloc,
                                 SupervisorActionsState>(
                               builder: (context, state) {
-                                if (state is SelectDriverState ||
-                                    state is SuccessfulState) {
-                                  print("locator.driverHasBusList");
-                                  print(locator.driverHasBusList);
-                                  print(locator.driverHasBusList.length);
+                                if (state is SelectTripDriverState ||state is SuccessGetDriverState) {
                                   return DropdownButton(
                                     hint: const Text("اختر سائق"),
                                     isExpanded: true,
@@ -231,39 +229,35 @@ class AddTrip extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(15),
                                     value: bloc.dropdownAddTripValue.isNotEmpty
                                         ? bloc.dropdownAddTripValue[0]
-                                        : null, //bloc.dropdownValue, //state.value,
+                                        : null,
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       size: 30,
                                       color: signatureBlueColor,
                                     ),
-                                    items: locator.driverHasBusList.map((e) {
-                                      //! bloc.drivers
+                                    items: locator.tripDrivers.map((e) {
                                       return DropdownMenuItem(
-                                        value: e.id,
+                                        value: e,
                                         child: Text(
-                                            locator.driverHasBusList.isNotEmpty
+                                            locator.tripDrivers.isNotEmpty
                                                 ? e.name
                                                 : "جميع السائقين لديهم باص"),
-                                        //(e.name),
+                                       
                                       );
                                     }).toList(),
                                     onChanged: (value) {
-                                      print("value ====  $value");
-                                      bloc.add(
-                                        SelectTripDriverEvent(
-                                          value.toString(),
-                                        ),
-                                      );
+                                      if(value is DarbUser){
+                                        bloc.add(SelectTripDriverEvent(value),);
+                                      }
                                     },
                                   );
                                 }
 
                                 return DropdownButton(
                                   hint: Text(
-                                      (locator.driverHasBusList.isNotEmpty)
+                                      (locator.tripDrivers.isNotEmpty)
                                           ? "اختر سائق"
-                                          : "جميع السائقين لديهم باص"),
+                                          : "جميع السائقين لديهم رحلات"),
                                   isExpanded: true,
                                   menuMaxHeight: 200,
                                   underline: const Text(""),
@@ -271,104 +265,31 @@ class AddTrip extends StatelessWidget {
                                       fontSize: 16, fontFamily: inukFont),
                                   borderRadius: BorderRadius.circular(15),
                                   value: bloc.dropdownAddTripValue.isNotEmpty
-                                      ? bloc.dropdownAddTripValue
-                                      : null,
+                                      ? bloc.dropdownAddTripValue[0].name
+                                      : null ,
                                   icon: const Icon(
                                     Icons.keyboard_arrow_down_outlined,
                                     size: 30,
                                     color: signatureBlueColor,
                                   ),
-                                  items: locator.driverHasBusList.map((e) {
+                                  items: locator.tripDrivers.map((e) {
                                     return DropdownMenuItem(
                                       value: e,
                                       child: Text(
-                                          locator.driverHasBusList.isNotEmpty
+                                          locator.tripDrivers.isNotEmpty
                                               ? e.name
-                                              : "جميع السائقين لديهم باص"),
+                                              : "جميع السائقين لديهم رحلات "),
                                     );
                                   }).toList(),
                                   onChanged: (value) {
-                                    bloc.add(SelectTripDriverEvent(
-                                        value.toString()));
+                                   if(value is DarbUser){
+                                    bloc.add(SelectTripDriverEvent(value));
+                                   }
                                   },
                                 );
                               },
                             ),
                           ),
-
-                          // Container(
-                          //   padding: const EdgeInsets.only(right: 16),
-                          //   alignment: Alignment.centerRight,
-                          //   width: context.getWidth() * 0.9,
-                          //   height: 55,
-                          //   decoration: BoxDecoration(
-                          //     color: whiteColor,
-                          //     border: Border.all(
-                          //         color: signatureTealColor, width: 3),
-                          //     borderRadius: BorderRadius.circular(
-                          //       10,
-                          //     ),
-                          //   ),
-
-                          //   child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
-                          //     builder: (context, state) {
-                          //       if(state is SelectDriverState){
-                          //       return DropdownButton(
-                          //         isExpanded: true,
-                          //         underline: const Text(""),
-                          //         menuMaxHeight: 200,
-                          //         style: const TextStyle(
-                          //             fontSize: 16, fontFamily: inukFont),
-                          //         iconDisabledColor: signatureTealColor,
-                          //         borderRadius: BorderRadius.circular(15),
-                          //         value: state.value[0], // bloc.dropdownAddBusValue[0],/// state.value, // bloc.dropdownValue,
-                          //         icon: const Icon(
-                          //             Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
-                          //         items: locator.driverHasBusList.map((e){
-                          //         // bloc.items.map((e) {
-                          //           return DropdownMenuItem(
-                          //             value: e,
-                          //             child: Text(e.name),
-                          //           );
-                          //         }).toList(),
-                          //         onChanged: (value) {
-                          //           bloc.add(
-                          //               SelectTripDriverEvent(value.toString()));
-                          //             print("ppppppp");
-                          //             print(value);
-                          //         },
-                          //       );
-
-                          //     }return DropdownButton(
-                          //         // disabledHint: const Text("hhh"),
-                          //       hint: const Text("اختر سائق"),
-                          //       isExpanded: true,
-                          //         menuMaxHeight: 200,
-                          //         underline: const Text(""),
-                          //         style: const TextStyle(
-                          //             fontSize: 16, fontFamily: inukFont),
-                          //         iconDisabledColor: signatureTealColor,
-                          //         borderRadius: BorderRadius.circular(15),
-                          //         value:  null ,// bloc.dropdownValue,
-                          //         icon: const Icon(
-                          //             Icons.keyboard_arrow_down_outlined, size : 30, color: signatureBlueColor,),
-                          //         items: locator.driverHasBusList.map((e){
-                          //         // bloc.items.map((e) {
-                          //           return DropdownMenuItem(
-                          //             value: e,
-                          //             child: Text(locator.driverHasTrip.isNotEmpty ? e.name : "ooo"),
-                          //           );
-                          //         }).toList(),
-                          //         onChanged: (value) {
-                          //           bloc.add( SelectTripDriverEvent(value.toString()));
-                          //             print("driiiiivvvveeeerr ");
-                          //             print(value);
-                          //         },
-                          //       );
-
-                          //     },
-                          //   ),
-                          // ),
 
                           height16,
                           HeaderTextField(
@@ -583,17 +504,13 @@ class AddTrip extends StatelessWidget {
                             textColor: whiteColor,
                             fontSize: 20,
                             onPressed: () {
-                              if (busNumberController.text.isNotEmpty &&
-                                      // nameController.text.isNotEmpty &&
+                              if (
+                                !(bloc.endTime.hour > bloc.startTime.hour || (bloc.endTime.hour == bloc.startTime.hour && bloc.endTime.minute > bloc.startTime.minute )
+                              )){
+                                context.showErrorSnackBar("الرجاء اختار وقت النهاية بعد وقت البداية");
+                              } else if (busNumberController.text.isNotEmpty &&
                                       locationController.text.isNotEmpty &&
-                                      bloc.startTripDate
-                                          .isAfter(DateTime.now()) &&
-                                      bloc.startTime.hour !=
-                                          TimeOfDay.hoursPerDay &&
-                                      bloc.endTime.hour != bloc.startTime
-                                  // bloc.startDate == DateTime.now() && // ! add day and start and expire time
-                                  // bloc.startTime != (TimeOfDay.hoursPerDay > 16 ) && // ! add day and start and expire time
-                                  // bloc.endDate != (TimeOfDay.hoursPerDay > 16 )
+                                      bloc.startTripDate.isAfter(DateTime.now()) 
                                   ) {
                                 showDialog(
                                   context: context,
@@ -611,16 +528,14 @@ class AddTrip extends StatelessWidget {
                                             district: locationController.text,
                                             supervisorId:
                                                 locator.currentUser.id!,
-                                            id: int.parse(
-                                                busNumberController.text),
-                                            driverId: "8e2ee3f9-5d45-4a16-b7ed-710e05613cee", // "e5e8213b-fe05-4e7e-a19f-3ff4e2739776"
+                                            driverId: bloc.dropdownAddTripValue[0].id!,
                                           ),
                                           driver: Driver(
-                                            id: "8e2ee3f9-5d45-4a16-b7ed-710e05613cee" ,// bloc.dropdownAddTripValue[0],
+                                            id: bloc.dropdownAddTripValue[0].id!, // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee" ,
                                             supervisorId:
-                                                locator.currentUser.id!,
-                                            hasBus: false,
-                                            noTrips: 2,
+                                                locator.driverData[0].supervisorId,
+                                            hasBus: locator.driverData[0].hasBus,
+                                            noTrips: locator.driverData[0].noTrips
                                           )));
                                     },
                                     onRefuseClick: () {

@@ -1,6 +1,7 @@
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
+import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:darb_app/utils/spaces.dart';
@@ -9,6 +10,7 @@ import 'package:darb_app/widgets/circle_back_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
+import 'package:darb_app/widgets/trip_card.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +18,8 @@ import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class EditTrip extends StatelessWidget {
-  EditTrip({super.key, required this.isView});
+  EditTrip({super.key, required this.isView, required this.trip});
+  TripCard  trip;
   final bool isView;
 
   TextEditingController busNumberController = TextEditingController();
@@ -239,16 +242,18 @@ class EditTrip extends StatelessWidget {
                                       ),
                                       items: locator.driverHasBusList.map((e) { //! bloc.drivers
                                         return DropdownMenuItem(
-                                          value: e.id,
+                                          value: e,
                                           child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
                                           //(e.name),
                                         );
                                       }).toList(),
                                       onChanged: (value) {
+                                        if(value is DarbUser){
                                         print("value ====  $value");
                                         bloc.add(
-                                          SelectBusDriverEvent(value.toString(),),
-                                        );
+                                          SelectBusDriverEvent(value)); //.toString(),),
+                                        
+                                        }
                                       },
                                     );
                                   }
@@ -274,7 +279,9 @@ class EditTrip extends StatelessWidget {
                                       );
                                     }).toList(),
                                     onChanged: (value) {
-                                      bloc.add(SelectBusDriverEvent(value.toString()));
+                                      if(value is DarbUser){
+                                      bloc.add(SelectBusDriverEvent(value)); //.toString()));
+                                    }
                                     },
                                   );
                                 },

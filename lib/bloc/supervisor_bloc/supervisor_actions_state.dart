@@ -7,6 +7,8 @@ final class SupervisorActionsInitial extends SupervisorActionsState {}
 
 
 final class LoadingState extends SupervisorActionsState {}
+final class LoadingCurrentTripState extends SupervisorActionsState {}
+final class LoadingFutureTripState extends SupervisorActionsState {}
 
 final class SuccessfulState extends SupervisorActionsState {
   String msg;
@@ -21,12 +23,25 @@ final class ErrorState extends SupervisorActionsState {
 
 final class ChangeTripTypeState extends SupervisorActionsState {}
 final class GetUsersState extends SupervisorActionsState {}
+final class GetAllStudentState extends SupervisorActionsState {
+  List<DarbUser> student;
+  GetAllStudentState({required this.student});
+}
+final class GetOneStudentState extends SupervisorActionsState {
+  List<DarbUser> student;
+  GetOneStudentState({required this.student});
+}
+
+final class AddStudentToSupervisorState extends SupervisorActionsState {}
 final class GetAllBusState extends SupervisorActionsState {}
-final class GetAllTripState extends SupervisorActionsState {}
+final class SuccessGetDriverState extends SupervisorActionsState {}
+final class GetAllCurrentTripState extends SupervisorActionsState {}
+final class GetAllFutureTripState extends SupervisorActionsState {}
 final class GetAllTripDriverState extends SupervisorActionsState {
   List<Driver> driver = [];
   GetAllTripDriverState(this.driver);
 }
+
 
 
 final class SelectDayState extends SupervisorActionsState {
@@ -42,6 +57,10 @@ final class SelectStartAndExpireTimeState extends SupervisorActionsState {
   SelectStartAndExpireTimeState(this.startTime, this.endTime);
 }
 
+final class SelectTripDriverState extends SupervisorActionsState {
+  List value ;
+  SelectTripDriverState(this.value);
+}  
 final class SelectDriverState extends SupervisorActionsState {
   List value ;
   SelectDriverState(this.value);
@@ -61,5 +80,22 @@ final class ErrorAddBusState extends SupervisorActionsState {
   String mas;
   ErrorAddBusState({required this.mas});
 }
+
+//  ---------------- Search State -----------------------
+final class SearchForStudentState extends SupervisorActionsState {
+  List<DarbUser> student;
+  SearchForStudentState({required this.student});
+}
+
+final class SearchForDriverState extends SupervisorActionsState {
+  List<DarbUser> drivers;
+  SearchForDriverState({required this.drivers});
+}
+
+final class SearchForBusState extends SupervisorActionsState {
+  List<Bus> bus;
+  SearchForBusState({required this.bus});
+}
+
 
 
