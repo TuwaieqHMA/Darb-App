@@ -18,13 +18,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class AddTrip extends StatelessWidget {
+class AddTrip extends StatefulWidget {
   AddTrip({super.key});
 
+  @override
+  State<AddTrip> createState() => _AddTripState();
+}
+
+class _AddTripState extends State<AddTrip> {
   TextEditingController busNumberController = TextEditingController();
+
   TextEditingController tripTypeController = TextEditingController();
+
   TextEditingController nameController = TextEditingController();
+
   TextEditingController locationController = TextEditingController();
+
+  @override
+  void dispose() {
+    busNumberController.dispose();
+    tripTypeController.dispose();
+    nameController.dispose();
+    locationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +99,7 @@ class AddTrip extends StatelessWidget {
                             ),
                           ),
                           height32,
-                          textFieldLabel(text: "نوع الرحلة"),
+                          TextFieldLabel(text: "نوع الرحلة"),
                           height8,
                           BlocBuilder<SupervisorActionsBloc,
                               SupervisorActionsState>(
@@ -200,7 +217,7 @@ class AddTrip extends StatelessWidget {
                             textDirection: TextDirection.rtl,
                           ),
                           height16,
-                          textFieldLabel(text: "اسم السائق "),
+                          TextFieldLabel(text: "اسم السائق "),
                           height16,
                           Container(
                             padding: const EdgeInsets.only(right: 16),
@@ -300,7 +317,7 @@ class AddTrip extends StatelessWidget {
                             textDirection: TextDirection.rtl,
                           ),
                           height16,
-                          textFieldLabel(text: "اليوم "),
+                          TextFieldLabel(text: "اليوم "),
                           height8,
                           InkWell(
                             onTap: () {
@@ -362,7 +379,7 @@ class AddTrip extends StatelessWidget {
                                 })),
                           ),
                           height16,
-                          textFieldLabel(text: "بداية الرحلة"),
+                          TextFieldLabel(text: "بداية الرحلة"),
                           height8,
                           InkWell(
                             onTap: () {
@@ -436,7 +453,7 @@ class AddTrip extends StatelessWidget {
                             ),
                           ),
                           height16,
-                          textFieldLabel(text: "نهاية الرحلة"),
+                          TextFieldLabel(text: "نهاية الرحلة"),
                           height8,
                           InkWell(
                             onTap: () {

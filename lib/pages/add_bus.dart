@@ -33,6 +33,16 @@ class _AddBusState extends State<AddBus> {
   DateTime endDate = DateTime.now().add(const Duration(days: 365));
 
   @override
+  void dispose() {
+    busNumberController.dispose();
+    seatsNumberController.dispose();
+    busPlateController.dispose();
+    dateIssusController.dispose();
+    dateExpireController.dispose();
+    super.dispose();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
     bloc.add(GetAllDriverHasNotBus());
@@ -88,7 +98,7 @@ class _AddBusState extends State<AddBus> {
                           Column(
                             children: [
                               height32,
-                              textFieldLabel(text: "اسم السائق "),
+                              TextFieldLabel(text: "اسم السائق "),
                               height16,
                               Container(
                                 padding: const EdgeInsets.only(right: 16),
@@ -206,7 +216,7 @@ class _AddBusState extends State<AddBus> {
                                 textDirection: TextDirection.rtl,
                               ),
                               height16,
-                              textFieldLabel(text: " تاريخ اصدار الرخصة "),
+                              TextFieldLabel(text: " تاريخ اصدار الرخصة "),
                               height8,
                               InkWell(
                                 onTap: () {
@@ -270,7 +280,7 @@ class _AddBusState extends State<AddBus> {
                                 ),
                               ),
                               height16,
-                              textFieldLabel(text: " تاريخ انتهاء الرخصة "),
+                              TextFieldLabel(text: " تاريخ انتهاء الرخصة "),
                               height8,
                               InkWell(
                                 onTap: () {

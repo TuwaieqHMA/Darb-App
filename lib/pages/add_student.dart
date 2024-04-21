@@ -14,10 +14,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 // ignore: must_be_immutable
-class AddStudent extends StatelessWidget {
-  AddStudent({super.key});
+class AddStudent extends StatefulWidget {
+  const AddStudent({super.key});
 
+  @override
+  State<AddStudent> createState() => _AddStudentState();
+}
+
+class _AddStudentState extends State<AddStudent> {
   TextEditingController idController = TextEditingController();
+
+  @override
+  void dispose() {
+    idController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

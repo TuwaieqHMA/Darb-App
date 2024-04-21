@@ -12,10 +12,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class BusListPage extends StatelessWidget {
-  BusListPage({super.key});
+class BusListPage extends StatefulWidget {
+  const BusListPage({super.key});
 
+  @override
+  State<BusListPage> createState() => _BusListPageState();
+}
+
+class _BusListPageState extends State<BusListPage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +88,7 @@ class BusListPage extends StatelessWidget {
             if (state is SearchForBusState) {
                return ListView.builder(
                     shrinkWrap: true,
+                    primary: false,
                     itemCount: state.bus.length, 
                     itemBuilder: (context, index) {
                       return           
@@ -93,6 +105,7 @@ class BusListPage extends StatelessWidget {
               if (locator.buses.isNotEmpty) {
                 return ListView.builder(
                     shrinkWrap: true,
+                    primary: false,
                     itemCount: locator.buses.length,
                     itemBuilder: (context, index) {
                       return           

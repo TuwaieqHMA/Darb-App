@@ -11,14 +11,33 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
-class AddDriver extends StatelessWidget {
-  AddDriver({super.key});
+class AddDriver extends StatefulWidget {
+  const AddDriver({super.key});
 
+  @override
+  State<AddDriver> createState() => _AddDriverState();
+}
+
+class _AddDriverState extends State<AddDriver> {
   TextEditingController nameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController rePasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    rePasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
