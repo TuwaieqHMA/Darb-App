@@ -58,27 +58,27 @@ final class SelectStartAndExpireTimeState extends SupervisorActionsState {
 }
 
 final class SelectTripDriverState extends SupervisorActionsState {
-  List value ;
-  SelectTripDriverState(this.value);
+  // DarbUser value ;
+  // SelectTripDriverState(this.value);
 }  
 final class SelectDriverState extends SupervisorActionsState {
-  List value ;
-  SelectDriverState(this.value);
+  // DarbUser value ;
+  // SelectDriverState(this.value);
 }  
 
 final class SelectBusNumberState extends SupervisorActionsState {
-  List value;
+  DarbUser value;
   SelectBusNumberState(this.value);
 }
 
 final class SuccessAddBusState extends SupervisorActionsState {
-  String mas;
-  SuccessAddBusState({required this.mas});
+  String msg;
+  SuccessAddBusState({required this.msg});
 }
 
 final class ErrorAddBusState extends SupervisorActionsState {
-  String mas;
-  ErrorAddBusState({required this.mas});
+  String msg;
+  ErrorAddBusState({required this.msg});
 }
 
 //  ---------------- Search State -----------------------

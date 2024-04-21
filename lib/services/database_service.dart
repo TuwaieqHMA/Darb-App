@@ -98,38 +98,36 @@ class DBService {
   // }
 
   // Get driver does not has bus
-  Future getDriversWithoutBus() async {
+  Future<List<DarbUser>> getDriversWithoutBus() async {
     List<DarbUser> busDriver = [];
     final driver = await supabase.rpc('fetch_driver_without_bus');
     for (var element in driver) {
       busDriver.add(DarbUser.fromJson(element));      
     }
     locator.driverHasBusList = busDriver;
+    return busDriver;
   }
-  // Get driver bus name
+  
+  // // Get driver bus name
+  // Future getDriverBusName(Bus driverId) async {
+  //   final data = await supabase.from("User").select().eq('id', driverId.driverId);
+  //   List<DarbUser> drivername  = [];
+  //   for (var element in data) {
+  //     drivername.add(DarbUser.fromJson(element));
+  //   }
+  //   locator.busDriverName = drivername;
+  //   print("locator.busDriverName  == database_service");
+  //   print('${locator.busDriverName[0].name}  ================');
+  // }
+
   Future getDriverBusName(Bus driverId) async {
-    final data = await supabase.from("User").select().eq('id', driverId.driverId);
-    // supabase.rpc('get_diver_bus_name',  params: {'driverid' : driverId.driverId});
-    List<DarbUser> drivername  = [];
-    for (var element in data) {
-      drivername.add(DarbUser.fromJson(element));
-      print(drivername.length);
-      print(drivername[0].name);
-    }
-    locator.busDriverName = drivername;
-    print(locator.busDriverName[0].name);
+    final data = await supabase.from("User").select().eq('id', driverId.driverId).single();
+
+    locator.busDriverName = DarbUser.fromJson(data);
+    print("locator.busDriverName  == database_service");
   }
   
    
-  // Get driver does not has Trip
-  Future getDriversHasTrip() async {
-    final data = await supabase.from('Driver').select('*').eq('no_trips', 0);
-
-    for (var element in data) {
-      locator.driverHasTrip.add(element['id']);
-    }
-  }
-
   // Get driver has max trip
   Future getDriversWithoutTrip() async {
     List<DarbUser> tripDriver = [];
@@ -441,6 +439,14 @@ class DBService {
         .from('User')
         .update({'name': name, 'phone': phone}).eq('id', driverId);
     await getAllDriver();
+  }
+  Future updateBus(Bus bus,) async {
+    await supabase
+        .from('Bus')
+        .update({'seats_number': bus.seatsNumber, 'bus_plate': bus.busPlate, 'date_issue' : bus.dateIssue.toIso8601String(), 'date_expire' : bus.dateExpire.toIso8601String(), 'driver_id': bus.driverId}).eq('id', bus.id!);
+    final updateDriver =
+        await supabase.from('Driver').update({'has_bus': true}).eq('id', bus.driverId);
+    await getAllBuses();
   }
 
 

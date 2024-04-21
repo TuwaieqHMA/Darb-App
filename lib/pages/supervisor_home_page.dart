@@ -156,7 +156,8 @@ class SupervisorHomePage extends StatelessWidget {
                 ],
               );
             }
-            return const SizedBox.shrink();
+             return const NoItemText( text: "لا توجد رحلات حالياً");
+            //  return const SizedBox.shrink();
           }),
         ],
       ),

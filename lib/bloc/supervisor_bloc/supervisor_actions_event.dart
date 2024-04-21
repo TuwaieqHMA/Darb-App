@@ -21,8 +21,9 @@ final class SelectStartAndExpireTimeEvent extends SupervisorActionsEvent {
 }
 
 final class SelectBusDriverEvent extends SupervisorActionsEvent {
-  DarbUser driverId;
-  SelectBusDriverEvent(this.driverId);
+  DarbUser? busDriverId;
+  DarbUser? TripDriverId;
+  SelectBusDriverEvent({this.busDriverId, this.TripDriverId});
 }
 
 final class GetDriverBusNameEvent extends SupervisorActionsEvent {
@@ -30,20 +31,16 @@ final class GetDriverBusNameEvent extends SupervisorActionsEvent {
   GetDriverBusNameEvent(this.busData);
 }
 
-// final class SelectBusNumberEvent extends SupervisorActionsEvent {
-//   List busId;
-//   SelectBusNumberEvent(this.busId);
-// }
 
 final class SelectTripDriverEvent extends SupervisorActionsEvent {
   DarbUser driver;
   SelectTripDriverEvent(this.driver);
 }
 
-final class RefrshDriverEvent extends SupervisorActionsEvent {
+// final class RefrshDriverEvent extends SupervisorActionsEvent {
   // String driverName;
   // RefrshDriverEvent(this.driverName);
-}
+// }
 
 final class GetAllSupervisorCurrentTrip extends SupervisorActionsEvent{}
 final class GetAllSupervisorFutureTrip extends SupervisorActionsEvent{}
@@ -66,6 +63,7 @@ final class UpdateStudent extends SupervisorActionsEvent{
   String phone;
   UpdateStudent({required this.id, required this.name, required this.phone});
 }
+
 
 final class UpdateDriver extends SupervisorActionsEvent{
   String id;  
@@ -105,6 +103,11 @@ final class AddBusEvent extends SupervisorActionsEvent{
   Bus bus;
   String id;
   AddBusEvent({required this.bus, required this.id});
+}
+
+final class UpdateBus extends SupervisorActionsEvent{
+ Bus busData;
+ UpdateBus({required this.busData,});
 }
 
 final class AddTripEvent extends SupervisorActionsEvent{

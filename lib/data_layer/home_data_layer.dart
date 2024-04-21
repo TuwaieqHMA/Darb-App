@@ -18,13 +18,15 @@ class HomeData {
   int currentPageIndex = 0;
 
   DateTime startDate = DateTime.now();
+  DateTime? editStartDate ;
   DateTime endDate = DateTime.now();
+  DateTime? editEndDate;
   final List<DarbUser> drivers = [];
   final List<Driver> driverData = [];
   final List<String> driverHasBus = [];
   late List<DarbUser> driverHasBusList = [];
   late List<String> driverHasTrip = [];
-  late List<DarbUser> busDriverName = [];
+  late DarbUser? busDriverName;
   List<DarbUser> students = [];
   final List<Bus> buses = [];
   final List<Bus> numberOfSeat = [];

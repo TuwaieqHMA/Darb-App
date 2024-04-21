@@ -257,7 +257,7 @@ class _EditTripState extends State<EditTrip> {
                                       style: const TextStyle(
                                           fontSize: 16, fontFamily: inukFont),
                                       borderRadius: BorderRadius.circular(15),
-                                      value: bloc.dropdownAddTripValue.isNotEmpty  ? bloc.dropdownAddTripValue[0] : null, //bloc.dropdownValue, //state.value, 
+                                      value: bloc.dropdownAddTripValue!.name, //bloc.dropdownValue, //state.value, 
                                       icon: const Icon(
                                         Icons.keyboard_arrow_down_outlined,
                                         size: 30,
@@ -274,7 +274,7 @@ class _EditTripState extends State<EditTrip> {
                                         if(value is DarbUser){
                                         print("value ====  $value");
                                         bloc.add(
-                                          SelectBusDriverEvent(value)); //.toString(),),
+                                          SelectBusDriverEvent(TripDriverId:  value)); //.toString(),),
                                         
                                         }
                                       },
@@ -289,7 +289,7 @@ class _EditTripState extends State<EditTrip> {
                                     style: const TextStyle(
                                         fontSize: 16, fontFamily: inukFont),
                                     borderRadius: BorderRadius.circular(15),
-                                    value: bloc.dropdownAddTripValue.isNotEmpty  ? bloc.dropdownAddTripValue : null,
+                                    value: bloc.dropdownAddTripValue?.name,
                                     icon: const Icon(
                                       Icons.keyboard_arrow_down_outlined,
                                       size: 30,
@@ -303,7 +303,7 @@ class _EditTripState extends State<EditTrip> {
                                     }).toList(),
                                     onChanged: (value) {
                                       if(value is DarbUser){
-                                      bloc.add(SelectBusDriverEvent(value)); //.toString()));
+                                      bloc.add(SelectBusDriverEvent(TripDriverId:  value)); //.toString()));
                                     }
                                     },
                                   );
