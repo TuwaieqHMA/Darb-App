@@ -4,7 +4,6 @@ import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/bottom_button.dart';
 import 'package:darb_app/widgets/circle_back_button.dart';
-import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
@@ -77,12 +76,14 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: nameController,
                                   headerText: "الاسم",
+                                  hintText: "الاسم الثلاثي",
                                   headerColor: signatureTealColor,
                                 ),
                                 height16,
                                 HeaderTextField(
                                   controller: emailController,
                                   headerText: "البريد الالكتروني ",
+                                  hintText: "someone@email.com",
                                   headerColor: signatureTealColor,
                                   textDirection: TextDirection.ltr,
                                 ),
@@ -90,6 +91,7 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: phoneController,
                                   headerText: "رقم الجوال",
+                                  hintText: "مبتدأً ب 05",
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
@@ -101,6 +103,7 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: passwordController,
                                   headerText: "كلمة السر",
+                                  hintText: "ادخل كلمة السر",
                                   headerColor: signatureTealColor,
                                   isObscured: true,
                                 ),
@@ -108,6 +111,7 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: rePasswordController,
                                   headerText: "كلمة السر مجدداً",
+                                  hintText: "ادخل كلمة السر مجدداً",
                                   headerColor: signatureTealColor,
                                   isObscured: true,
                                 ),
