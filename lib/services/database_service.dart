@@ -630,7 +630,7 @@ class DBService {
   Future<List<TripCard>> getAllDriverTrips() async {
     List<Trip> tripList = [];
     List<TripCard> tripCardList = [];
-    List<Map<String, dynamic>> mapTriplist = await supabase.from("Trip").select().eq('driver_id', locator.currentUser.id!);
+    List<Map<String, dynamic>> mapTriplist = await supabase.from("Trip").select().eq('driver_id', locator.currentUser.id!).order('date',);
     if(mapTriplist.isNotEmpty){
       for (Map<String, dynamic> tripMap in mapTriplist){
         tripList.add(Trip.fromJson(tripMap));
@@ -658,20 +658,49 @@ class DBService {
     }).single());
   }
 
-  Future<AttendanceStatus> changeAttendanceStatus(int tripId, AttendanceStatus currentStatus) async {
-    if(currentStatus == AttendanceStatus.assueredPrecense){
-      await supabase.from("AttendanceList").update({'status': "غائب"}).match({
-      'trip_id': tripId,
-      'student_id': locator.currentUser.id
-    });
-      return AttendanceStatus.absent;
-    }else {
+  Future<AttendanceStatus> changeAttendanceStatus(int tripId, AttendanceStatus currentStatus, String? studentId) async {
+    if(currentStatus == AttendanceStatus.absent && studentId == null){
       await supabase.from("AttendanceList").update({'status': "حضور مؤكد"}).match({
       'trip_id': tripId,
       'student_id': locator.currentUser.id
     });
       return AttendanceStatus.assueredPrecense;
+    }else if (currentStatus == AttendanceStatus.assueredPrecense && studentId != null){
+      await supabase.from("AttendanceList").update({'status': "حاضر"}).match({
+      'trip_id': tripId,
+      'student_id': studentId
+    });
+      return AttendanceStatus.absent;
+    }else {
+      await supabase.from("AttendanceList").update({'status': "غائب"}).match({
+      'trip_id': tripId,
+      'student_id': studentId
+    });
+    return AttendanceStatus.absent;
     }
+  }
+
+  //---------------------------AttendanceList Actions---------------------------
+
+  Stream<List<AttendanceList>> getAttendanceList(int tripId) {
+    final Stream<List<AttendanceList>> attendanceListStream = supabase
+    .from("AttendanceList")
+    .stream(primaryKey: ['trip_id'])
+    .eq('trip_id', tripId)
+    .order('student_id')
+    .map((records) => records
+    .map((record) => AttendanceList.fromJson(record)).toList());
+    return attendanceListStream;
+  }
+
+  Future<List<DarbUser>> getTripStudentList(int tripId) async{
+    List<DarbUser> studentList = [];
+    final List<dynamic> studentListMap = await supabase.rpc('get_trip_student_list', params: {'tripid': tripId}).order('id');
+
+    for (Map<String, dynamic> student in studentListMap){
+      studentList.add(DarbUser.fromJson(student));
+    }
+    return studentList;
   }
 
 }

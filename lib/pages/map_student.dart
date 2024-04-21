@@ -1,8 +1,7 @@
 import 'dart:collection';
 
-import 'package:darb_app/helpers/extensions/screen_helper.dart';
-import 'package:darb_app/widgets/appbar_home.dart';
-import 'package:darb_app/widgets/circle_back_button.dart';
+import 'package:darb_app/utils/colors.dart';
+import 'package:darb_app/widgets/page_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -21,8 +20,14 @@ class _MapPageState extends State<MapStudent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size(context.getWidth(), context.getHeight() * .10),
-          child: AppBarHome(tital: '', icon: const CircleBackButton())),
+          preferredSize: Size(MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height * 0.10),
+          child: const PageAppBar(
+            title: "الخريطة",
+            backgroundColor: signatureBlueColor,
+            textColor: whiteColor,
+          ),
+          ),
       body: Stack(
         children: [
           GoogleMap(

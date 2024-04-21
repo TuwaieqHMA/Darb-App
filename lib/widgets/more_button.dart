@@ -18,6 +18,7 @@ class MoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MenuAnchor(
+      alignmentOffset: const Offset(-32, 0),
         builder: (context, controller, child) {
           return IconButton(
             style: ButtonStyle(
@@ -36,7 +37,7 @@ class MoreButton extends StatelessWidget {
           elevation: const MaterialStatePropertyAll(10),
           surfaceTintColor: const MaterialStatePropertyAll(offWhiteColor),
           shape: MaterialStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),),
         ),
         menuChildren: [
           MenuItemButton(
@@ -67,7 +68,6 @@ class MoreButton extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w600),
               )),
-         
           MenuItemButton(
               onPressed: onDeleteClick,
               leadingIcon: const Icon(
