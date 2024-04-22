@@ -6,6 +6,7 @@ import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/chat_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
+import 'package:darb_app/models/location_model.dart';
 import 'package:darb_app/models/message_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/models/student_model.dart';
@@ -14,6 +15,7 @@ import 'package:darb_app/widgets/trip_card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class DBService {
   final supabase = Supabase.instance.client;
@@ -702,5 +704,15 @@ class DBService {
     }
     return studentList;
   }
+
+  // Future<Location?> checkDriverLocationExist() async{
+  //   Map<String, dynamic> locationMap = await supabase.from("Location").select().eq('user_id', locator.currentUser.id!).single();
+  //   if(locationMap.isNotEmpty){
+  //     return Location.fromJson(locationMap);
+  //   }else {
+  //     await StreamSubscription<Position> positionStream = Geolocator.getPositionStream();
+  //     await supabase.from("Location").insert(Location(userId: locator.currentUser.id!, latitude: latitude, longitude: longitude).toJson());
+  //   }
+  // }
 
 }

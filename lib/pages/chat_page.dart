@@ -100,7 +100,6 @@ class _ChatPageState extends State<ChatPage> {
         size: result.files.single.size,
         uri: result.files.single.path!,
       );
-
       _addMessage(message);
     }
   }
