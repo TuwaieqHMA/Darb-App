@@ -24,6 +24,14 @@ class _DriverListPageState extends State<DriverListPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
+  void initState() {
+    final bloc = context.read<SupervisorActionsBloc>();
+    bloc.add(GetAllDriver());
+    bloc.add(GetAllTripDriver());
+    super.initState();
+  }
+
+  @override
   void dispose() {
     searchController.dispose();
     super.dispose();
@@ -32,8 +40,6 @@ class _DriverListPageState extends State<DriverListPage> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
-    bloc.add(GetAllDriver());
-    bloc.add(GetAllTripDriver());
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
@@ -64,11 +70,14 @@ class _DriverListPageState extends State<DriverListPage> {
                 controller: searchController,
                 hintText: "ابحث عن سائق...",
                 onChanged: (value) {
-                  if(value.isEmpty){
+                  if (value.isEmpty) {
                     bloc.add(GetAllDriver());
                     bloc.add(GetAllTripDriver());
                   }
-                  bloc.add(SearchForDriverEvent(driverName: searchController.text));
+                },
+                onEditingComplete: () {
+                  bloc.add(
+                      SearchForDriverEvent(driverName: searchController.text));
                 },
               ),
             ),
@@ -76,9 +85,9 @@ class _DriverListPageState extends State<DriverListPage> {
         ),
       ),
       body: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
-        listener: (context, state) {         
-          if(state is SuccessfulState){
-             context.showSuccessSnackBar(state.msg);
+        listener: (context, state) {
+          if (state is SuccessfulState) {
+            context.showSuccessSnackBar(state.msg);
           }
         },
         child: ListView(
@@ -99,56 +108,56 @@ class _DriverListPageState extends State<DriverListPage> {
                     ),
                   ),
                 );
-              }
-              if(state is SearchForDriverState){ 
+              } else if (state is SearchForDriverState) {
                 return ListView.builder(
-                      shrinkWrap: true,
-                      primary: false,
-                      itemCount: state.drivers.length,
-                      itemBuilder: (context, index) {
-                        return PersonCard(
-                          user: state.drivers[index],
-                          name: state.drivers[index].name,
-                          isSigned: (locator.driverHasTrip.contains(state.drivers[index].id)) ? false : true, 
-                          onView: () {
-                            context.push(
-                                EditDriver(
-                                  driver:  state.drivers[index],
-                                  isView: true,
-                                ),
-                                true);
-                          },
-                          onEdit: () {
-                            context.push(
-                                EditDriver(
-                                  driver: state.drivers[index],
-                                  isView: false,
-                                ),
-                                true);
-                          },
-                          onDelete: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => DialogBox(
-                                text: "هل أنت متأكد من حذف السائق ؟",
-                                onAcceptClick: () {
-                                  print("delete pressed");
-                                  bloc.add(DeleteDriver(
-                                      driverId: state.drivers[index].id
-                                          .toString()));
-                                  context.pop();
-                                },
-                                onRefuseClick: () {
-                                  context.pop();
-                                },
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: state.drivers.length,
+                    itemBuilder: (context, index) {
+                      return PersonCard(
+                        user: state.drivers[index],
+                        name: state.drivers[index].name,
+                        isSigned: (locator.driverHasTrip
+                                .contains(state.drivers[index].id))
+                            ? false
+                            : true,
+                        onView: () {
+                          context.push(
+                              EditDriver(
+                                driver: state.drivers[index],
+                                isView: true,
                               ),
-                            );
-                          },
-                        );
-                      });
-                
-              }
-              if (state is GetUsersState || state is GetAllTripDriverState) {
+                              true);
+                        },
+                        onEdit: () {
+                          context.push(
+                              EditDriver(
+                                driver: state.drivers[index],
+                                isView: false,
+                              ),
+                              true);
+                        },
+                        onDelete: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => DialogBox(
+                              text: "هل أنت متأكد من حذف السائق ؟",
+                              onAcceptClick: () {
+                                print("delete pressed");
+                                bloc.add(DeleteDriver(
+                                    driverId:
+                                        state.drivers[index].id.toString()));
+                                context.pop();
+                              },
+                              onRefuseClick: () {
+                                context.pop();
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    });
+              } else {
                 if (locator.drivers.isNotEmpty) {
                   return ListView.builder(
                       shrinkWrap: true,
@@ -158,11 +167,14 @@ class _DriverListPageState extends State<DriverListPage> {
                         return PersonCard(
                           user: locator.drivers[index],
                           name: locator.drivers[index].name,
-                          isSigned: (locator.driverHasTrip.contains(locator.drivers[index].id)) ? false : true, 
+                          isSigned: (locator.driverHasTrip
+                                  .contains(locator.drivers[index].id))
+                              ? false
+                              : true,
                           onView: () {
                             context.push(
                                 EditDriver(
-                                  driver:  locator.drivers[index],
+                                  driver: locator.drivers[index],
                                   isView: true,
                                 ),
                                 true);
@@ -195,7 +207,6 @@ class _DriverListPageState extends State<DriverListPage> {
                           },
                         );
                       });
-                
                 }
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +220,6 @@ class _DriverListPageState extends State<DriverListPage> {
                   ],
                 );
               }
-              return const SizedBox.shrink();
             }),
           ],
         ),

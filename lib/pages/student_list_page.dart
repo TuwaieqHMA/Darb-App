@@ -24,6 +24,13 @@ class _StudentListPageState extends State<StudentListPage> {
   TextEditingController searchController = TextEditingController();
 
   @override
+  void initState() {
+    final bloc = context.read<SupervisorActionsBloc>();
+    bloc.add(GetAllStudent());
+    super.initState();
+  }
+
+  @override
   void dispose() {
     searchController.dispose();
     super.dispose();
@@ -32,8 +39,6 @@ class _StudentListPageState extends State<StudentListPage> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
-    bloc.add(GetAllStudent());
-
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
@@ -65,8 +70,10 @@ class _StudentListPageState extends State<StudentListPage> {
                 hintText: "ابحث عن طالب/ة...",
                 onChanged: (value) {
                   if(value.isEmpty){
-                    bloc.add(GetAllStudent());
+                  bloc.add(GetAllStudent());
                   }
+                },
+                onEditingComplete: () {
                   bloc.add(SearchForStudentEvent(studentName: searchController.text));
                 },
               ),

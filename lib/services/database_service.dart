@@ -29,7 +29,7 @@ class DBService {
   // Get All basic user information
   Future getAllDriver() async {
     final driver =
-        await supabase.from("User").select('*').eq('user_type', 'Driver');
+        await supabase.rpc('get_all_driver_with_supervisor', params: {'supervisorid': locator.currentUser.id});
     locator.drivers.clear();
     for (var element in driver) {
       locator.drivers.add(DarbUser.fromJson(element));
@@ -39,7 +39,7 @@ class DBService {
   // Get All basic user information
   Future getAllUser() async {
     List<DarbUser> studentList = [];
-    final std = await supabase.rpc('get_student_with_supervisor',);
+    final std = await supabase.rpc('get_student_with_supervisor', params: {'supervisorid': locator.currentUser.id});
 
     for (var element in std) {
       studentList.add(DarbUser.fromJson(element));
@@ -112,7 +112,7 @@ class DBService {
   // Get driver does not has bus
   Future<List<DarbUser>> getDriversWithoutBus() async {
     List<DarbUser> busDriver = [];
-    final driver = await supabase.rpc('fetch_driver_without_bus');
+    final driver = await supabase.rpc('fetch_driver_without_bus', params: {'supervisorid' : locator.currentUser.id});
     for (var element in driver) {
       busDriver.add(DarbUser.fromJson(element));      
     }
@@ -132,17 +132,17 @@ class DBService {
   // Get driver has max trip
   Future getDriversWithoutTrip() async {
     List<DarbUser> tripDriver = [];
-    final data = await supabase.rpc('fetch_available_driver_for_trip');
+    final data = await supabase.rpc('fetch_available_driver_for_trip', params: {'supervisorid' : locator.currentUser.id});
     for (var e in data) {
       tripDriver.add(DarbUser.fromJson(e));
     }
-    locator.tripDrivers = tripDriver ;
+    locator.tripDrivers = tripDriver;
   }
 
   // Search for driver
   Future<List<DarbUser>> searchForDriver(String driverName) async {
     List<DarbUser> searchDriver = [];
-    final data = await supabase.from("User").select().match({'name' : driverName, 'user_type': "Driver" });
+    final data = await supabase.rpc('search_for_driver', params: {'driver_name': driverName, 'supervisorid': locator.currentUser.id});
       for (var user in data) {
         searchDriver.add(DarbUser.fromJson(user));
       }
@@ -152,7 +152,7 @@ class DBService {
   // Search for student
   Future<List<DarbUser>> searchForStudent(String studentName) async {
     List<DarbUser> searchStudent = [];
-    final data = await supabase.from("User").select().match({'name' : studentName, 'user_type': "Student" });
+    final data = await supabase.rpc('search_for_student', params: {'student_name': studentName, 'supervisorid': locator.currentUser.id});
       for (var user in data) {
         searchStudent.add(DarbUser.fromJson(user));
       }
@@ -162,7 +162,7 @@ class DBService {
   // Search for bus
   Future<List<Bus>> searchForBus(int busNumber) async {
     List<Bus> searchBus = [];
-    final data = await supabase.from("Bus").select().match({'id' : busNumber, });
+    final data = await supabase.from("Bus").select().match({'id' : busNumber, 'supervisor_id' : locator.currentUser.id});
       for (var user in data) {
         searchBus.add(Bus.fromJson(user));
       }
@@ -171,7 +171,7 @@ class DBService {
 
   // Get Bus information
   Future getAllBuses() async {
-    final bus = await supabase.from('Bus').select('*');
+    final bus = await supabase.from('Bus').select('*').eq('supervisor_id', locator.currentUser.id!);
     locator.buses.clear();
     for (var element in bus) {
       locator.buses.add(Bus.fromJson(element));
@@ -235,7 +235,7 @@ class DBService {
     
     List<Trip> tripList = [];
     List<TripCard> tripCardList = [];
-    List<Map<String, dynamic>> mapTriplist = await supabase.rpc('get_current_supervisor_trips', params: {'supervisor_id' : locator.currentUser.id!});
+    List<Map<String, dynamic>> mapTriplist = await supabase.rpc('get_current_supervisor_trips', params: {'supervisorid' : locator.currentUser.id!});
     // from("Trip").select().eq('supervisor_id', locator.currentUser.id!);
     if (mapTriplist.isNotEmpty) {
       for (Map<String, dynamic> tripMap in mapTriplist) {
@@ -339,7 +339,7 @@ class DBService {
     
     List<Trip> tripList = [];
     List<TripCard> tripCardList = [];
-    List<Map<String, dynamic>> mapTriplist = await supabase.rpc('get_future_supervisor_trips', params: {'supervisor_id' : locator.currentUser.id!});
+    List<Map<String, dynamic>> mapTriplist = await supabase.rpc('get_future_supervisor_trips', params: {'supervisorid' : locator.currentUser.id!});
     // from("Trip").select().eq('supervisor_id', locator.currentUser.id!);
     if (mapTriplist.isNotEmpty) {
       for (Map<String, dynamic> tripMap in mapTriplist) {
