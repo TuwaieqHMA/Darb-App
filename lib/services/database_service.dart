@@ -790,7 +790,7 @@ class DBService {
 
   Future<List<DarbUser>> getTripStudentList(int tripId) async{
     List<DarbUser> studentList = [];
-    final List<dynamic> studentListMap = await supabase.rpc('get_trip_student_list', params: {'tripid': tripId}).order('id');
+    final List<dynamic> studentListMap = await supabase.rpc('get_trip_student_list', params: {'tripid': tripId});
 
     for (Map<String, dynamic> student in studentListMap){
       studentList.add(DarbUser.fromJson(student));
