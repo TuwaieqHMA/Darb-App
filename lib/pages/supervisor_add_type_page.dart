@@ -52,7 +52,7 @@ class SupervisorAddTypePage extends StatelessWidget {
               
                       SupervisorAddCard(
                         onTap: (){
-                          context.push( AddDriver(), true);
+                          context.push( const AddDriver(), true);
                         },
                         text: "سائق جديد",
                         bgColor: const Color.fromARGB(155, 255, 201, 74),
@@ -66,7 +66,7 @@ class SupervisorAddTypePage extends StatelessWidget {
               
                       SupervisorAddCard(
                         onTap: (){
-                          context.push( AddTrip(), true);
+                          context.push( const AddTrip(), true);
                         },
                         text: "رحلة جديد",
                         bgColor: const Color.fromARGB(192, 121, 204, 198),
@@ -80,9 +80,9 @@ class SupervisorAddTypePage extends StatelessWidget {
               
                       SupervisorAddCard(
                         onTap: (){
-                          context.push(AddStudent(), true);
+                          context.push(const AddStudent(), true);
                         },
-                        text: "طالبة جديد",
+                        text: "طالب/ة جديد",
                         bgColor: signatureYellowColor,
                         img: "assets/images/get_on_bus.png",
                         imgColor: const Color.fromARGB(255, 250, 172, 4),

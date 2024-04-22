@@ -44,8 +44,8 @@ class _AddStudentState extends State<AddStudent> {
               context.pop();
               context.showSuccessSnackBar(state.msg);
             }
-            if (state is ErrorAddBusState) {
-              context.showErrorSnackBar(state.mas);
+            if (state is ErrorState) {
+              context.showErrorSnackBar(state.msg);
             }
           },
           child: Stack(
@@ -71,7 +71,7 @@ class _AddStudentState extends State<AddStudent> {
                           height24,
                           const Center(
                             child: Text(
-                              "إضافة طالبة",
+                              "إضافة طالب/ة",
                               style: TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,
@@ -83,8 +83,8 @@ class _AddStudentState extends State<AddStudent> {
                               height32,
                               HeaderTextField(
                                 controller: idController,
-                                headerText: "رمز الطالب التعريفي",
-                                hintText: "أدخل الرمز التعريفي للطالب",
+                                headerText: "رمز الطالب/ة التعريفي",
+                                hintText: "أدخل الرمز التعريفي للطالب/ة",
                                 headerColor: signatureTealColor,
                                 maxLength: 6,
                                 textDirection: TextDirection.rtl,
@@ -147,13 +147,13 @@ class _AddStudentState extends State<AddStudent> {
                                             width8,
                                             GoToButton(
                                               isStudent: true,
-                                              text: " إضافة طالب",
+                                              text: " إضافة طالب/ة",
                                               onTap: () {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) =>
                                                       DialogBox(
-                                                    text: "هل أنت متأكد من إضافة طالب ؟",
+                                                    text: "هل أنت متأكد من إضافة طالب/ة ؟",
                                                     onAcceptClick: () {
                                                       bloc.add(
                                                           AddStudentToSupervisorEvent(student: state.student[0]));
@@ -170,7 +170,7 @@ class _AddStudentState extends State<AddStudent> {
                                       );
                                     }
                                     return const Text(
-                                        "لا يوجد طالب بهذا الرمز");
+                                        "لا يوجد طالب/ة بهذا الرمز");
                                   }
                                   return nothing;
                                 },

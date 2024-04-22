@@ -33,7 +33,7 @@ class SupervisorHomePage extends StatelessWidget {
         }
       },
       child: ListView(
-        physics: const NeverScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         shrinkWrap: true,
         children: [
@@ -79,19 +79,20 @@ class SupervisorHomePage extends StatelessWidget {
                         ],
                       );
                     });
-              }
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  height32,
-                  Image.asset("assets/images/empty_trip.png"),
-                  height16,
-                  const Text(
-                    "لا توجد رحلات حالياً",
-                    style: TextStyle(fontSize: 16, color: signatureBlueColor),
-                  ),
-                ],
-              );
+              } return const NoItemText(isLoading:  true,);
+              // return Column(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     height32,
+              //     Image.asset("assets/images/empty_trip.png"),
+              //     height16,
+              //     const Text(
+              //       "لا توجد رحلات حالياً",
+              //       style: TextStyle(fontSize: 16, color: signatureBlueColor),
+              //     ),
+              //   ],
+              // );
+            
             }
             return const NoItemText( text: "لا توجد رحلات حالياً");
           }),
@@ -126,6 +127,7 @@ class SupervisorHomePage extends StatelessWidget {
               if (locator.supervisorFutureTrips.isNotEmpty) {
                 return ListView.builder(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: locator.supervisorFutureTrips.length,
                     itemBuilder: (context, index) {
                       return Column(
@@ -143,20 +145,25 @@ class SupervisorHomePage extends StatelessWidget {
                       );
                     });
               }
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  height32,
-                  Image.asset("assets/images/empty_trip.png"),
-                  height16,
-                  const Text(
-                    "لا توجد رحلات حالياً",
-                    style: TextStyle(fontSize: 16, color: signatureBlueColor),
-                  ),
-                ],
-              );
+              return const NoItemText( text: "لا توجد رحلات حالياً");
+
+              // return const NoItemText(isLoading:  true,);
+              // return Column(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     height32,
+              //     Image.asset("assets/images/empty_trip.png"),
+              //     height16,
+              //     const Text(
+              //       "لا توجد رحلات حالياً",
+              //       style: TextStyle(fontSize: 16, color: signatureBlueColor),
+              //     ),
+              //   ],
+              // );
             }
-            return const SizedBox.shrink();
+            return const NoItemText(isLoading:  true,);
+            //  return const NoItemText( text: "لا توجد رحلات حالياً");
+            //  return const SizedBox.shrink();
           }),
         ],
       ),

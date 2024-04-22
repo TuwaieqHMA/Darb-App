@@ -27,8 +27,6 @@ class _AddBusState extends State<AddBus> {
   TextEditingController busNumberController = TextEditingController();
   TextEditingController seatsNumberController = TextEditingController();
   TextEditingController busPlateController = TextEditingController();
-  TextEditingController dateIssusController = TextEditingController();
-  TextEditingController dateExpireController = TextEditingController();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 365));
 
@@ -37,16 +35,13 @@ class _AddBusState extends State<AddBus> {
     busNumberController.dispose();
     seatsNumberController.dispose();
     busPlateController.dispose();
-    dateIssusController.dispose();
-    dateExpireController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
     bloc.add(GetAllDriverHasNotBus());
-    bloc.add(GetAllBus());
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
@@ -54,14 +49,15 @@ class _AddBusState extends State<AddBus> {
       body: SafeArea(
         child: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
           listener: (context, state) {
-            if (state is SuccessfulState) {
+            if (state is SuccessAddBusState) {
               context.pop();
               context.pop();
               context.showSuccessSnackBar(state.msg);
+              bloc.dropdownAddBusValue = null;
               locator.startDate = DateTime.now();
               locator.endDate = DateTime.now();
             }
-            if (state is ErrorState) {
+            if (state is ErrorAddBusState) {
               context.showErrorSnackBar(state.msg);
             }
           },
@@ -72,11 +68,16 @@ class _AddBusState extends State<AddBus> {
               ),
               ListView(
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       height24,
-                      CircleBackButton(),
+                      CircleBackButton(
+                        onTap: (){
+                          bloc.dropdownAddBusValue = null;
+                          context.pop();                          
+                        },
+                      ),
                     ],
                   ),
                   Center(
@@ -113,82 +114,43 @@ class _AddBusState extends State<AddBus> {
                                     10,
                                   ),
                                 ),
-                                child: BlocBuilder<SupervisorActionsBloc,
-                                    SupervisorActionsState>(
-                                  builder: (context, state) {
-                                    if (state is SelectDriverState || state is SuccessGetDriverState) {
-                                     
-                                      return DropdownButton(
-                                        hint: const Text("اختر سائق"),
-                                        isExpanded: true,
-                                        underline: const Text(""),
-                                        menuMaxHeight: 200,
-                                        style: const TextStyle(
-                                            fontSize: 16, fontFamily: inukFont),
-                                        borderRadius: BorderRadius.circular(15),
-                                        value: bloc.dropdownAddBusValue.isNotEmpty
-                                            ? bloc.dropdownAddBusValue[0]
-                                            : null, 
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_down_outlined,
-                                          size: 30,
-                                          color: signatureBlueColor,
-                                        ),
-                                        items:
-                                            locator.driverHasBusList.map((e) {
-                                          return DropdownMenuItem(
-                                            value: e,
-                                            child: Text(locator.driverHasBusList.isNotEmpty
-                                                ? e.name
-                                                : "جميع السائقين لديهم باص"),
-                                          );
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          if (value is DarbUser) {
-                                            bloc.add(
-                                              SelectBusDriverEvent(value),
-                                            );
-                                          }
-                                        },
-                                      );
-                                    }
-
+                                child: BlocBuilder<SupervisorActionsBloc,SupervisorActionsState>(
+                                    builder: (context, state) {
+                                    List<DarbUser> drivers = locator.driverHasBusList;
+                                  if (state is SuccessGetDriverState) {
                                     return DropdownButton(
-                                      hint: Text(
-                                          (locator.driverHasBusList.isNotEmpty)
-                                              ? "اختر سائق"
-                                              : "جميع السائقين لديهم باص"),
+                                      hint:  Text( drivers.isNotEmpty ? "اختر سائق" : "لا يوجد سائقين متاحين"),
                                       isExpanded: true,
-                                      menuMaxHeight: 200,
                                       underline: const Text(""),
+                                      menuMaxHeight: 200,
                                       style: const TextStyle(
                                           fontSize: 16, fontFamily: inukFont),
                                       borderRadius: BorderRadius.circular(15),
-                                      value: bloc.dropdownAddBusValue.isNotEmpty
-                                          ? bloc.dropdownAddBusValue[0].name
-                                          : null,
+                                      value: bloc.dropdownAddBusValue,
                                       icon: const Icon(
                                         Icons.keyboard_arrow_down_outlined,
                                         size: 30,
                                         color: signatureBlueColor,
                                       ),
-                                      items: locator.driverHasBusList.map((e) {
+                                      items: drivers
+                                          // locator.driverHasBusList
+                                          .map((e) {
                                         return DropdownMenuItem(
                                           value: e,
-                                          child: Text(locator
-                                                  .driverHasBusList.isNotEmpty
-                                              ? e.name
-                                              : "جميع السائقين لديهم باص"),
+                                          child: Text(e.name),
                                         );
                                       }).toList(),
                                       onChanged: (value) {
                                         if (value is DarbUser) {
-                                          bloc.add(SelectBusDriverEvent(value));
+                                          bloc.add(
+                                            SelectBusDriverEvent(busDriverId:  value),
+                                          );
                                         }
                                       },
                                     );
-                                  },
-                                ),
+                                  }
+                                  return const SizedBox(width: 10, height:  10, child: CircularProgressIndicator(color: signatureYellowColor,));
+                                }),
                               ),
                               height16,
                               HeaderTextField(
@@ -349,25 +311,32 @@ class _AddBusState extends State<AddBus> {
                                 textColor: whiteColor,
                                 fontSize: 20,
                                 onPressed: () {
-                                  if (locator.startDate.month >
+                                  if(
+                                    bloc.dropdownAddBusValue == null
+                                  ){
+                                    context.showErrorSnackBar("الرجاء اختيار السائق");
+                                  }  else if (
+                                    busNumberController.text.isEmpty &&
+                                    seatsNumberController
+                                          .text.isEmpty &&
+                                      busPlateController.text.isEmpty 
+                                     ){ context.showErrorSnackBar(
+                                        "الرجاء ملئ جميع الجقول");
+                                        
+                                      }else if (locator.startDate.month >
                                       locator.endDate.month) {
-                                    context.showErrorSnackBar(
-                                        "تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار");
+                                    context.showErrorSnackBar("تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار");
                                   } else if (locator.startDate.day >=
                                       locator.endDate.day) {
-                                    context.showErrorSnackBar(
-                                        "تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار");
-                                  } else if (seatsNumberController
-                                          .text.isNotEmpty &&
-                                      busPlateController.text.isNotEmpty &&
-                                      bloc.dropdownAddBusValue.isNotEmpty) {
+                                    context.showErrorSnackBar("تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار");
+                                  }else {
                                     showDialog(
                                       context: context,
                                       builder: (context) => DialogBox(
                                         text: "هل أنت متأكد من إضافة باص ؟",
                                         onAcceptClick: () {
-                                          print('bloc.dropdownAddBusValue.length');
-                                          print(bloc.dropdownAddBusValue.length);
+                                          print(
+                                              'bloc.dropdownAddBusValue.length');
                                           bloc.add(AddBusEvent(
                                             bus: Bus(
                                               supervisorId:
@@ -377,9 +346,9 @@ class _AddBusState extends State<AddBus> {
                                               busPlate: busPlateController.text,
                                               dateIssue: locator.startDate,
                                               dateExpire: locator.endDate,
-                                              driverId: bloc.dropdownAddBusValue[0].id.toString(),
+                                              driverId: bloc.dropdownAddBusValue!.id.toString(),
                                             ),
-                                            id: bloc.dropdownAddBusValue[0].id.toString(),
+                                            id: bloc.dropdownAddBusValue!.id.toString(),
                                           ));
                                         },
                                         onRefuseClick: () {
@@ -387,19 +356,12 @@ class _AddBusState extends State<AddBus> {
                                         },
                                       ),
                                     );
-                                  } else {
-                                    context.showErrorSnackBar(
-                                        "الرجاء ملئ جميع الجقول");
                                   }
-
-                                  // bloc.add(RefrshDriverEvent());
                                 },
                               ),
-                              // ),
                             ],
                           ),
-                          Image.asset(
-                            "assets/images/add_bus_img.png",
+                          Image.asset("assets/images/add_bus_img.png",
                             width: context.getWidth(),
                             height: context.getHeight() * .35,
                           ),

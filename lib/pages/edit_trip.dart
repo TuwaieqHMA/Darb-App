@@ -15,6 +15,7 @@ import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class EditTrip extends StatefulWidget {
@@ -28,28 +29,14 @@ class EditTrip extends StatefulWidget {
 
 class _EditTripState extends State<EditTrip> {
   TextEditingController busNumberController = TextEditingController();
-
-  TextEditingController tripTypeController = TextEditingController();
-
   TextEditingController nameController = TextEditingController();
-
   TextEditingController locationController = TextEditingController();
-
-  TextEditingController dateController = TextEditingController();
-
-  TextEditingController dateStartController = TextEditingController();
-
-  TextEditingController dateEndController = TextEditingController();
 
   @override
   void dispose() {
     busNumberController.dispose();
-    tripTypeController.dispose();
     nameController.dispose();
     locationController.dispose();
-    dateController.dispose();
-    dateStartController.dispose();
-    dateEndController.dispose();
     super.dispose();
   }
 
@@ -62,43 +49,123 @@ class _EditTripState extends State<EditTrip> {
     return Scaffold(
       backgroundColor: offWhiteColor,
       body: SafeArea(
-        child: Stack(
-          children: [
-            WaveDecoration(
-              containerColor: lightGreenColor,
-            ),
-            ListView(
-              children: [
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    height24,
-                    CircleBackButton(),
-                  ],
-                ),
-                Center(
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: context.getWidth() * 0.85,
-                    child: Column(
-                      children: [
-                        height24,
-                        Center(
-                          child: Text(
-                            widget.isView ? "بيانات الرحلة" : "تعديل الرحلة",
-                            style: const TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: lightGreenColor),
+        child: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
+          listener: (context, state) {
+            if (state is SuccessfulState) {
+              context.pop();
+              context.pop();
+              context.showSuccessSnackBar("تم تعديل بيانات الرحلة بنجاح");
+            }
+            if (state is ErrorState) {
+              context.showErrorSnackBar(state.msg);
+              context.pop();
+            }
+          },
+          child: Stack(
+            children: [
+              WaveDecoration(
+                containerColor: lightGreenColor,
+              ),
+              ListView(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      height24,
+                      CircleBackButton(
+                        onTap: () {
+                          bloc.add(GetAllSupervisorCurrentTrip());
+                          bloc.add(GetAllSupervisorFutureTrip());
+                          bloc.add(RefrshDriverEvent());
+                          context.pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  Center(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: context.getWidth() * 0.85,
+                      child: Column(
+                        children: [
+                          height24,
+                          Center(
+                            child: Text(
+                              widget.isView ? "بيانات الرحلة" : "تعديل الرحلة",
+                              style: const TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: lightGreenColor),
+                            ),
                           ),
-                        ),
-                        height32,
-                        TextFieldLabel(text: "نوع الرحلة"),
-                        height8,
-                        BlocBuilder<SupervisorActionsBloc,
-                            SupervisorActionsState>(
-                          builder: (context, state) {
-                            if (state is ChangeTripTypeState) {
+                          height32,
+                          TextFieldLabel(text: "نوع الرحلة"),
+                          height8,
+                          BlocBuilder<SupervisorActionsBloc,
+                              SupervisorActionsState>(
+                            builder: (context, state) {
+                              if (state is ChangeTripTypeState) {
+                                return Row(
+                                  children: [
+                                    SizedBox(
+                                      width: context.getWidth() * .4,
+                                      child: RadioListTile(
+                                        fillColor: MaterialStateProperty
+                                            .resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                          return blueColor;
+                                        }),
+                                        title: const Text(
+                                          'ذهاب',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
+                                              color: blueColor),
+                                        ),
+                                        value: 1,
+                                        groupValue:
+                                            widget.trip.isToSchool == true
+                                                ? bloc.seletctedType
+                                                : 2,
+                                        onChanged: (value) {
+                                          widget.isView
+                                              ? () {}
+                                              : bloc.add(ChangeTripTypeEvent(
+                                                  num: value!));
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: context.getWidth() * .4,
+                                      child: RadioListTile(
+                                        fillColor: MaterialStateProperty
+                                            .resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                          return blueColor;
+                                        }),
+                                        title: const Text(
+                                          'عودة',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
+                                              color: blueColor),
+                                        ),
+                                        value: 2,
+                                        groupValue:
+                                            widget.trip.isToSchool == false
+                                                ? bloc.seletctedType
+                                                : 1,
+                                        onChanged: (value) {
+                                          widget.isView
+                                              ? () {}
+                                              : bloc.add(ChangeTripTypeEvent(
+                                                  num: value!));
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
                               return Row(
                                 children: [
                                   SizedBox(
@@ -119,8 +186,10 @@ class _EditTripState extends State<EditTrip> {
                                       value: 1,
                                       groupValue: bloc.seletctedType,
                                       onChanged: (value) {
-                                        bloc.add(
-                                            ChangeTripTypeEvent(num: value!));
+                                        widget.isView
+                                            ? () {}
+                                            : bloc.add(ChangeTripTypeEvent(
+                                                num: value!));
                                       },
                                     ),
                                   ),
@@ -142,284 +211,172 @@ class _EditTripState extends State<EditTrip> {
                                       value: 2,
                                       groupValue: bloc.seletctedType,
                                       onChanged: (value) {
-                                        bloc.add(
-                                            ChangeTripTypeEvent(num: value!));
+                                        widget.isView
+                                            ? () {}
+                                            : bloc.add(ChangeTripTypeEvent(
+                                                num: value!));
                                       },
                                     ),
                                   ),
                                 ],
                               );
-                            }
-                            return Row(
-                              children: [
-                                SizedBox(
-                                  width: context.getWidth() * .4,
-                                  child: RadioListTile(
-                                    fillColor:
-                                        MaterialStateProperty.resolveWith<
-                                            Color>((Set<MaterialState> states) {
-                                      return blueColor;
-                                    }),
-                                    title: const Text(
-                                      'ذهاب',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: blueColor),
-                                    ),
-                                    value: 1,
-                                    groupValue: bloc.seletctedType,
-                                    onChanged: (value) {
-                                      widget.isView
-                                          ? () {}
-                                          : bloc.add(
-                                              ChangeTripTypeEvent(num: value!));
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: context.getWidth() * .4,
-                                  child: RadioListTile(
-                                    fillColor:
-                                        MaterialStateProperty.resolveWith<
-                                            Color>((Set<MaterialState> states) {
-                                      return blueColor;
-                                    }),
-                                    title: const Text(
-                                      'عودة',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: blueColor),
-                                    ),
-                                    value: 2,
-                                    groupValue: bloc.seletctedType,
-                                    onChanged: (value) {
-                                      widget.isView
-                                          ? () {}
-                                          : bloc.add(
-                                              ChangeTripTypeEvent(num: value!));
-                                    },
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        height16,
-                        HeaderTextField(
-                          controller: busNumberController,
-                          headerText: "رقم الباص",
-                          headerColor: signatureTealColor,
-                          textDirection: TextDirection.rtl,
-                          isReadOnly: widget.isView ? true : false,
-                        ),
-                        height16,
-                        widget.isView
-                            ? HeaderTextField(
-                                controller: nameController,
-                                headerText: "اسم السائق  ",
-                                headerColor: signatureTealColor,
-                                textDirection: TextDirection.rtl,
-                                isReadOnly: widget.isView ? true : false,
-                              )
-                            : Column(
-                              children: [
-                                TextFieldLabel(text: "اسم السائق "),
-                        height16,
-                        Container(
-                              padding: const EdgeInsets.only(right: 16),
-                              alignment: Alignment.centerRight,
-                              width: context.getWidth() * 0.9,
-                              height: 55,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                border: Border.all(
-                                    color: signatureTealColor, width: 3),
-                                borderRadius: BorderRadius.circular(
-                                  10,
-                                ),
-                              ),
-                              child: BlocBuilder<SupervisorActionsBloc,
-                                  SupervisorActionsState>(
-                                builder: (context, state) {
-                                  if (state is SelectDriverState 
-                                  || state is SuccessfulState
-                                  ) {
-                                    print("locator.driverHasBusList");
-                                    print(locator.driverHasBusList);
-                                    print(locator.driverHasBusList.length);
-                                    return DropdownButton(
-                                      hint: const Text("اختر سائق"),
-                                      isExpanded: true,
-                                      underline: const Text(""),
-                                      menuMaxHeight: 200,
-                                      style: const TextStyle(
-                                          fontSize: 16, fontFamily: inukFont),
-                                      borderRadius: BorderRadius.circular(15),
-                                      value: bloc.dropdownAddTripValue.isNotEmpty  ? bloc.dropdownAddTripValue[0] : null, //bloc.dropdownValue, //state.value, 
-                                      icon: const Icon(
-                                        Icons.keyboard_arrow_down_outlined,
-                                        size: 30,
-                                        color: signatureBlueColor,
+                            },
+                          ),
+                          height16,
+                          // HeaderTextField(
+                          //   controller: busNumberController,
+                          //   headerText: "رقم الباص",
+                          //   hintText: "!!!",
+                          //   headerColor: signatureTealColor,
+                          //   textDirection: TextDirection.rtl,
+                          //   isReadOnly: widget.isView ? true : false,
+                          //   isEnabled: widget.isView ? false : true,
+                          // ),
+                          height16,
+                          widget.isView
+                              ? BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                                  builder: (context, state) {
+                                    if (state is SuccessGetDriverState) {
+                                    return HeaderTextField(
+                                      controller: nameController,
+                                      headerText: "اسم السائق  ",
+                                      hintText:
+                                          locator.busDriverName?.name ??
+                                              "حدث خطأ أثناء جلب السائق",
+                                      headerColor: signatureTealColor,
+                                      // textDirection: TextDirection.rtl,
+                                      isReadOnly: widget.isView ? true : false,
+                                      isEnabled: widget.isView ? false : true,
+                                    );
+                                    } return nothing;
+                                  },
+                                )
+                              : Column(
+                                  children: [
+                                    TextFieldLabel(text: "اسم السائق "),
+                                    height16,
+                                    Container(
+                                      padding: const EdgeInsets.only(right: 16),
+                                      alignment: Alignment.centerRight,
+                                      width: context.getWidth() * 0.9,
+                                      height: 55,
+                                      decoration: BoxDecoration(
+                                        color: whiteColor,
+                                        border: Border.all(
+                                            color: signatureTealColor,
+                                            width: 3),
+                                        borderRadius: BorderRadius.circular(
+                                          10,
+                                        ),
                                       ),
-                                      items: locator.driverHasBusList.map((e) { //! bloc.drivers
-                                        return DropdownMenuItem(
-                                          value: e,
-                                          child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
-                                          //(e.name),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        if(value is DarbUser){
-                                        print("value ====  $value");
-                                        bloc.add(
-                                          SelectBusDriverEvent(value)); //.toString(),),
-                                        
+                                      child: BlocBuilder<SupervisorActionsBloc,
+                                              SupervisorActionsState>(
+                                          builder: (context, state) {
+                                        List<DarbUser> drivers = [];
+
+                                        if (state is SuccessGetDriverState) {
+                                          if (drivers.isEmpty) {
+                                            drivers = locator.tripDrivers;
+                                          }
+                                          return DropdownButton(
+                                            hint: Text(
+                                                "${locator.busDriverName?.name}"),
+                                            isExpanded: true,
+                                            underline: const Text(""),
+                                            menuMaxHeight: 200,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: inukFont),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            value: bloc.dropdownAddTripValue,
+                                            icon: const Icon(
+                                              Icons
+                                                  .keyboard_arrow_down_outlined,
+                                              size: 30,
+                                              color: signatureBlueColor,
+                                            ),
+                                            items: drivers.map((e) {
+                                              return DropdownMenuItem(
+                                                value: e,
+                                                child: Text(e.name),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              if (value is DarbUser) {
+                                                bloc.add(SelectBusDriverEvent(
+                                                    TripDriverId: value));
+                                              }
+                                            },
+                                          );
                                         }
-                                      },
+                                        return const SizedBox(
+                                            width: 10,
+                                            height: 10,
+                                            child: CircularProgressIndicator(
+                                              color: signatureYellowColor,
+                                            ));
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                          height16,
+                          HeaderTextField(
+                            controller: locationController,
+                            headerText: "الحي",
+                            hintText: widget.trip.district,
+                            headerColor: signatureTealColor,
+                            // textDirection: TextDirection.rtl,
+                            isReadOnly: widget.isView ? true : false,
+                            isEnabled: widget.isView ? false : true,
+                          ),
+                          height16,
+                          TextFieldLabel(text: "اليوم "),
+                          height8,
+                          InkWell(
+                            onTap: widget.isView
+                                ? () {}
+                                : () {
+                                    bloc.add(SelectDayEvent(context, 5));
+                                  },
+                            child: Container(
+                                padding: const EdgeInsets.only(right: 16),
+                                alignment: Alignment.centerRight,
+                                width: context.getWidth() * 0.9,
+                                height: 55,
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  border: Border.all(
+                                      color: widget.isView
+                                          ? fadedBlueColor
+                                          : signatureTealColor,
+                                      width: 3),
+                                  borderRadius: BorderRadius.circular(
+                                    10,
+                                  ),
+                                ),
+                                child: BlocBuilder<SupervisorActionsBloc,
+                                        SupervisorActionsState>(
+                                    builder: (context, state) {
+                                  bloc.editStartTripDate ??= widget.trip.date;
+                                  if (state is SelectDayState) {
+                                    return Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month_rounded,
+                                          color: signatureBlueColor,
+                                          size: 23,
+                                        ),
+                                        width8,
+                                        Text(
+                                          "${bloc.editStartTripDate?.toLocal()}"
+                                              .split(' ')[0],
+                                          style: const TextStyle(
+                                              fontFamily: inukFont),
+                                        ),
+                                      ],
                                     );
                                   }
-
-                                  return DropdownButton(
-                                    hint: Text( (locator.driverHasBusList.isNotEmpty) ? "اختر سائق" : "جميع السائقين لديهم باص"),
-                                    isExpanded: true,
-                                    menuMaxHeight: 200,
-                                    underline: const Text(""),
-                                    style: const TextStyle(
-                                        fontSize: 16, fontFamily: inukFont),
-                                    borderRadius: BorderRadius.circular(15),
-                                    value: bloc.dropdownAddTripValue.isNotEmpty  ? bloc.dropdownAddTripValue : null,
-                                    icon: const Icon(
-                                      Icons.keyboard_arrow_down_outlined,
-                                      size: 30,
-                                      color: signatureBlueColor,
-                                    ),
-                                    items: locator.driverHasBusList.map((e) {
-                                      return DropdownMenuItem(
-                                        value: e ,
-                                        child: Text(locator.driverHasBusList.isNotEmpty ?  e.name : "جميع السائقين لديهم باص"),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      if(value is DarbUser){
-                                      bloc.add(SelectBusDriverEvent(value)); //.toString()));
-                                    }
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                           
-                        // Container(
-                        //   padding: const EdgeInsets.only(right: 16),
-                        //   alignment: Alignment.centerRight,
-                        //   width: context.getWidth() * 0.9,
-                        //   height: 55,
-                        //   decoration: BoxDecoration(
-                        //     color: whiteColor,
-                        //     border:
-                        //         Border.all(color: signatureTealColor, width: 3),
-                        //     borderRadius: BorderRadius.circular(
-                        //       10,
-                        //     ),
-                        //   ),
-                        //   child: BlocBuilder<SupervisorActionsBloc,
-                        //       SupervisorActionsState>(
-                        //     builder: (context, state) {
-                        //       if (state is SelectDriverState) {
-                        //         return DropdownButton(
-                        //           isExpanded: true,
-                        //           underline: const Text(""),
-                        //           menuMaxHeight: 200,
-                        //           style: const TextStyle(
-                        //               fontSize: 16, fontFamily: inukFont),
-                        //           iconDisabledColor: signatureTealColor,
-                        //           borderRadius: BorderRadius.circular(15),
-                        //           value: state.value, // bloc.dropdownValue,
-                        //           icon: const Icon(
-                        //             Icons.keyboard_arrow_down_outlined,
-                        //             size: 30,
-                        //             color: signatureBlueColor,
-                        //           ),
-                        //           items: bloc.items.map((e) {
-                        //             return DropdownMenuItem(
-                        //               value: e,
-                        //               child: Text(e),
-                        //             );
-                        //           }).toList(),
-                        //           onChanged: (value) {
-                        //             // bloc.add(
-                        //             //     SelectDriverEvent(value.toString()));
-                        //           },
-                        //         );
-                        //       }
-                        //       return DropdownButton(
-                        //         disabledHint: const Text("hhh"),
-                        //         hint: const Text("اختر سائق"),
-                        //         isExpanded: true,
-                        //         menuMaxHeight: 200,
-                        //         underline: const Text(""),
-                        //         style: const TextStyle(
-                        //             fontSize: 16, fontFamily: inukFont),
-                        //         iconDisabledColor: signatureTealColor,
-                        //         borderRadius: BorderRadius.circular(15),
-                        //         value: null,
-                        //         icon: const Icon(
-                        //           Icons.keyboard_arrow_down_outlined,
-                        //           size: 30,
-                        //           color: signatureBlueColor,
-                        //         ),
-                        //         items: bloc.items.map((e) {
-                        //           return DropdownMenuItem(
-                        //             value: e,
-                        //             child: Text(e),
-                        //           );
-                        //         }).toList(),
-                        //         onChanged: (value) {
-                        //           // bloc.add(SelectDriverEvent(value.toString()));
-                        //         },
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
-                        
-                              ],
-                            ),
-                        height16,
-                        HeaderTextField(
-                          controller: locationController,
-                          headerText: "الحي",
-                          headerColor: signatureTealColor,
-                          textDirection: TextDirection.rtl,
-                          isReadOnly: widget.isView ? true : false,
-                        ),
-                        height16,
-                        TextFieldLabel(text: "اليوم "),
-                        height8,
-                        InkWell(
-                          onTap: widget.isView
-                              ? () {}
-                              : () {
-                                  bloc.add(SelectDayEvent(context, 1));
-                                },
-                          child: Container(
-                              padding: const EdgeInsets.only(right: 16),
-                              alignment: Alignment.centerRight,
-                              width: context.getWidth() * 0.9,
-                              height: 55,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                border: Border.all(
-                                    color: signatureTealColor, width: 3),
-                                borderRadius: BorderRadius.circular(
-                                  10,
-                                ),
-                              ),
-                              child: BlocBuilder<SupervisorActionsBloc,
-                                      SupervisorActionsState>(
-                                  builder: (context, state) {
-                                if (state is SelectDayState) {
                                   return Row(
                                     children: [
                                       const Icon(
@@ -429,58 +386,60 @@ class _EditTripState extends State<EditTrip> {
                                       ),
                                       width8,
                                       Text(
-                                        "${locator.startDate.toLocal()}"
+                                        "${bloc.editStartTripDate?.toLocal()}"
                                             .split(' ')[0],
                                         style: const TextStyle(
                                             fontFamily: inukFont),
                                       ),
                                     ],
                                   );
-                                }
-                                return Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.calendar_month_rounded,
-                                      color: signatureBlueColor,
-                                      size: 23,
-                                    ),
-                                    width8,
-                                    Text(
-                                      "${locator.startDate.toLocal()}"
-                                          .split(' ')[0],
-                                      style:
-                                          const TextStyle(fontFamily: inukFont),
-                                    ),
-                                  ],
-                                );
-                              })),
-                        ),
-                        height16,
-                        TextFieldLabel(text: "بداية الرحلة"),
-                        height8,
-                        InkWell(
-                          onTap: widget.isView
-                              ? () {}
-                              : () {
-                                  bloc.add(SelectStartAndExpireTimeEvent(
-                                      context, 1));
-                                },
-                          child: Container(
-                            padding: const EdgeInsets.only(right: 16),
-                            alignment: Alignment.centerRight,
-                            width: context.getWidth() * 0.9,
-                            height: 55,
-                            decoration: BoxDecoration(
-                                color: whiteColor,
-                                border: Border.all(
-                                    color: signatureTealColor, width: 3),
-                                borderRadius: BorderRadius.circular(
-                                  10,
-                                )),
-                            child: BlocBuilder<SupervisorActionsBloc,
-                                SupervisorActionsState>(
-                              builder: (context, state) {
-                                if (state is SelectStartAndExpireTimeState) {
+                                })),
+                          ),
+                          height16,
+                          TextFieldLabel(text: "بداية الرحلة"),
+                          height8,
+                          InkWell(
+                            onTap: widget.isView
+                                ? () {}
+                                : () {
+                                    bloc.add(SelectStartAndExpireTimeEvent(
+                                        context, 3));
+                                  },
+                            child: Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              alignment: Alignment.centerRight,
+                              width: context.getWidth() * 0.9,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  border: Border.all(
+                                      color: widget.isView
+                                          ? fadedBlueColor
+                                          : signatureTealColor,
+                                      width: 3),
+                                  borderRadius: BorderRadius.circular(
+                                    10,
+                                  )),
+                              child: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                                builder: (context, state) {
+                                  bloc.editStartTime ??= widget.trip.timeFrom;
+                                  if (state is SelectStartAndExpireTimeState) {
+                                    return Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.access_time_filled,
+                                          color: signatureBlueColor,
+                                          size: 23,
+                                        ),
+                                        width8,
+                                        Text(
+                                          " ${bloc.editStartTime!.minute} : ${bloc.editStartTime!.hourOfPeriod} ${bloc.editStartTime!.period.name == "pm" ? "م" : "ص"} ",
+                                          style: const TextStyle(
+                                              fontFamily: inukFont),
+                                        ),
+                                      ],
+                                    );
+                                  }
                                   return Row(
                                     children: [
                                       const Icon(
@@ -490,58 +449,62 @@ class _EditTripState extends State<EditTrip> {
                                       ),
                                       width8,
                                       Text(
-                                        " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
+                                        " ${bloc.editStartTime!.minute} : ${bloc.editStartTime!.hourOfPeriod} ${bloc.editStartTime!.period.name == "pm" ? "م" : "ص"} ",
                                         style: const TextStyle(
                                             fontFamily: inukFont),
                                       ),
                                     ],
                                   );
-                                }
-                                return Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.access_time_filled,
-                                      color: signatureBlueColor,
-                                      size: 23,
-                                    ),
-                                    width8,
-                                    Text(
-                                      " ${bloc.startTime.minute} : ${bloc.startTime.hourOfPeriod} ${bloc.startTime.period.name == "pm" ? "م" : "ص"} ",
-                                      style:
-                                          const TextStyle(fontFamily: inukFont),
-                                    ),
-                                  ],
-                                );
-                              },
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                        height16,
-                        TextFieldLabel(text: "نهاية الرحلة"),
-                        height8,
-                        InkWell(
-                          onTap: widget.isView
-                              ? () {}
-                              : () {
-                                  bloc.add(SelectStartAndExpireTimeEvent(
-                                      context, 2));
-                                },
-                          child: Container(
-                            padding: const EdgeInsets.only(right: 16),
-                            alignment: Alignment.centerRight,
-                            width: context.getWidth() * 0.9,
-                            height: 55,
-                            decoration: BoxDecoration(
-                                color: whiteColor,
-                                border: Border.all(
-                                    color: signatureTealColor, width: 3),
-                                borderRadius: BorderRadius.circular(
-                                  10,
-                                )),
-                            child: BlocBuilder<SupervisorActionsBloc,
-                                SupervisorActionsState>(
-                              builder: (context, state) {
-                                if (state is SelectStartAndExpireTimeState) {
+                          height16,
+                          TextFieldLabel(text: "نهاية الرحلة"),
+                          height8,
+                          InkWell(
+                            onTap: widget.isView
+                                ? () {}
+                                : () {
+                                    bloc.add(SelectStartAndExpireTimeEvent(
+                                        context, 4));
+                                  },
+                            child: Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              alignment: Alignment.centerRight,
+                              width: context.getWidth() * 0.9,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  border: Border.all(
+                                      color: widget.isView
+                                          ? fadedBlueColor
+                                          : signatureTealColor,
+                                      width: 3),
+                                  borderRadius: BorderRadius.circular(
+                                    10,
+                                  )),
+                              child: BlocBuilder<SupervisorActionsBloc,
+                                  SupervisorActionsState>(
+                                builder: (context, state) {
+                                  bloc.editEndTime ??= widget.trip.timeTo;
+                                  if (state is SelectStartAndExpireTimeState) {
+                                    return Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.access_time_filled,
+                                          color: signatureBlueColor,
+                                          size: 23,
+                                        ),
+                                        width8,
+                                        Text(
+                                          " ${bloc.editEndTime!.minute} : ${bloc.editEndTime!.hourOfPeriod} ${bloc.editEndTime!.period.name == "pm" ? "م" : "ص"} ",
+                                          style: const TextStyle(
+                                              fontFamily: inukFont),
+                                        ),
+                                      ],
+                                    );
+                                  }
                                   return Row(
                                     children: [
                                       const Icon(
@@ -551,83 +514,81 @@ class _EditTripState extends State<EditTrip> {
                                       ),
                                       width8,
                                       Text(
-                                        " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
+                                        " ${bloc.editEndTime!.minute} : ${bloc.editEndTime!.hourOfPeriod} ${bloc.editEndTime!.period.name == "pm" ? "م" : "ص"} ",
                                         style: const TextStyle(
                                             fontFamily: inukFont),
                                       ),
                                     ],
                                   );
-                                }
-                                return Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.access_time_filled,
-                                      color: signatureBlueColor,
-                                      size: 23,
-                                    ),
-                                    width8,
-                                    Text(
-                                      " ${bloc.endTime.minute} : ${bloc.endTime.hourOfPeriod} ${bloc.endTime.period.name == "pm" ? "م" : "ص"} ",
-                                      style:
-                                          const TextStyle(fontFamily: inukFont),
-                                    ),
-                                  ],
-                                );
-                              },
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                        height32,
-                        widget.isView
-                            ? const SizedBox.shrink()
-                            : BottomButton(
-                                text: "تعديل بيانات الرحلة ",
-                                textColor: whiteColor,
-                                fontSize: 20,
-                                onPressed: () {
-                                  if (tripTypeController.text.isNotEmpty &&
-                                      busNumberController.text.isNotEmpty &&
-                                      nameController.text.isNotEmpty &&
-                                      locationController.text.isNotEmpty &&
-                                      dateController.text.isNotEmpty &&
-                                      dateStartController.text.isNotEmpty &&
-                                      dateEndController.text.isNotEmpty) {
+                          height32,
+                          widget.isView
+                              ? const SizedBox.shrink()
+                              : BottomButton(
+                                  text: "تعديل بيانات الرحلة ",
+                                  textColor: whiteColor,
+                                  fontSize: 20,
+                                  onPressed: () {
                                     showDialog(
                                       context: context,
                                       builder: (context) => DialogBox(
                                         text: "هل أنت متأكد من تعديل الرحلة ؟",
                                         onAcceptClick: () {
-                                          //! add new trip to trip table -- bloc --
+                                          print(bloc.editStartTime.toString());
+                                          print(bloc.editEndTime);
+                                          bloc.add(UpdateTrip(
+                                            tripData: Trip(
+                                              id: widget.trip.id,
+                                              isToSchool: bloc.seletctedType == 1 ? true : false,
+                                              district: locationController.text.isEmpty ? widget.trip.district : locationController.text,
+                                              date: bloc.editStartTripDate!,
+                                              driverId: bloc.dropdownAddTripValue == null ? "${locator.busDriverName!.id}" : "${bloc.dropdownAddTripValue!.id}",
+                                              supervisorId: locator.currentUser.id!.toString(),
+                                              timeFrom: //
+                                              //  TimeOfDay.fromDateTime(DateTime.parse("${bloc.editStartTime!}")), //.hour}:${bloc.editStartTime!.minute}".split(':'))),
+                                              // '${bloc.editStartTime.hour}:${bloc.editStartTime.minute}',
+                                              // ${bloc.editStartTime.hour} ${bloc.editStartTime.minute},
+                                              bloc.editStartTime!,
+                                              // "${bloc.editStartTime!.hour.toString().padLeft(2,'0')}:${bloc.editStartTime!.minute.toString().padLeft(2,'0')}: ",
+                                              timeTo:
+                                              //TimeOfDay.fromDateTime(DateTime.parse("${bloc.editEndTime!}")), //  TimeOfDay.fromDateTime(DateFormat.Hm().parse("${bloc.editStartTime!.hour}:${bloc.editStartTime!.minute}".toString.split(':'))),
+                                              bloc.editEndTime!,
+                                            ),
+                                          ));
+                                        },
+                                        onRefuseClick: () {
                                           context.pop();
-                                          context.pop();
-                                          context.showSuccessSnackBar(
-                                              "تم تعديل بيانات الرحلة بنجاح");
                                         },
                                       ),
                                     );
-                                  }
-                                },
-                              ),
-                        widget.isView ? const SizedBox.shrink() : height24,
-                        widget.isView
-                            ? const SizedBox.shrink()
-                            : BottomButton(
-                                text: "إلغاء",
-                                textColor: whiteColor,
-                                fontSize: 20,
-                                color: signatureBlueColor,
-                                onPressed: () {
-                                  context.pop();
-                                },
-                              ),
-                        height32,
-                      ],
+                                  },
+                                ),
+                          widget.isView ? const SizedBox.shrink() : height24,
+                          widget.isView
+                              ? const SizedBox.shrink()
+                              : BottomButton(
+                                  text: "إلغاء",
+                                  textColor: whiteColor,
+                                  fontSize: 20,
+                                  color: signatureBlueColor,
+                                  onPressed: () {
+                                    bloc.add(GetAllSupervisorCurrentTrip());
+                                    bloc.add(GetAllSupervisorFutureTrip());
+                                    context.pop();
+                                  },
+                                ),
+                          height32,
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
