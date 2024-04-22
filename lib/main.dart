@@ -57,7 +57,8 @@ class _MainAppState extends State<MainApp> {
       providers: [
         BlocProvider(create: (context) => SupervisorActionsBloc()),
         BlocProvider(create: (context) => AuthBloc()),
-         BlocProvider(create: (context) => ChatBloc()..add(GetMessagesEvent()),
+         BlocProvider(
+          create: (context) => ChatBloc(),
         ),
         BlocProvider(create: (context) => StudentBloc(),),
         BlocProvider(create: (context) => DriverBloc(),),

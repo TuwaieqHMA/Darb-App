@@ -4,10 +4,9 @@ import 'package:darb_app/models/chat_model.dart'; // استيراد نموذج �
 import 'package:timeago/timeago.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({Key? key, required this.message, required this.chat}) : super(key: key); // تحديث المتغيرات
+  const ChatBubble({Key? key, required this.message,}) : super(key: key); // تحديث المتغيرات
 
-  final Message message;
-  final Chat chat; // تحديث المتغير من Profile إلى Chat
+  final Message message; // تحديث المتغير من Profile إلى Chat
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +14,9 @@ class ChatBubble extends StatelessWidget {
       // إظهار صورة دائرية للمرسل
       if (!message.isMine)
         CircleAvatar(
-          backgroundColor: Colors.red[200],
+          backgroundColor: Colors.grey[500],
           child: Text(
-            chat.driverId.substring(0, 2), // استخدام معرف السائق بدلاً من اسم المستخدم
+            message.userId.substring(0, 2), // استخدام معرف السائق بدلاً من اسم المستخدم
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -33,17 +32,17 @@ class ChatBubble extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: message.isMine
-                ? const Color.fromARGB(255, 79, 158, 143)
-                : const Color.fromARGB(255, 223, 223, 223),
+                ? const Color(0xff79CCC7)
+                : const Color(0xffF3F0F3),
             borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(15),
+              topLeft: const Radius.circular(8),
               bottomLeft: message.isMine
-                  ? const Radius.circular(15)
+                  ? const Radius.circular(8)
                   : const Radius.circular(0),
               bottomRight: message.isMine
                   ? const Radius.circular(0)
-                  : const Radius.circular(15),
-              topRight: const Radius.circular(15),
+                  : const Radius.circular(8),
+              topRight: const Radius.circular(8),
             ),
           ),
           child: Text(

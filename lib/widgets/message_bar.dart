@@ -13,9 +13,9 @@ class MessageBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<ChatBloc>();//-----------
+    final chatBloc = context.read<ChatBloc>();//-----------
     return Container(
-      color: const Color.fromARGB(255, 54, 54, 54),
+      // color: const Color.fromARGB(255, 54, 54, 54),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15),
         child: Row(
@@ -25,11 +25,12 @@ class MessageBar extends StatelessWidget {
                 controller: msgController,
                 maxLines: null,
                 decoration: InputDecoration(
-                  hintText: 'Type a message',
+                  hintText: '...اكتب هنا ',
                   contentPadding: const EdgeInsets.all(8),
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(35),
                   ),
                 ),
@@ -37,16 +38,20 @@ class MessageBar extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                bloc.add(SubmitMessageEvent(msgController.text));
+                 String message = msgController.text.trim(); 
+                if (message.isNotEmpty) {
+                  chatBloc.add(SubmitMessageEvent(message: msgController.text, chatId: chatBloc.currentChatId!));
+                  msgController.clear();
+                }
               },
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 249, 249, 156),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.send),
+                // decoration: const BoxDecoration(
+                //   color: Color.fromARGB(255, 249, 249, 156),
+                //   shape: BoxShape.circle,
+                // ),
+                child: const Icon(Icons.send,color: Color.fromARGB(255, 249, 249, 156),size: 45,),
               ),
             ),
           ],
