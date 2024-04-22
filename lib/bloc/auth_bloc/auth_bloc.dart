@@ -118,6 +118,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoadingState());
 
     await dbService.signOut();
+    locator.currentPageIndex = 0;
     emit(SignedOutState(msg: "تم تسجيل خروجك بنجاح"));
   }
 

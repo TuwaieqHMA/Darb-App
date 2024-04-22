@@ -170,6 +170,27 @@ class SupervisorHomePage extends StatelessWidget {
           }),
         ],
       ),
-    ));
+    ),
+      floatingActionButton: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(builder: (context, state) {
+      if((state is! GetAllCurrentTripState)){
+        return FloatingActionButton(
+              onPressed: () {
+                bloc.add(GetAllSupervisorCurrentTrip());
+                bloc.add(GetAllSupervisorFutureTrip());
+              },
+              shape: const CircleBorder(),
+              backgroundColor: signatureYellowColor,
+              child: const Icon(
+                Icons.refresh_rounded,
+                color: whiteColor,
+              ),
+      );
+      }else{
+      return nothing;
+      }
+      
+    },),
+    floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+    );
   }
 }
