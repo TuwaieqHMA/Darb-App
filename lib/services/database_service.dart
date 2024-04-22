@@ -380,7 +380,9 @@ class DBService {
   Future addTrip(Trip trip,) async {
     // final data = await getDriverData(trip.driverId);
     final addTrip = await supabase.from('Trip').insert(trip.toJson());
-    
+    print("trip.district");
+    print(trip.district);
+
     await GetOneTrip(trip);
     // final int numberOfTrip = driver.noTrips! + 1;
     // final int numberOfTrip = data.noTrips! + 1;
@@ -403,20 +405,24 @@ class DBService {
   }
 
   Future GetOneTrip(Trip trip) async {
-    Trip tripData ; 
+    int tripId;
+    print(trip.district); 
+    print(trip.driverId); 
+    print(trip.supervisorId); 
+    print(trip.supervisorId); 
     final data = await supabase.from("Trip").select('id').match({
       'isToSchool': trip.isToSchool, 
       'district': trip.district, 
       'date' : trip.date.toIso8601String(), 
       'time_from' : '${trip.timeFrom.hour}:${trip.timeFrom.minute}', 
       'time_to' : '${trip.timeTo.hour}:${trip.timeTo.minute}', 
-      'driver_id': trip.driverId,
+      'driver_id': trip.driverId.toString(),
     }).single();
-    trip = Trip.fromJson(data);
+    tripId = data['id'];
 
     for (var element in locator.students) {      
       await supabase.from("AttendanceList").insert({
-        "trip_id" : trip.id!,
+        "trip_id" : tripId,
         "student_id": element.id!, 
         "status" : "حضور مؤكد",
       });

@@ -499,10 +499,9 @@ class _AddTripState extends State<AddTrip> {
                                       locationController.text.isEmpty ) {
                                 context.showErrorSnackBar("الرجاء ملئ جميع الحقول");
                                                            
-                              }else if (bloc.startTripDate.day == DateTime.now().day){
+                              } else if (bloc.startTripDate.day == DateTime.now().day){
                                 context.showErrorSnackBar("الرجاء تغيير اليوم ، لا يسمح بإضافة رحلة في نفس اليوم ");
-                              }
-                              else if (
+                              } else if (
                                 !(bloc.endTime.hour > bloc.startTime.hour || (bloc.endTime.hour == bloc.startTime.hour && bloc.endTime.minute > bloc.startTime.minute )
                               )){
                                 context.showErrorSnackBar("الرجاء اختار وقت النهاية بعد وقت البداية");
@@ -517,6 +516,9 @@ class _AddTripState extends State<AddTrip> {
                                       print(locator.students);
                                       print("locator.students");
                                       // bloc.add(GetDriverInfoEvent(bloc.dropdownAddTripValue!.id!));
+                                      print(locationController.text);
+                                      print(locator.currentUser.id!);
+                                      print(bloc.dropdownAddTripValue!.id);
                                       bloc.add(AddTripEvent(
                                           trip: Trip(
                                             isToSchool: bloc.seletctedType == 1
@@ -527,8 +529,8 @@ class _AddTripState extends State<AddTrip> {
                                             timeTo: bloc.endTime,
                                             district: locationController.text,
                                             supervisorId:
-                                                locator.currentUser.id!,
-                                            driverId: bloc.dropdownAddTripValue!.id!,
+                                                locator.currentUser.id!.toString(),
+                                            driverId: bloc.dropdownAddTripValue!.id!.toString() //"8e2ee3f9-5d45-4a16-b7ed-710e05613cee" // bloc.dropdownAddTripValue!.id!,
                                           ),
                                           // driver: Driver(
                                           //   id: bloc.dropdownAddTripValue!.id!, // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee" ,
