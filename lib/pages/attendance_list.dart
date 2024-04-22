@@ -4,7 +4,6 @@ import 'package:darb_app/bloc/student_bloc/student_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/attendance_list_model.dart';
-import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/pages/map_page.dart';
 import 'package:darb_app/utils/colors.dart';
@@ -33,6 +32,7 @@ class AttendanceListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final attendanceListBloc = context.read<AttendanceListBloc>();
     final locator = GetIt.I.get<HomeData>();
+    (isCurrent!) ? attendanceListBloc.add(UpdateDriverLocationEvent(trip: trip)) : null;
     attendanceListBloc.add(GetAttendanceListInfoEvent(tripId: trip.id!));
     return PopScope(
       canPop: true,
@@ -157,7 +157,7 @@ class AttendanceListPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       itemCount: state.studentList.length,
                       itemBuilder:(context, index) {
-                        AttendanceStatus studentStatus = (attendanceList![index].status == "حضور مؤكد") ? AttendanceStatus.assueredPrecense : (attendanceList[index].status == "حاضر") ? AttendanceStatus.present : AttendanceStatus.absent;
+                        AttendanceStatus studentStatus = (attendanceList[index].status == "حضور مؤكد") ? AttendanceStatus.assueredPrecense : (attendanceList[index].status == "حاضر") ? AttendanceStatus.present : AttendanceStatus.absent;
                         return ListViewBar(i: index+1, student: state.studentList[index], status:  studentStatus, trip: trip, isCurrent: !isCurrent!,);
                     }
                     ) : nothing;
