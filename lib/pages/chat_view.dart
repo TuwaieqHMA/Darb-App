@@ -1,29 +1,44 @@
-import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
-import 'package:darb_app/models/chat_model.dart';
-import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/message_model.dart';
 import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/widgets/chat_bubble.dart';
 import 'package:darb_app/widgets/message_bar.dart';
-import 'package:darb_app/pages/login_page.dart';
 import 'package:darb_app/widgets/page_app_bar.dart';
 import 'package:flutter/material.dart';
-// ignore: unnecessary_import
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChatView extends StatelessWidget {
+// ignore: must_be_immutable
+class ChatView extends StatefulWidget {
   const ChatView({super.key, required this.studentId, required this.driverId});
 
   final String studentId;
   final String driverId;
 
   @override
+  State<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  late TextEditingController msgController;
+
+  @override
+  void initState() {
+    msgController = TextEditingController();
+    final chatBloc = context.read<ChatBloc>();
+    chatBloc.add(CheckChatEvent(studentId: widget.studentId, driverId: widget.driverId));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    msgController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final chatBloc = context.read<ChatBloc>();
-    chatBloc.add(CheckChatEvent(studentId: studentId, driverId: driverId));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(context.getWidth(), context.getHeight() * 0.10),
@@ -35,10 +50,11 @@ class ChatView extends StatelessWidget {
       ),
       body: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
-          if (state is ChatFoundState){
+          if (state is ChatFoundState) {
             chatBloc.add(GetMessagesEvent(chatId: state.chatId));
-          }else if (state is ChatNotFoundState){
-            chatBloc.add(CreateChatEvent(studentId: studentId, driverId: driverId));
+          } else if (state is ChatNotFoundState) {
+            chatBloc
+                .add(CreateChatEvent(studentId: widget.studentId, driverId: widget.driverId));
           }
         },
         builder: (context, state) {
@@ -79,7 +95,9 @@ class ChatView extends StatelessWidget {
                                   },
                                 ),
                         ),
-                        MessageBar(),
+                        MessageBar(
+                          msgController: msgController,
+                        ),
                       ],
                     ),
                   );
@@ -98,10 +116,10 @@ class ChatView extends StatelessWidget {
             return Center(
               child: Text(state.msg),
             );
-          }else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),
