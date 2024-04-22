@@ -44,7 +44,7 @@ class SupervisorActionsBloc
     on<SelectDayEvent>(selectDay);
     on<GetAllSupervisorCurrentTrip>(getAllCurrentTrip);
     on<GetAllSupervisorFutureTrip>(getAllFutureTrip);
-    // on<GetAllDriver>(getAllDriver);
+    on<GetAllDriver>(getAllDriver);
     on<GetDriverInfoEvent>(getDriverInfo);
     on<GetAllTripDriver>(getAllTripDriver);
     on<GetAllBus>(getAllBus);
@@ -194,7 +194,6 @@ class SupervisorActionsBloc
       final addNewBus =  await DBService().addBus(event.bus, event.id);
       emit(SuccessAddBusState(msg: "تم إضافة الباص بنحاج "));
     } catch (e) {
-      print(e);
       emit(ErrorAddBusState(msg: "حدث خطأ أنثاء إضافة الباص"));
     }
   }
@@ -229,12 +228,10 @@ class SupervisorActionsBloc
   FutureOr<void> addTrip(AddTripEvent event, Emitter<SupervisorActionsState> emit) async {
     emit(LoadingState());
     try{
-      print(event.trip.date);
       final newTrip = await DBService().addTrip(event.trip );
       emit(SuccessfulState("تمت إضافة الرحلة بنجاح")); 
 
     }catch(e){
-      print("add trip error : $e");
       emit(ErrorState("حدث خطأ أثناء إضافة الرحلة , الرجاء المحاولة مرة أخرى"));
     }
   
@@ -295,8 +292,7 @@ class SupervisorActionsBloc
     try{
       List<DarbUser> students = await DBService().SearchForStudentById(event.studentId);
       emit(GetOneStudentState(student:  students));      
-    }catch(e){
-      print("Search for student without supervisor : $e");
+    }catch(_){
     }
   }
 
@@ -306,7 +302,6 @@ class SupervisorActionsBloc
       emit(AddStudentToSupervisorState());
       emit(SuccessfulState("تم ربط الطالب/ة بالمشرف بنجاح"));
     }catch(e){
-      print("Add student to supervisor : $e");
       emit(ErrorState("حدث خطأ أثناء إضافة الطالب/ة"));
     }
   }
@@ -321,7 +316,6 @@ class SupervisorActionsBloc
       emit(GetAllFutureTripState());
       emit(SuccessfulState("تم حذف الرحلة بنجاح "));
     }catch(e){
-      print("delete trip error : $e");
       emit(ErrorState("حدث خطأ أثناء حذف الرحلة"));
     }
   }
@@ -336,9 +330,7 @@ class SupervisorActionsBloc
         studentList.add(e);
       }
       emit(SearchForStudentState(student: studentList));
-
-    }catch(e){
-      print("Error for student search : $e");
+    }catch(_){
     }
   }
 
@@ -423,7 +415,6 @@ class SupervisorActionsBloc
       await DBService().updateTrip(event.tripData);
       emit(SuccessfulState("تم تعديل الرحلة"));
     }catch(e){
-      print("update trip error : $e");
       emit(ErrorState("حدث خطأ أثناء جلب البيانات"));
     }
   }
