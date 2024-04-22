@@ -13,10 +13,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class StudentListPage extends StatelessWidget {
-  StudentListPage({super.key});
+class StudentListPage extends StatefulWidget {
+  const StudentListPage({super.key});
 
+  @override
+  State<StudentListPage> createState() => _StudentListPageState();
+}
+
+class _StudentListPageState extends State<StudentListPage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +62,13 @@ class StudentListPage extends StatelessWidget {
                   ]),
               child: CustomSearchBar(
                 controller: searchController,
-                hintText: "ابحث عن طالب...",
+                hintText: "ابحث عن طالب/ة...",
+                onChanged: (value) {
+                  if(value.isEmpty){
+                    bloc.add(GetAllStudent());
+                  }
+                  bloc.add(SearchForStudentEvent(studentName: searchController.text));
+                },
               ),
             ),
           ),
@@ -62,7 +79,6 @@ class StudentListPage extends StatelessWidget {
           if (state is SuccessfulState) {
             context.showSuccessSnackBar(state.msg);
           }
-          // TODO: implement listener
         },
         child: ListView(
           padding: const EdgeInsets.symmetric(
@@ -83,41 +99,63 @@ class StudentListPage extends StatelessWidget {
                   ),
                 );
               }
-              if (state is GetUsersState) {
-                print('student.length============================');
-                print(locator.students.length);
-                print('student.length');
-                if (locator.students.isNotEmpty) {
+              if(state is SearchForStudentState){
                   return ListView.builder(
                       shrinkWrap: true,
-                      itemCount: locator.students.length,
+                      primary: false,
+                      itemCount: state.student.length,
                       itemBuilder: (context, index) {
                         return PersonCard(
-                          user: locator.students[index],
-                          name: locator.students[index].name, //"حامد اليحيوي",
-
+                          user: state.student[index],
+                          name: state.student[index].name, 
                           onView: () {
-                            context.push(
-                                EditStudent(
-                                  isView: true,
-                                  student: locator.students[index],
-
-                                ),
-                                true);
+                            context.push( EditStudent(isView: true, student: state.student[index], ), true);
                           },
                           onEdit: () {
-                            context.push(
-                                EditStudent(
-                                  isView: false,
-                                  student: locator.students[index],
-                                ),
-                                true);
+                            context.push( EditStudent(isView: false, student: locator.students[index],), true);
                           },
                           onDelete: () {
                             showDialog(
                               context: context,
                               builder: (context) => DialogBox(
-                                text: "هل أنت متأكد من حذف الطالب ؟",
+                                text: "هل أنت متأكد من حذف الطالب/ة ؟",
+                                onAcceptClick: () {
+                                  bloc.add(DeleteStudent(
+                                      studentId: locator.students[index].id
+                                          .toString()));
+                                  context.pop();
+                                },
+                                onRefuseClick: () {
+                                  context.pop();
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      });
+                
+              }
+              if (state is GetAllStudentState) {
+                if (state.student.isNotEmpty) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      primary: false,
+                      itemCount: state.student.length,
+                      itemBuilder: (context, index) {
+                        return PersonCard(
+                          user: state.student[index],
+                          name: state.student[index].name, 
+                          onView: () {
+                            context.push( EditStudent(isView: true, student: locator.students[index], ), true);
+                          },
+                          onEdit: () {
+                            context.push( EditStudent(isView: false, student: locator.students[index],), true);
+                          },
+                          onDelete: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => DialogBox(
+                                text: "هل أنت متأكد من حذف الطالب/ة ؟",
                                 onAcceptClick: () {
                                   bloc.add(DeleteStudent(
                                       studentId: locator.students[index].id

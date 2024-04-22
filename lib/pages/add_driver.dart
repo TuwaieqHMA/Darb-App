@@ -4,7 +4,6 @@ import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/spaces.dart';
 import 'package:darb_app/widgets/bottom_button.dart';
 import 'package:darb_app/widgets/circle_back_button.dart';
-import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +11,33 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
-class AddDriver extends StatelessWidget {
-  AddDriver({super.key});
+class AddDriver extends StatefulWidget {
+  const AddDriver({super.key});
 
+  @override
+  State<AddDriver> createState() => _AddDriverState();
+}
+
+class _AddDriverState extends State<AddDriver> {
   TextEditingController nameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController rePasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    rePasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,12 +95,14 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: nameController,
                                   headerText: "الاسم",
+                                  hintText: "الاسم الثلاثي",
                                   headerColor: signatureTealColor,
                                 ),
                                 height16,
                                 HeaderTextField(
                                   controller: emailController,
                                   headerText: "البريد الالكتروني ",
+                                  hintText: "someone@email.com",
                                   headerColor: signatureTealColor,
                                   textDirection: TextDirection.ltr,
                                 ),
@@ -90,6 +110,7 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: phoneController,
                                   headerText: "رقم الجوال",
+                                  hintText: "مبتدأً ب 05",
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
@@ -101,6 +122,7 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: passwordController,
                                   headerText: "كلمة السر",
+                                  hintText: "ادخل كلمة السر",
                                   headerColor: signatureTealColor,
                                   isObscured: true,
                                 ),
@@ -108,6 +130,7 @@ class AddDriver extends StatelessWidget {
                                 HeaderTextField(
                                   controller: rePasswordController,
                                   headerText: "كلمة السر مجدداً",
+                                  hintText: "ادخل كلمة السر مجدداً",
                                   headerColor: signatureTealColor,
                                   isObscured: true,
                                 ),

@@ -7,14 +7,26 @@ import 'package:darb_app/widgets/bus_card.dart';
 import 'package:darb_app/widgets/custom_search_bar.dart';
 import 'package:darb_app/widgets/page_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class BusListPage extends StatelessWidget {
-  BusListPage({super.key});
+class BusListPage extends StatefulWidget {
+  const BusListPage({super.key});
 
+  @override
+  State<BusListPage> createState() => _BusListPageState();
+}
+
+class _BusListPageState extends State<BusListPage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +55,16 @@ class BusListPage extends StatelessWidget {
                   BoxShadow(color: shadowColor, blurRadius: 4, offset: const Offset(0, 4))
                 ]
               ),
-              child: CustomSearchBar(controller: searchController, hintText: "ابحث عن باص...",),
+              child: CustomSearchBar(controller: searchController, hintText: "ابحث عن رقم باص...", 
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly ],
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                  if(value.isEmpty){
+                    bloc.add(GetAllBus());
+                  }else{
+                  bloc.add(SearchForBusEvent(busNumber: int.tryParse(searchController.text)!));
+                  }
+                },),
             ),
           ),
         ),
@@ -64,12 +85,27 @@ class BusListPage extends StatelessWidget {
                 ),
               );
             }
+            if (state is SearchForBusState) {
+               return ListView.builder(
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: state.bus.length, 
+                    itemBuilder: (context, index) {
+                      return           
+                      BusCard(
+                        bus: state.bus[index],
+                        busId: state.bus[index].id! , 
+                        busPlate: state.bus[index].busPlate, 
+                        startDate: state.bus[index].dateIssue, 
+                        endDate: state.bus[index].dateExpire,);
+                    });
+             
+            }
             if (state is GetAllBusState) {
-              print(locator.buses.length);
-              print('DBService().drivers.length');
               if (locator.buses.isNotEmpty) {
                 return ListView.builder(
                     shrinkWrap: true,
+                    primary: false,
                     itemCount: locator.buses.length,
                     itemBuilder: (context, index) {
                       return           

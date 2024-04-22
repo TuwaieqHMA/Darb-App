@@ -157,7 +157,7 @@ class TrackingPage extends StatelessWidget {
                                   context.read<TripDetailsBloc>();
                               return DialogBox(
                                 text:
-                                    "حالة حضورك الان هي: ${state.status == AttendanceStatus.assueredPrecense ? "حضور مؤكد" : "غائب"}",
+                                    "حالة حضورك الان هي:\n ${state.status == AttendanceStatus.assueredPrecense ? "حضور مؤكد" : "غائب"}",
                                 acceptText: (state.status ==
                                         AttendanceStatus.assueredPrecense)
                                     ? "تغيير لغائب"

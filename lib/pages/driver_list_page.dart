@@ -13,10 +13,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
-class DriverListPage extends StatelessWidget {
-  DriverListPage({super.key});
+class DriverListPage extends StatefulWidget {
+  const DriverListPage({super.key});
 
+  @override
+  State<DriverListPage> createState() => _DriverListPageState();
+}
+
+class _DriverListPageState extends State<DriverListPage> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,24 +63,23 @@ class DriverListPage extends StatelessWidget {
               child: CustomSearchBar(
                 controller: searchController,
                 hintText: "ابحث عن سائق...",
-                // onChanged: 
-                // DBService().searchForDriver(searchController.text);
-                  // bloc.add();
-                
+                onChanged: (value) {
+                  if(value.isEmpty){
+                    bloc.add(GetAllDriver());
+                    bloc.add(GetAllTripDriver());
+                  }
+                  bloc.add(SearchForDriverEvent(driverName: searchController.text));
+                },
               ),
             ),
           ),
         ),
       ),
       body: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
-        listener: (context, state) {
-          if(state is LoadingState){
-
-          }
+        listener: (context, state) {         
           if(state is SuccessfulState){
              context.showSuccessSnackBar(state.msg);
           }
-          // TODO: implement listener
         },
         child: ListView(
           padding: const EdgeInsets.symmetric(
@@ -90,13 +100,59 @@ class DriverListPage extends StatelessWidget {
                   ),
                 );
               }
+              if(state is SearchForDriverState){ 
+                return ListView.builder(
+                      shrinkWrap: true,
+                      primary: false,
+                      itemCount: state.drivers.length,
+                      itemBuilder: (context, index) {
+                        return PersonCard(
+                          user: state.drivers[index],
+                          name: state.drivers[index].name,
+                          isSigned: (locator.driverHasTrip.contains(state.drivers[index].id)) ? false : true, 
+                          onView: () {
+                            context.push(
+                                EditDriver(
+                                  driver:  state.drivers[index],
+                                  isView: true,
+                                ),
+                                true);
+                          },
+                          onEdit: () {
+                            context.push(
+                                EditDriver(
+                                  driver: state.drivers[index],
+                                  isView: false,
+                                ),
+                                true);
+                          },
+                          onDelete: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => DialogBox(
+                                text: "هل أنت متأكد من حذف السائق ؟",
+                                onAcceptClick: () {
+                                  print("delete pressed");
+                                  bloc.add(DeleteDriver(
+                                      driverId: state.drivers[index].id
+                                          .toString()));
+                                  context.pop();
+                                },
+                                onRefuseClick: () {
+                                  context.pop();
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      });
+                
+              }
               if (state is GetUsersState || state is GetAllTripDriverState) {
-                print(locator.drivers.length );
-                print('DBService().drivers.length');
                 if (locator.drivers.isNotEmpty) {
                   return ListView.builder(
-                      // scrollDirection: Axis.vertical,
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: locator.drivers.length,
                       itemBuilder: (context, index) {
                         return PersonCard(
@@ -139,6 +195,7 @@ class DriverListPage extends StatelessWidget {
                           },
                         );
                       });
+                
                 }
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,

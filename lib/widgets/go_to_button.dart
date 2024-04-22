@@ -1,15 +1,17 @@
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
+import 'package:darb_app/utils/spaces.dart';
 import 'package:flutter/material.dart';
 
 class GoToButton extends StatelessWidget {
   const GoToButton({
-    super.key, required this.text, this.color = lightGreenColor, this.onTap, this.height = 26,
+    super.key, required this.text, this.color = lightGreenColor, this.onTap, this.height = 26, this.isStudent = false
   });
   final String text;
   final Color? color;
   final double? height;
+  final bool? isStudent;
   final Function()? onTap;
 
   @override
@@ -27,7 +29,7 @@ class GoToButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(child: Text(text, style: const TextStyle(color: whiteColor, fontFamily: inukFont, fontSize: 16, overflow: TextOverflow.ellipsis),)),
-          const Icon(Icons.arrow_forward_ios_rounded, color: whiteColor,),
+          isStudent! ? nothing :  const Icon(Icons.arrow_forward_ios_rounded, color: whiteColor,),
         ],
       )),
     );

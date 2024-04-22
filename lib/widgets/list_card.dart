@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class ListCard extends StatelessWidget {
   const ListCard({
-    super.key, required this.text, required this.icon, this.buttonText = "عرض", required this.color, this.buttonColor = signatureYellowColor, this.onTap, this.margin = 32,
+    super.key, required this.text, required this.icon, this.buttonText = "عرض", required this.color, this.buttonColor = signatureYellowColor, this.onTap, this.margin = 32, this.image
   });
 
   final String text;
@@ -14,6 +14,7 @@ class ListCard extends StatelessWidget {
   final Color color;
   final String? buttonText;
   final Color? buttonColor;
+  final String? image;
   final double? margin;
   final Function()? onTap;
 
@@ -24,7 +25,9 @@ class ListCard extends StatelessWidget {
       height: context.getHeight() * .23,
       padding: const EdgeInsets.all(16),
       margin: EdgeInsets.only(bottom: margin!),
+      
       decoration: BoxDecoration(
+        image: image != null ?  DecorationImage(image: AssetImage(image!), fit: BoxFit.cover, colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.3), BlendMode.dstATop) ) : null,
         color: color,
         borderRadius: BorderRadius.circular(30)),
         child: Column(

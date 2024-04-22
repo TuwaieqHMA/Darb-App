@@ -14,6 +14,8 @@ class StudentHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final studentBloc = context.read<StudentBloc>();
+    studentBloc.add(CheckStudentSignStatusEvent());
     return Scaffold(
       appBar: PreferredSize(
           preferredSize:
@@ -115,7 +117,7 @@ class StudentHome extends StatelessWidget {
       floatingActionButton: BlocBuilder<StudentBloc, StudentState>(
         builder: (context, state) {
           final studentBloc = context.read<StudentBloc>();
-          if (state is TripLoadingState || state is StudentLoadingState) {
+          if (state is TripLoadingState || state is StudentLoadingState || state is StudentNotSignedState) {
             return nothing;
           } else {
             return FloatingActionButton(

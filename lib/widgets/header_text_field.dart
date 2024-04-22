@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 class HeaderTextField extends StatelessWidget {
   const HeaderTextField({
     super.key,
-    required this.controller, required this.headerText, this.headerColor = whiteColor, this.borderColor = signatureTealColor, this.hintText, this.hintTextDircetion, this.isEnabled = true, this.isReadOnly = false, this.textDirection, this.isObscured = false, this.inputFormatters, this.onChange, this.onTap, this.keyboardType,
+    required this.controller, required this.headerText, this.headerColor = whiteColor, this.borderColor = signatureTealColor, this.hintText, this.hintTextDircetion, this.isEnabled = true, this.isReadOnly = false, this.textDirection, this.isObscured = false, this.inputFormatters, this.onChange, this.onTap, this.keyboardType, this.maxLength,
   });
 
   final TextEditingController controller;
@@ -20,6 +20,7 @@ class HeaderTextField extends StatelessWidget {
   final bool? isEnabled;
   final bool? isReadOnly;
   final bool? isObscured;
+  final int? maxLength;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final Function(String value)? onChange;
@@ -73,10 +74,14 @@ class HeaderTextField extends StatelessWidget {
                       strokeAlign:
                           BorderSide.strokeAlignOutside))),
           textDirection: textDirection,
+          maxLength: maxLength,
           inputFormatters: inputFormatters,
           obscureText: isObscured!,
           onChanged: onChange,
           onTap: onTap,
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
         ),
       ],
     );

@@ -40,7 +40,7 @@ class CreateAccountTypePage extends StatelessWidget {
               ContainerButton(icon: const FaIcon(FontAwesomeIcons.userTie, color: deepBlueColor, size: 50,), text: "إنشاء حساب كـ مشرف", onTap: () {
                 context.push(CreateAccountSupervisorPage(), false);
               },  color: fadedBlueColor, shadowColor: fadedwhiteColor,),
-              ContainerButton(icon: const FaIcon(FontAwesomeIcons.userGraduate, color: deepBlueColor, size: 50,), text: "إنشاء حساب كـ طالب", onTap: () {
+              ContainerButton(icon: const FaIcon(FontAwesomeIcons.userGraduate, color: deepBlueColor, size: 50,), text: "إنشاء حساب كـ طالب/ة", onTap: () {
                 context.push(CreateAccountStudentPage(), false);
               },),
             ],

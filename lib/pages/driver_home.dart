@@ -13,6 +13,8 @@ class DriverHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final driverBloc = context.read<DriverBloc>();
+    driverBloc.add(GetAllDriverTripsEvent());
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size(context.getWidth(), context.getHeight() * .10),
