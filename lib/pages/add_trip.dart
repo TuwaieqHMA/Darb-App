@@ -59,13 +59,11 @@ class _AddTripState extends State<AddTrip> {
               context.pop();
               context.pop();
               context.showSuccessSnackBar(state.msg);
-              bloc.dropdownAddTripValue = null;
-              locator.startDate = DateTime.now();
-              
+              bloc.add(RefrshDriverEvent());              
             }
             if (state is ErrorState) {
               context.pop();
-              context.showSuccessSnackBar(state.msg);
+              context.showErrorSnackBar(state.msg);
             }
           },
           child: Stack(
@@ -75,11 +73,16 @@ class _AddTripState extends State<AddTrip> {
               ),
               ListView(
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       height24,
-                      CircleBackButton(),
+                      CircleBackButton(
+                        onTap: () {
+                          context. pop();
+                          bloc.add(RefrshDriverEvent());
+                        },
+                      ),
                     ],
                   ),
                   Center(
@@ -260,86 +263,15 @@ class _AddTripState extends State<AddTrip> {
                                       }).toList(),
                                       onChanged: (value) {
                                         if (value is DarbUser) {
-                                          bloc.add(
-                                            SelectBusDriverEvent(TripDriverId:  value),
-                                          );
+                                          bloc.add(SelectBusDriverEvent(TripDriverId:  value));
+                                                                                  
                                         }
                                       },
                                     );
                                   }
-                                  return const SizedBox(width: 10, height: 10,  child: CircularProgressIndicator());
+                                  return const SizedBox(width: 10, height: 10,  child: CircularProgressIndicator(color: signatureYellowColor,));
                                 }),
                              
-                            //  BlocBuilder<SupervisorActionsBloc,
-                            //     SupervisorActionsState>(
-                            //   builder: (context, state) {
-                            //     if (state is SelectTripDriverState ||state is SuccessGetDriverState) {
-                            //       return DropdownButton(
-                            //         hint: const Text("اختر سائق"),
-                            //         isExpanded: true,
-                            //         underline: const Text(""),
-                            //         menuMaxHeight: 200,
-                            //         style: const TextStyle(
-                            //             fontSize: 16, fontFamily: inukFont),
-                            //         borderRadius: BorderRadius.circular(15),
-                            //         value: bloc.dropdownAddTripValue?.name,
-                            //         icon: const Icon(
-                            //           Icons.keyboard_arrow_down_outlined,
-                            //           size: 30,
-                            //           color: signatureBlueColor,
-                            //         ),
-                            //         items: locator.tripDrivers.map((e) {
-                            //           return DropdownMenuItem(
-                            //             value: e,
-                            //             child: Text(
-                            //                 locator.tripDrivers.isNotEmpty
-                            //                     ? e.name
-                            //                     : "جميع السائقين لديهم باص"),
-                                       
-                            //           );
-                            //         }).toList(),
-                            //         onChanged: (value) {
-                            //           if(value is DarbUser){
-                            //             bloc.add(SelectTripDriverEvent(value),);
-                            //           }
-                            //         },
-                            //       );
-                            //     }
-
-                            //     return DropdownButton(
-                            //       hint: Text(
-                            //           (locator.tripDrivers.isNotEmpty)
-                            //               ? "اختر سائق"
-                            //               : "جميع السائقين لديهم رحلات"),
-                            //       isExpanded: true,
-                            //       menuMaxHeight: 200,
-                            //       underline: const Text(""),
-                            //       style: const TextStyle(
-                            //           fontSize: 16, fontFamily: inukFont),
-                            //       borderRadius: BorderRadius.circular(15),
-                            //       value: bloc.dropdownAddTripValue?.name ,
-                            //       icon: const Icon(
-                            //         Icons.keyboard_arrow_down_outlined,
-                            //         size: 30,
-                            //         color: signatureBlueColor,
-                            //       ),
-                            //       items: locator.tripDrivers.map((e) {
-                            //         return DropdownMenuItem(
-                            //           value: e,
-                            //           child: Text(
-                            //               locator.tripDrivers.isNotEmpty
-                            //                   ? e.name
-                            //                   : "جميع السائقين لديهم رحلات "),
-                            //         );
-                            //       }).toList(),
-                            //       onChanged: (value) {
-                            //        if(value is DarbUser){
-                            //         bloc.add(SelectTripDriverEvent(value));
-                            //        }
-                            //       },
-                            //     );
-                            //   },
-                            // ),
                           
                           ),
 
@@ -555,20 +487,31 @@ class _AddTripState extends State<AddTrip> {
                             text: "إضافة",
                             textColor: whiteColor,
                             fontSize: 20,
-                            onPressed: () {
-                              if (
+                           onPressed: () {
+                              if( bloc.dropdownAddTripValue == null ){
+                                context.showErrorSnackBar("الرجاء اختبار السائق");
+                              } else if (busNumberController.text.isEmpty &&
+                                      locationController.text.isEmpty ) {
+                                context.showErrorSnackBar("الرجاء ملئ جميع الحقول");
+                                                           
+                              }else if (bloc.startTripDate.day == DateTime.now().day){
+                                context.showErrorSnackBar("الرجاء تغيير اليوم ، لا يسمح بإضافة رحلة في نفس اليوم ");
+                              }
+                              else if (
                                 !(bloc.endTime.hour > bloc.startTime.hour || (bloc.endTime.hour == bloc.startTime.hour && bloc.endTime.minute > bloc.startTime.minute )
                               )){
                                 context.showErrorSnackBar("الرجاء اختار وقت النهاية بعد وقت البداية");
-                              } else if (busNumberController.text.isNotEmpty &&
-                                      locationController.text.isNotEmpty &&
-                                      bloc.startTripDate.isAfter(DateTime.now()) 
-                                  ) {
+                              } else  {
+                                
                                 showDialog(
                                   context: context,
                                   builder: (context) => DialogBox(
                                     text: "هل أنت متأكد من إضافة رحلة ؟",
                                     onAcceptClick: () {
+                                      bloc.add(GetAllStudent());
+                                      print(locator.students);
+                                      print("locator.students");
+                                      // bloc.add(GetDriverInfoEvent(bloc.dropdownAddTripValue!.id!));
                                       bloc.add(AddTripEvent(
                                           trip: Trip(
                                             isToSchool: bloc.seletctedType == 1
@@ -582,22 +525,20 @@ class _AddTripState extends State<AddTrip> {
                                                 locator.currentUser.id!,
                                             driverId: bloc.dropdownAddTripValue!.id!,
                                           ),
-                                          driver: Driver(
-                                            id: bloc.dropdownAddTripValue!.id!, // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee" ,
-                                            supervisorId:
-                                                locator.driverData[0].supervisorId,
-                                            hasBus: locator.driverData[0].hasBus,
-                                            noTrips: locator.driverData[0].noTrips
-                                          )));
+                                          // driver: Driver(
+                                          //   id: bloc.dropdownAddTripValue!.id!, // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee" ,
+                                          //   supervisorId:
+                                          //       locator.driverData.supervisorId,
+                                          //   hasBus: locator.driverData.hasBus,
+                                          //   noTrips: locator.driverData.noTrips
+                                          // ),
+                                          ));
                                     },
                                     onRefuseClick: () {
                                       context.pop();
                                     },
                                   ),
                                 );
-                              } else {
-                                context.showErrorSnackBar(
-                                    "الرجاء ملئ جميع الحقول");
                               }
                             },
                           ),

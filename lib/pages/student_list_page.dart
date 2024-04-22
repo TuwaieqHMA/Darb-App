@@ -62,7 +62,7 @@ class _StudentListPageState extends State<StudentListPage> {
                   ]),
               child: CustomSearchBar(
                 controller: searchController,
-                hintText: "ابحث عن طالب...",
+                hintText: "ابحث عن طالب/ة...",
                 onChanged: (value) {
                   if(value.isEmpty){
                     bloc.add(GetAllStudent());
@@ -118,7 +118,7 @@ class _StudentListPageState extends State<StudentListPage> {
                             showDialog(
                               context: context,
                               builder: (context) => DialogBox(
-                                text: "هل أنت متأكد من حذف الطالب ؟",
+                                text: "هل أنت متأكد من حذف الطالب/ة ؟",
                                 onAcceptClick: () {
                                   bloc.add(DeleteStudent(
                                       studentId: locator.students[index].id
@@ -155,7 +155,7 @@ class _StudentListPageState extends State<StudentListPage> {
                             showDialog(
                               context: context,
                               builder: (context) => DialogBox(
-                                text: "هل أنت متأكد من حذف الطالب ؟",
+                                text: "هل أنت متأكد من حذف الطالب/ة ؟",
                                 onAcceptClick: () {
                                   bloc.add(DeleteStudent(
                                       studentId: locator.students[index].id

@@ -75,7 +75,7 @@ class _EditStudentState extends State<EditStudent> {
                           height24,
                           Center(
                             child: Text(
-                              widget.isView ? "بيانات الطالب" : "تعديل الطالب",
+                              widget.isView ? "بيانات الطالب/ة" : "تعديل الطالب/ة",
                               style: const TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,
@@ -120,7 +120,7 @@ class _EditStudentState extends State<EditStudent> {
                               widget.isView
                                   ? const SizedBox.shrink()
                                   : BottomButton(
-                                      text: "تعديل بيانات الطالب",
+                                      text: "تعديل بيانات الطالب/ة",
                                       textColor: whiteColor,
                                       fontSize: 20,
                                       onPressed: () {
@@ -128,7 +128,7 @@ class _EditStudentState extends State<EditStudent> {
                                           context: context,
                                           builder: (context) => DialogBox(
                                             text:
-                                                "هل أنت متأكد من تعديل بيانات الطالب ؟",
+                                                "هل أنت متأكد من تعديل بيانات الطالب/ة ؟",
                                             onAcceptClick: () {
                                               bloc.add(
                                                 UpdateStudent(

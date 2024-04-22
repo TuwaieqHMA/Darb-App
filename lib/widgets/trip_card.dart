@@ -111,10 +111,12 @@ class TripCard extends StatelessWidget {
                     },
                   ) : MoreButton(
                     onViewClick: () {
+                            bloc.add(GetDriverBusNameEvent(tripData:  trip));
                             context.push(EditTrip(isView:  true, trip: trip, ), true);
                           },
                     onEditClick: () {
-                            context.push(EditTrip(isView: false, trip: trip,), true); // edit trip
+                            bloc.add(GetDriverBusNameEvent(tripData:  trip));
+                            context.push(EditTrip(isView: false, trip: trip,), true); 
                           },
                     onDeleteClick: () {
                             showDialog(
@@ -122,7 +124,7 @@ class TripCard extends StatelessWidget {
                               builder: (context) => DialogBox(
                                 text: "هل أنت متأكد من حذف الرحلة ؟",
                                 onAcceptClick: () {
-                                  bloc.add(DeleteTrip(tripId: trip.id!.toString(), driver: driver!,)); //! delete trip 
+                                  bloc.add(DeleteTrip(tripId: trip.id!.toString(), driver: driver!,)); 
                                   context.pop();
                                 },
                                 onRefuseClick: () {

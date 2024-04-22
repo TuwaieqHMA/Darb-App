@@ -22,11 +22,11 @@ class HomeData {
   DateTime endDate = DateTime.now();
   DateTime? editEndDate;
   final List<DarbUser> drivers = [];
-  final List<Driver> driverData = [];
+  late Driver driverData ;
   final List<String> driverHasBus = [];
   late List<DarbUser> driverHasBusList = [];
   late List<String> driverHasTrip = [];
-  late DarbUser? busDriverName;
+  DarbUser? busDriverName;
   List<DarbUser> students = [];
   final List<Bus> buses = [];
   final List<Bus> numberOfSeat = [];

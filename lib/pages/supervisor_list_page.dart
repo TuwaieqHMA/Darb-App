@@ -20,8 +20,9 @@ class SupervisorListPage extends StatelessWidget {
             color: fadedBlueColor,
             icon: SvgPicture.asset("assets/icons/driver_bus.svg"),
             text: "قائمة السائقين",
+            image: "assets/images/bg_driver.jpg",
             onTap: (){
-              context.push(DriverListPage(), true);
+              context.push(const DriverListPage(), true);
             },
           ),
           ListCard(
@@ -29,17 +30,19 @@ class SupervisorListPage extends StatelessWidget {
             buttonColor: signatureBlueColor,
             icon: SvgPicture.asset("assets/icons/student_icon.svg"),
             text: "قائمة الطلاب",
+            image: "assets/images/bg_st.jpg",
             onTap: (){
-              context.push(StudentListPage(), true);
+              context.push(const StudentListPage(), true);
             },
           ),
           ListCard(
             color: signatureBlueColor,
             icon: SvgPicture.asset("assets/icons/bus_icon.svg"),
             text: "قائمة الباصات",
+            image: "assets/images/bg_buses.jpg",
             margin: 0,
             onTap: (){
-              context.push(BusListPage(), true);
+              context.push(const BusListPage(), true);
             },
           ),
         ],

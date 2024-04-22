@@ -147,13 +147,13 @@ class _AddStudentState extends State<AddStudent> {
                                             width8,
                                             GoToButton(
                                               isStudent: true,
-                                              text: " إضافة طالب",
+                                              text: " إضافة طالب/ة",
                                               onTap: () {
                                                 showDialog(
                                                   context: context,
                                                   builder: (context) =>
                                                       DialogBox(
-                                                    text: "هل أنت متأكد من إضافة طالب ؟",
+                                                    text: "هل أنت متأكد من إضافة طالب/ة ؟",
                                                     onAcceptClick: () {
                                                       bloc.add(
                                                           AddStudentToSupervisorEvent(student: state.student[0]));
@@ -170,7 +170,7 @@ class _AddStudentState extends State<AddStudent> {
                                       );
                                     }
                                     return const Text(
-                                        "لا يوجد طالب بهذا الرمز");
+                                        "لا يوجد طالب/ة بهذا الرمز");
                                   }
                                   return nothing;
                                 },

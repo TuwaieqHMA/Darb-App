@@ -113,8 +113,7 @@ class _EditBusState extends State<EditBus> {
                             children: [
                               height32,
                               widget.isView
-                                  ? BlocBuilder<SupervisorActionsBloc,
-                                      SupervisorActionsState>(
+                                  ? BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
                                       builder: (context, state) {
                                         if (state is SuccessGetDriverState) {
                                           return HeaderTextField(
@@ -207,17 +206,16 @@ class _EditBusState extends State<EditBus> {
                                                 }).toList(),
                                                 onChanged: (value) {
                                                   if (value is DarbUser) {
-                                                    bloc.add(
-                                                      SelectBusDriverEvent(busDriverId: value),
-                                                    );
+                                                    bloc.add(SelectBusDriverEvent(busDriverId: value),);
                                                   }
                                                 },
                                               );
                                             }
                                             return const SizedBox(
-                                                width: 20,
+                                                width: 10,
+                                                height: 10,
                                                 child:
-                                                    CircularProgressIndicator());
+                                                    CircularProgressIndicator(color: signatureYellowColor,));
                                           }),
                                         ),
                                       ],

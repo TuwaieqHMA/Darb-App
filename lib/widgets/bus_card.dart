@@ -72,7 +72,7 @@ class BusCard extends StatelessWidget {
             ),
             MoreButton(
               onViewClick: () {
-                bloc.add(GetDriverBusNameEvent(bus));
+                bloc.add(GetDriverBusNameEvent(busData:  bus));
                 context.push(
                     EditBus(
                       bus: bus ,
@@ -82,7 +82,7 @@ class BusCard extends StatelessWidget {
                     true);
               },
               onEditClick: () {
-                bloc.add(GetDriverBusNameEvent(bus));
+                bloc.add(GetDriverBusNameEvent(busData:  bus));
                 context.push(
                     EditBus(
                       bus: bus,

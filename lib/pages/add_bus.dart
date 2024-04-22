@@ -42,7 +42,6 @@ class _AddBusState extends State<AddBus> {
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
     bloc.add(GetAllDriverHasNotBus());
-    // bloc.add(GetAllBus());
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
@@ -150,7 +149,7 @@ class _AddBusState extends State<AddBus> {
                                       },
                                     );
                                   }
-                                  return const SizedBox(width: 20, child: CircularProgressIndicator());
+                                  return const SizedBox(width: 10, height:  10, child: CircularProgressIndicator(color: signatureYellowColor,));
                                 }),
                               ),
                               height16,
