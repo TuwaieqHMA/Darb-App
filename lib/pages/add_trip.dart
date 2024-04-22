@@ -2,7 +2,6 @@ import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/darb_user_model.dart';
-import 'package:darb_app/models/driver_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
@@ -35,6 +34,13 @@ class _AddTripState extends State<AddTrip> {
   TextEditingController locationController = TextEditingController();
 
   @override
+  void initState() {
+    final bloc = context.read<SupervisorActionsBloc>();
+    bloc.add(GetAllTripDriver());
+    super.initState();
+  }
+
+  @override
   void dispose() {
     busNumberController.dispose();
     tripTypeController.dispose();
@@ -46,7 +52,6 @@ class _AddTripState extends State<AddTrip> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
-    bloc.add(GetAllTripDriver());
 
     final locator = GetIt.I.get<HomeData>();
 
@@ -59,7 +64,7 @@ class _AddTripState extends State<AddTrip> {
               context.pop();
               context.pop();
               context.showSuccessSnackBar(state.msg);
-              bloc.add(RefrshDriverEvent());              
+              bloc.add(RefrshDriverEvent());             
             }
             if (state is ErrorState) {
               context.pop();
@@ -258,7 +263,7 @@ class _AddTripState extends State<AddTrip> {
                                           .map((e) {
                                         return DropdownMenuItem(
                                           value: e,
-                                          child: Text(e.name),
+                                          child: Text(e.name, style: const TextStyle(color: blackColor),),
                                         );
                                       }).toList(),
                                       onChanged: (value) {

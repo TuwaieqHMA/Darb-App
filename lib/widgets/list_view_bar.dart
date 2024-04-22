@@ -73,7 +73,7 @@ class ListViewBar extends StatelessWidget {
                         showDialog(context: context, builder: (context) {
                           return DialogBox(text: "هل أنت متأكد من تغيير حالة الطالب/ة لحاضر؟\nلا يمكن تغيير الحالة بعد ذلك",
                           onAcceptClick: () {
-                            attendanceListBloc.add(ChangeStudentAttendanceStatus(tripId: trip.id!, currentStatus: status, studentId: student.id!));
+                            attendanceListBloc.add(ChangeStudentAttendanceStatusEvent(tripId: trip.id!, currentStatus: status, studentId: student.id!));
                             context.pop();
                             context.pop();
                           },
@@ -87,7 +87,7 @@ class ListViewBar extends StatelessWidget {
                         showDialog(context: context, builder: (context) {
                           return DialogBox(text: "هل أنت متأكد من تغيير حالة الطالب/ة لغائب؟\nلا يمكن تغيير الحالة بعد ذلك",
                           onAcceptClick: () {
-                            attendanceListBloc.add(ChangeStudentAttendanceStatus(tripId: trip.id!, currentStatus: AttendanceStatus.absent, studentId: student.id!));
+                            attendanceListBloc.add(ChangeStudentAttendanceStatusEvent(tripId: trip.id!, currentStatus: AttendanceStatus.absent, studentId: student.id!));
                             context.pop();
                             context.pop();
                           },

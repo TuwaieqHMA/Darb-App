@@ -74,6 +74,8 @@ class SupervisorHomePage extends StatelessWidget {
                                 .supervisorCurrentTrips[index].driverName,
                             noOfPassengers: locator
                                 .supervisorCurrentTrips[index].noOfPassengers,
+                                driver: locator.supervisorCurrentTrips[index].driver,
+                                isCurrent: true,
                           ),
                           height16,
                         ],
@@ -139,6 +141,7 @@ class SupervisorHomePage extends StatelessWidget {
                                 locator.supervisorFutureTrips[index].driverName,
                             noOfPassengers: locator
                                 .supervisorFutureTrips[index].noOfPassengers,
+                                driver: locator.supervisorFutureTrips[index].driver,
                           ),
                           height16,
                         ],

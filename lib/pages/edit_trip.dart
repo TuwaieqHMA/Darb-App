@@ -299,7 +299,7 @@ class _EditTripState extends State<EditTrip> {
                                             items: drivers.map((e) {
                                               return DropdownMenuItem(
                                                 value: e,
-                                                child: Text(e.name),
+                                                child: Text(e.name, style: const TextStyle(color: blackColor),),
                                               );
                                             }).toList(),
                                             onChanged: (value) {

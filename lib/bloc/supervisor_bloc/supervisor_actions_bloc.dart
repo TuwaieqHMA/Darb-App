@@ -80,7 +80,7 @@ class SupervisorActionsBloc
   }
 
   FutureOr<void> selectDay( SelectDayEvent event, Emitter<SupervisorActionsState> emit) async {
-    await selectDate(event.context, event.num);
+    await selectDate(event.context, event.num,);
     if(locator.startDate.month > locator.endDate.month && locator.startDate.day > locator.endDate.day){
       emit(ErrorState("تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار"));
     }
@@ -98,7 +98,7 @@ class SupervisorActionsBloc
   }
 
   //  Date Picker
-  Future<void> selectDate(BuildContext context, int num, ) async {
+  Future<void> selectDate(BuildContext context, int num,) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       builder: (context, child) {
@@ -118,8 +118,8 @@ class SupervisorActionsBloc
           child: child!,
         );
       },
-      initialDate: DateTime.now(),
-      firstDate: num == 1 ? DateTime.now().subtract(const Duration(days: 365 * 9)) : DateTime.now(),
+      initialDate: DateTime.now().add(const Duration(days: 1)),
+      firstDate: (num == 1 || num == 4)? DateTime.now().subtract(const Duration(days: 365 * 9)) : DateTime.now().add(const Duration(days: 1)),
       lastDate: DateTime(2036, 1),
     );
     if (picked != null) {
@@ -230,7 +230,7 @@ class SupervisorActionsBloc
     emit(LoadingState());
     try{
       print(event.trip.date);
-      final newTrip = await DBService().addTrip(event.trip );
+      final newTrip = await DBService().addTrip(event.trip);
       emit(SuccessfulState("تمت إضافة الرحلة بنجاح")); 
 
     }catch(e){
@@ -317,8 +317,8 @@ class SupervisorActionsBloc
   FutureOr<void> deleteTrip(DeleteTrip event, Emitter<SupervisorActionsState> emit) async {
     try{
       await DBService().deleteTrip(event.tripId, event.driver,);
-      emit(GetAllCurrentTripState());
-      emit(GetAllFutureTripState());
+      await getAllCurrentTrip(GetAllSupervisorCurrentTrip(), emit);
+      await getAllFutureTrip(GetAllSupervisorFutureTrip(), emit);
       emit(SuccessfulState("تم حذف الرحلة بنجاح "));
     }catch(e){
       print("delete trip error : $e");

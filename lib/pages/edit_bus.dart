@@ -182,7 +182,7 @@ class _EditBusState extends State<EditBus> {
                                               }
                                               return DropdownButton(
                                                 hint: Text(
-                                                    "${locator.busDriverName?.name}"),
+                                                    "${locator.busDriverName?.name}",),
                                                 isExpanded: true,
                                                 underline: const Text(""),
                                                 menuMaxHeight: 200,
@@ -201,7 +201,7 @@ class _EditBusState extends State<EditBus> {
                                                 items: drivers.map((e) {
                                                   return DropdownMenuItem(
                                                     value: e,
-                                                    child: Text(e.name),
+                                                    child: Text(e.name, style: const TextStyle(color: blackColor),),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {

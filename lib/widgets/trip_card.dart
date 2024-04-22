@@ -124,7 +124,7 @@ class TripCard extends StatelessWidget {
                               builder: (context) => DialogBox(
                                 text: "هل أنت متأكد من حذف الرحلة ؟",
                                 onAcceptClick: () {
-                                  bloc.add(DeleteTrip(tripId: trip.id!.toString(), driver: driver!,)); 
+                                  bloc.add(DeleteTrip(tripId: trip.id.toString(), driver: driver!,)); 
                                   context.pop();
                                 },
                                 onRefuseClick: () {

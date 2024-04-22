@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cron/cron.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/attendance_list_model.dart';
 import 'package:darb_app/models/bus_model.dart';
@@ -203,8 +204,6 @@ class DBService {
     await supabase.from("Trip").delete().eq('id', tripId);
     final int numTrip = driver.noTrips! - 1;
     await supabase.from("Driver").update({"no_trips": numTrip}).eq('id', driver.id);
-    await getAllCurrentTrip();
-    await getAllFutureTrip();
   }
 
   // Get Driver Data
@@ -378,7 +377,7 @@ class DBService {
   }
 
   //  Add trip
-  Future addTrip(Trip trip, ) async {
+  Future addTrip(Trip trip,) async {
     // final data = await getDriverData(trip.driverId);
     final addTrip = await supabase.from('Trip').insert(trip.toJson());
     
@@ -793,14 +792,34 @@ class DBService {
     return studentList;
   }
 
-  // Future<Location?> checkDriverLocationExist() async{
-  //   Map<String, dynamic> locationMap = await supabase.from("Location").select().eq('user_id', locator.currentUser.id!).single();
-  //   if(locationMap.isNotEmpty){
-  //     return Location.fromJson(locationMap);
-  //   }else {
-  //     await StreamSubscription<Position> positionStream = Geolocator.getPositionStream();
-  //     await supabase.from("Location").insert(Location(userId: locator.currentUser.id!, latitude: latitude, longitude: longitude).toJson());
-  //   }
-  // }
+  Future<Location?> checkDriverLocationExist() async{
+    Map<String, dynamic> locationMap = await supabase.from("Location").select().eq('user_id', locator.currentUser.id!).single();
+    if(locationMap.isNotEmpty){
+      return Location.fromJson(locationMap);
+    }else {
+      Position driverPos = await Geolocator.getCurrentPosition();
+      await supabase.from("Location").insert(Location(userId: locator.currentUser.id!, latitude: driverPos.latitude, longitude: driverPos.longitude).toJson());
+      return null;
+    }
+  }
+
+  Future<void> createDriverLocationCron(TimeOfDay timeFrom,TimeOfDay timeTo, String driverId) async {
+    await locator.driverLocationCron.close();
+
+    locator.driverLocationCron = Cron();
+
+    locator.driverLocationCron.schedule(Schedule.parse('*/2 * * * *'), () async{
+      if(locator.isGivenTimeInCurrentTime(timeFrom, timeTo)){
+        Position driverPos = await Geolocator.getCurrentPosition();
+        await supabase.from("Location").update({
+        'latitude': driverPos.latitude,
+        'longitude': driverPos.longitude,
+      }).eq('user_id', driverId);
+      } else {
+        await supabase.from("Location").delete().eq('user_id', driverId);
+        locator.driverLocationCron.close();
+      }
+    });
+  }
 
 }
