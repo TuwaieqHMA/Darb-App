@@ -31,6 +31,13 @@ class _AddBusState extends State<AddBus> {
   DateTime endDate = DateTime.now().add(const Duration(days: 365));
 
   @override
+  void initState() {
+    final bloc = context.read<SupervisorActionsBloc>();
+    bloc.add(GetAllDriverHasNotBus());
+    super.initState();
+  }
+
+  @override
   void dispose() {
     busNumberController.dispose();
     seatsNumberController.dispose();
@@ -41,7 +48,6 @@ class _AddBusState extends State<AddBus> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<SupervisorActionsBloc>();
-    bloc.add(GetAllDriverHasNotBus());
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
@@ -137,7 +143,7 @@ class _AddBusState extends State<AddBus> {
                                           .map((e) {
                                         return DropdownMenuItem(
                                           value: e,
-                                          child: Text(e.name),
+                                          child: Text(e.name, style: const TextStyle(color: blackColor),),
                                         );
                                       }).toList(),
                                       onChanged: (value) {

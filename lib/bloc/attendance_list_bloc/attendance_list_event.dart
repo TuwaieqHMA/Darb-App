@@ -9,10 +9,16 @@ final class GetAttendanceListInfoEvent extends AttendanceListEvent {
   GetAttendanceListInfoEvent({required this.tripId});
 }
 
-final class ChangeStudentAttendanceStatus extends AttendanceListEvent {
+final class ChangeStudentAttendanceStatusEvent extends AttendanceListEvent {
   final int tripId;
   final AttendanceStatus currentStatus;
   final String studentId;
 
-  ChangeStudentAttendanceStatus({required this.tripId, required this.currentStatus, required this.studentId});
+  ChangeStudentAttendanceStatusEvent({required this.tripId, required this.currentStatus, required this.studentId});
+}
+
+final class UpdateDriverLocationEvent extends AttendanceListEvent {
+  final Trip trip;
+
+  UpdateDriverLocationEvent({required this.trip});
 }

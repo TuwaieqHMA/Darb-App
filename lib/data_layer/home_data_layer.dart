@@ -16,7 +16,7 @@ class HomeData {
   final FlutterLocalization localization = FlutterLocalization.instance;
   TextDirection currentDirctionallity = TextDirection.rtl;
   int currentPageIndex = 0;
-  final driverLocationCron = Cron();
+  Cron driverLocationCron = Cron();
 
   DateTime startDate = DateTime.now();
   DateTime? editStartDate ;
