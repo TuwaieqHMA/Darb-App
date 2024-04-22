@@ -22,7 +22,7 @@ class Message {
         message = json['message'],
         userId = json['user_id'],
         chatId = json['chat_id'],
-         isMine = myUserID == json['user_id'];
+        isMine = myUserID == json['user_id'];
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};

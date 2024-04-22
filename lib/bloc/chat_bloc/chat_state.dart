@@ -6,21 +6,30 @@ sealed class ChatState {}
 final class ChatInitial extends ChatState {}
 
 // ---- ResultStates ----
-class SuccessState extends ChatState{}
+final class ChatSuccessState extends ChatState{}
 // ignore: must_be_immutable
-class ErrorState extends ChatState{
+final class ChatErrorState extends ChatState{
   String msg;
-  ErrorState(this.msg);
+  ChatErrorState(this.msg);
 }
 
 // ---- Show Messages State ---
 // ignore: must_be_immutable
-class ShowMessageStreamState extends ChatState {
+final class ShowMessageStreamState extends ChatState {
   Stream<List<Message>> messageList;
   ShowMessageStreamState(
     this.messageList,
   );
 }
-
+final class ChatLoadingState extends ChatState {}
+final class ChatCreatedState extends ChatState {}
 // ---- Sending message state -----
-class SendMessageState extends ChatState {}
+final class SendMessageState extends ChatState {}
+
+final class ChatFoundState extends ChatState {
+  final int chatId;
+
+  ChatFoundState({required this.chatId});
+}
+
+final class ChatNotFoundState extends ChatState {}

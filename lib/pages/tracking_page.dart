@@ -95,7 +95,7 @@ class TrackingPage extends StatelessWidget {
                   } else {
                     return DriverInfoCard(
                         driver: locator.currentTripDriver,
-                        isCurrent: isCurrent);
+                        isCurrent: !isCurrent!);
                   }
                 },
               ),

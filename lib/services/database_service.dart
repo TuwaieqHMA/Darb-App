@@ -17,7 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DBService {
   final supabase = Supabase.instance.client;
-  late Stream<List<Message>> listOfMessages; // Fetched Messages
+  Stream<List<Message>>? listOfMessages; // Fetched Messages
   // final List<Driver> driverData = [];
   // final List<AttendanceList> attendanceList = [];
   
@@ -389,53 +389,104 @@ class DBService {
 
   //------------------------------------------------------------
   // --------- Fetching user and session info Operations ------
+ //final SupabaseClient _client;
 
-  // Getting session data for routing
-  Future getSessionData() async {
-    final session = supabase.auth.currentSession;
-    print("-------------------------------");
-    print("Session Data $session");
-    print("-------------------------------");
-    return session;
-  }
+ 
 
-  // Getting current user ID
+  // Future<void> createChat(Chat chat) async {
+  //   final response = await supabase.from('chats').upsert(chat.toJson()).();
+  //   if (response.error != null) {
+  //     throw Exception('Failed to create chat: ${response.error!.message}');
+  //   }
+  // }
+
+  // Future<void> sendMessage(Message message) async {
+  //   final response = await supabase.from('messages').upsert(message.toJson()).execute();
+  //   if (response.error != null) {
+  //     throw Exception('Failed to send message: ${response.error!.message}');
+  //   }
+  // }
+
+  // Future<List<Message>> getMessagesForChat(int chatId) async {
+  //   final response = await supabase
+  //       .from('messages')
+  //       .select()
+  //       .eq('chat_id', chatId)
+  //       .order('created_at', ascending: true)
+  //       .select();
+
+  //   if (response.error != null) {
+  //     throw Exception('Failed to fetch messages: ${response.error!.message}');
+  //   }
+
+  //   return (response.data as List<dynamic>)
+  //       .map((e) => Message.fromJson(e as Map<String, dynamic>, json: {}, myUserID: ''))
+  //       .toList();
+  // }
+ // Getting session data for routing
+  // Future getSessionData() async {
+  //   final session = supabase.auth.currentSession;
+  //   print("-------------------------------");
+  //   print("Session Data $session");
+  //   print("-------------------------------");
+  //   return session;
+  // }
+
+ // Getting current user ID
   Future getCurrentUserID() async {
     final currentUserId = supabase.auth.currentUser?.id;
     return currentUserId;
   }
 
   // Get messages stream
-  Future getMessagesStream() async {
-    final userID = await getCurrentUserID();
+  Stream<List<Message>> getMessagesStream(int chatId) {
     final Stream<List<Message>> msgStream = supabase
-        .from('messages')
-        .stream(primaryKey: ['id'])
+        .from('Message')
+        .stream(primaryKey: ["id"])
+        .eq('chat_id', chatId)
         .order('created_at')
         .map((messages) => messages
-            .map((message) => Message.fromJson(json: message, myUserID: userID))
+            .map((message) => Message.fromJson(json: message,myUserID: locator.currentUser.id!))
+            // Message.fromJson(json: message, myUserID: userID))
+            
             .toList());
-    listOfMessages = msgStream;
+    return msgStream;
   }
 
-  // Get chat stream (assuming 'chats' is the table name)
-  Future getChatData(String chatID) async {
-    final Stream<List<Chat>> chatStream = supabase
-        .from('chats')
-        .stream(primaryKey: ['id'])
-        .order('created_at')
-        .map((chats) => chats.map((chat) => Chat.fromJson(chat)).toList());
-    return chatStream;
+  // Get chat stream 
+ Future<Chat> getChatData(int chatId)async {
+    final Chat chat = Chat.fromJson(await supabase
+        .from('Chat')
+        .select()
+        .eq("id", chatId)
+        .single());
+    return chat;
   }
 
   // Submit message
-  Future submitMessage(String msgContent) async {
-    final currentUserId = await getCurrentUserID();
-    await supabase.from("messages").insert({
-      'user_id': currentUserId,
+  Future submitMessage(String msgContent, int chatId) async {
+    await supabase.from("Message").insert({
+      'user_id': locator.currentUser.id,
       'message': msgContent,
+      'chat_id': chatId,
     });
   }
+
+    Future<List<Map<String, dynamic>>> checkChat(String driverId ,String studentId) async{
+    List<Map<String, dynamic>> chatIdList = await supabase.from("Chat")
+    .select('id')
+    .match({
+      'driver_id': driverId,
+      'student_id': studentId,
+    });
+    return chatIdList;
+  }
+
+  Future createChat(String driverId ,String studentId) async{
+    await supabase.from('Chat')
+    .insert(Chat(driverId: driverId, studentId: studentId).toJson());
+  }
+
 
   //---------------------------Student Actions---------------------------
   Future<Student> getStudentInfo() async {
