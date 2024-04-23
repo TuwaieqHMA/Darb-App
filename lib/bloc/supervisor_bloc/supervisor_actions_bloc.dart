@@ -301,11 +301,9 @@ class SupervisorActionsBloc
     try{
       emit(LoadingState());
       await DBService().deleteTrip(event.tripId, event.driver,);
-      // await getAllCurrentTrip(GetAllSupervisorCurrentTrip(), emit);
-      // await getAllFutureTrip(GetAllSupervisorFutureTrip(), emit);
       emit(SuccessfulState("تم حذف الرحلة بنجاح "));
-      emit(GetAllCurrentTripState());
-      emit(GetAllFutureTripState());
+      await getAllCurrentTrip(GetAllSupervisorCurrentTrip(), emit);
+      await getAllFutureTrip(GetAllSupervisorFutureTrip(), emit);
     }catch(e){
       emit(ErrorState("حدث خطأ أثناء حذف الرحلة"));
     }
@@ -401,6 +399,8 @@ class SupervisorActionsBloc
     try{
       await DBService().updateTrip(event.tripData);
       emit(SuccessfulState("تم تعديل الرحلة"));
+      await getAllCurrentTrip(GetAllSupervisorCurrentTrip(), emit);
+      await getAllFutureTrip(GetAllSupervisorFutureTrip(), emit);
     }catch(e){
       emit(ErrorState("حدث خطأ أثناء جلب البيانات"));
     }

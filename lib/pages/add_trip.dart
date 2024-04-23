@@ -11,6 +11,7 @@ import 'package:darb_app/widgets/circle_back_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
+import 'package:darb_app/widgets/no_item_text.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -512,6 +513,10 @@ class _AddTripState extends State<AddTrip> {
                                   builder: (context) => DialogBox(
                                     text: "هل أنت متأكد من إضافة رحلة ؟",
                                     onAcceptClick: () {
+                                      context.pop();
+                                          showDialog(barrierDismissible: false,context: context, builder: (context) {
+                                            return const NoItemText(isLoading: true,);
+                                          },);
                                       bloc.add(GetAllStudent());
                                       bloc.add(AddTripEvent(
                                           trip: Trip(

@@ -76,25 +76,11 @@ class SupervisorHomePage extends StatelessWidget {
                       });
                 }
                 return const NoItemText(text: "لا توجد رحلات حالياً");
-                // return Column(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     height32,
-                //     Image.asset("assets/images/empty_trip.png"),
-                //     height16,
-                //     const Text(
-                //       "لا توجد رحلات حالياً",
-                //       style: TextStyle(fontSize: 16, color: signatureBlueColor),
-                //     ),
-                //   ],
-                // );
               }
               return const NoItemText(
                 isLoading: true,
               );
             }),
-
-            // ===========================================
             height24,
             const Text(
               "الرحلات القادمة",
@@ -135,26 +121,10 @@ class SupervisorHomePage extends StatelessWidget {
                       });
                 }
                 return const NoItemText(text: "لا توجد رحلات حالياً");
-
-                // return const NoItemText(isLoading:  true,);
-                // return Column(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     height32,
-                //     Image.asset("assets/images/empty_trip.png"),
-                //     height16,
-                //     const Text(
-                //       "لا توجد رحلات حالياً",
-                //       style: TextStyle(fontSize: 16, color: signatureBlueColor),
-                //     ),
-                //   ],
-                // );
               }
               return const NoItemText(
                 isLoading: true,
               );
-              //  return const NoItemText( text: "لا توجد رحلات حالياً");
-              //  return const SizedBox.shrink();
             }),
           ],
         ),
