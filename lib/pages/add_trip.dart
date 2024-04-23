@@ -513,12 +513,6 @@ class _AddTripState extends State<AddTrip> {
                                     text: "هل أنت متأكد من إضافة رحلة ؟",
                                     onAcceptClick: () {
                                       bloc.add(GetAllStudent());
-                                      print(locator.students);
-                                      print("locator.students");
-                                      // bloc.add(GetDriverInfoEvent(bloc.dropdownAddTripValue!.id!));
-                                      print(locationController.text);
-                                      print(locator.currentUser.id!);
-                                      print(bloc.dropdownAddTripValue!.id);
                                       bloc.add(AddTripEvent(
                                           trip: Trip(
                                             isToSchool: bloc.seletctedType == 1
@@ -530,15 +524,8 @@ class _AddTripState extends State<AddTrip> {
                                             district: locationController.text,
                                             supervisorId:
                                                 locator.currentUser.id!.toString(),
-                                            driverId: bloc.dropdownAddTripValue!.id!.toString() //"8e2ee3f9-5d45-4a16-b7ed-710e05613cee" // bloc.dropdownAddTripValue!.id!,
+                                            driverId: bloc.dropdownAddTripValue!.id!.toString() 
                                           ),
-                                          // driver: Driver(
-                                          //   id: bloc.dropdownAddTripValue!.id!, // "8e2ee3f9-5d45-4a16-b7ed-710e05613cee" ,
-                                          //   supervisorId:
-                                          //       locator.driverData.supervisorId,
-                                          //   hasBus: locator.driverData.hasBus,
-                                          //   noTrips: locator.driverData.noTrips
-                                          // ),
                                           ));
                                     },
                                     onRefuseClick: () {

@@ -138,9 +138,7 @@ class _AddBusState extends State<AddBus> {
                                         size: 30,
                                         color: signatureBlueColor,
                                       ),
-                                      items: drivers
-                                          // locator.driverHasBusList
-                                          .map((e) {
+                                      items: drivers.map((e) {
                                         return DropdownMenuItem(
                                           value: e,
                                           child: Text(e.name, style: const TextStyle(color: blackColor),),
@@ -232,9 +230,7 @@ class _AddBusState extends State<AddBus> {
                                             size: 23,
                                           ),
                                           width8,
-                                          Text(
-                                            locator.startDate.day ==
-                                                    DateTime.now().day
+                                          Text( locator.startDate.day == DateTime.now().day
                                                 ? "أدخل تاريخ اصدار الرخصة"
                                                 : "${locator.startDate.toLocal()}"
                                                     .split(' ')[0],
@@ -341,8 +337,6 @@ class _AddBusState extends State<AddBus> {
                                       builder: (context) => DialogBox(
                                         text: "هل أنت متأكد من إضافة باص ؟",
                                         onAcceptClick: () {
-                                          print(
-                                              'bloc.dropdownAddBusValue.length');
                                           bloc.add(AddBusEvent(
                                             bus: Bus(
                                               supervisorId:

@@ -44,7 +44,7 @@ class _MainAppState extends State<MainApp> {
     super.initState();
   }
 
-// the setState function here is a must to add
+  // the setState function here is a must to add
   void _onTranslatedLanguage(Locale? locale) {
     setState(() {});
   }

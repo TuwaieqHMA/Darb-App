@@ -21,9 +21,7 @@ class SupervisorAddTypePage extends StatelessWidget {
           context.getWidth(),
           context.getHeight() * 0.10,
         ),
-        child: // const HomeAppBar(),
-         // PageAppBar(title: "صفحة الإضافات", actionButton: context.pop(), ),
-          PreferredSize(
+        child: PreferredSize(
         preferredSize: Size(context.getWidth(), context.getHeight() * .10),
         child: const PageAppBar(
           title: "صفحة الإضافات",

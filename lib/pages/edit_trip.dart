@@ -222,15 +222,6 @@ class _EditTripState extends State<EditTrip> {
                             },
                           ),
                           height16,
-                          // HeaderTextField(
-                          //   controller: busNumberController,
-                          //   headerText: "رقم الباص",
-                          //   hintText: "!!!",
-                          //   headerColor: signatureTealColor,
-                          //   textDirection: TextDirection.rtl,
-                          //   isReadOnly: widget.isView ? true : false,
-                          //   isEnabled: widget.isView ? false : true,
-                          // ),
                           height16,
                           widget.isView
                               ? BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
@@ -239,11 +230,8 @@ class _EditTripState extends State<EditTrip> {
                                     return HeaderTextField(
                                       controller: nameController,
                                       headerText: "اسم السائق  ",
-                                      hintText:
-                                          locator.busDriverName?.name ??
-                                              "حدث خطأ أثناء جلب السائق",
+                                      hintText: locator.busDriverName?.name ?? "حدث خطأ أثناء جلب السائق",
                                       headerColor: signatureTealColor,
-                                      // textDirection: TextDirection.rtl,
                                       isReadOnly: widget.isView ? true : false,
                                       isEnabled: widget.isView ? false : true,
                                     );
@@ -325,7 +313,6 @@ class _EditTripState extends State<EditTrip> {
                             headerText: "الحي",
                             hintText: widget.trip.district,
                             headerColor: signatureTealColor,
-                            // textDirection: TextDirection.rtl,
                             isReadOnly: widget.isView ? true : false,
                             isEnabled: widget.isView ? false : true,
                           ),
@@ -536,8 +523,6 @@ class _EditTripState extends State<EditTrip> {
                                       builder: (context) => DialogBox(
                                         text: "هل أنت متأكد من تعديل الرحلة ؟",
                                         onAcceptClick: () {
-                                          print(bloc.editStartTime.toString());
-                                          print(bloc.editEndTime);
                                           bloc.add(UpdateTrip(
                                             tripData: Trip(
                                               id: widget.trip.id,
@@ -546,15 +531,8 @@ class _EditTripState extends State<EditTrip> {
                                               date: bloc.editStartTripDate!,
                                               driverId: bloc.dropdownAddTripValue == null ? "${locator.busDriverName!.id}" : "${bloc.dropdownAddTripValue!.id}",
                                               supervisorId: locator.currentUser.id!.toString(),
-                                              timeFrom: //
-                                              //  TimeOfDay.fromDateTime(DateTime.parse("${bloc.editStartTime!}")), //.hour}:${bloc.editStartTime!.minute}".split(':'))),
-                                              // '${bloc.editStartTime.hour}:${bloc.editStartTime.minute}',
-                                              // ${bloc.editStartTime.hour} ${bloc.editStartTime.minute},
-                                              bloc.editStartTime!,
-                                              // "${bloc.editStartTime!.hour.toString().padLeft(2,'0')}:${bloc.editStartTime!.minute.toString().padLeft(2,'0')}: ",
-                                              timeTo:
-                                              //TimeOfDay.fromDateTime(DateTime.parse("${bloc.editEndTime!}")), //  TimeOfDay.fromDateTime(DateFormat.Hm().parse("${bloc.editStartTime!.hour}:${bloc.editStartTime!.minute}".toString.split(':'))),
-                                              bloc.editEndTime!,
+                                              timeFrom: bloc.editStartTime!,
+                                              timeTo: bloc.editEndTime!,
                                             ),
                                           ));
                                         },

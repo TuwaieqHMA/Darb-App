@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
 class CreateAccountStudentPage extends StatefulWidget {
-  CreateAccountStudentPage({super.key});
+  const CreateAccountStudentPage({super.key});
 
   @override
   State<CreateAccountStudentPage> createState() => _CreateAccountStudentPageState();
@@ -21,13 +21,9 @@ class CreateAccountStudentPage extends StatefulWidget {
 
 class _CreateAccountStudentPageState extends State<CreateAccountStudentPage> {
   TextEditingController nameController = TextEditingController();
-
   TextEditingController phoneController = TextEditingController();
-
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
-
   TextEditingController rePasswordController = TextEditingController();
 
   @override
