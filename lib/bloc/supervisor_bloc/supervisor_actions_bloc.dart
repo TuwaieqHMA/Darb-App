@@ -201,15 +201,14 @@ class SupervisorActionsBloc
   
 
    FutureOr<void> getAllCurrentTrip(GetAllSupervisorCurrentTrip event, Emitter<SupervisorActionsState> emit) async {
-    emit(LoadingCurrentTripState());
+    emit(LoadingSupervisorTripState());
     final trips = await DBService().getAllCurrentTrip();
-    emit(GetAllCurrentTripState());
   }
   
   FutureOr<void> getAllFutureTrip(GetAllSupervisorFutureTrip event, Emitter<SupervisorActionsState> emit) async{
-     emit(LoadingFutureTripState());
+     emit(LoadingSupervisorTripState());
     final trips = await DBService().getAllFutureTrip();
-    emit(GetAllFutureTripState());
+    emit(GetAllSupervisorTripsState());
   }
 
 

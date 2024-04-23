@@ -7,8 +7,7 @@ final class SupervisorActionsInitial extends SupervisorActionsState {}
 
 
 final class LoadingState extends SupervisorActionsState {}
-final class LoadingCurrentTripState extends SupervisorActionsState {}
-final class LoadingFutureTripState extends SupervisorActionsState {}
+final class LoadingSupervisorTripState extends SupervisorActionsState {}
 
 final class SuccessfulState extends SupervisorActionsState {
   String msg;
@@ -35,8 +34,7 @@ final class GetOneStudentState extends SupervisorActionsState {
 final class AddStudentToSupervisorState extends SupervisorActionsState {}
 final class GetAllBusState extends SupervisorActionsState {}
 final class SuccessGetDriverState extends SupervisorActionsState {}
-final class GetAllCurrentTripState extends SupervisorActionsState {}
-final class GetAllFutureTripState extends SupervisorActionsState {}
+final class GetAllSupervisorTripsState extends SupervisorActionsState {}
 final class GetAllTripDriverState extends SupervisorActionsState {
   List<Driver> driver = [];
   GetAllTripDriverState(this.driver);
