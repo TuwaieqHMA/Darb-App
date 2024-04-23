@@ -1,8 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:darb_app/data_layer/home_data_layer.dart';
-import 'package:darb_app/models/chat_model.dart';
 import 'package:darb_app/models/message_model.dart';
 import 'package:darb_app/services/database_service.dart';
 import 'package:get_it/get_it.dart';

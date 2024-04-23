@@ -23,127 +23,149 @@ class SupervisorHomePage extends StatelessWidget {
     final locator = GetIt.I.get<HomeData>();
 
     return Scaffold(
-        body: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
-      listener: (context, state) {
-        if(state is SuccessfulState){
-          context.showSuccessSnackBar(state.msg);
-        }
-        if(state is ErrorState){
-          context.showErrorSnackBar(state.msg);
-        }
-      },
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        shrinkWrap: true,
-        children: [
-          const Text(
-            "الرحلات الحالية",
-            style: TextStyle(
-              color: blackColor,
-              fontFamily: inukFont,
-              fontSize: 30,
+      body: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
+        listener: (context, state) {
+          if (state is SuccessfulState) {
+            context.showSuccessSnackBar(state.msg);
+          }
+          if (state is ErrorState) {
+            context.showErrorSnackBar(state.msg);
+          }
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          shrinkWrap: true,
+          children: [
+            const Text(
+              "الرحلات الحالية",
+              style: TextStyle(
+                color: blackColor,
+                fontFamily: inukFont,
+                fontSize: 30,
+              ),
             ),
-          ),
-          height24,
-          BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
-              builder: (context, state) {
-            if (state is LoadingCurrentTripState) {
-              return SizedBox(
-                width: context.getWidth(),
-                height: context.getHeight(),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    color: signatureYellowColor,
-                  ),
-                ),
-              );
-            }
-            if (state is GetAllCurrentTripState) {
-              if (locator.supervisorCurrentTrips.isNotEmpty) {
-                return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: locator.supervisorCurrentTrips.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          TripCard(
-                            userType: UserType.supervisor,
-                            trip: locator.supervisorCurrentTrips[index].trip,
-                            driverName: locator
-                                .supervisorCurrentTrips[index].driverName,
-                            noOfPassengers: locator
-                                .supervisorCurrentTrips[index].noOfPassengers,
-                                driver: locator.supervisorCurrentTrips[index].driver,
-                                isCurrent: true,
-                          ),
-                          height16,
-                        ],
-                      );
-                    });
-              } return const NoItemText(isLoading:  true,);
-            }
-            return const NoItemText( text: "لا توجد رحلات حالياً");
-          }),
-
-
-          height24,
-          const Text(
-            "الرحلات القادمة",
-            style: TextStyle(
-              color: blackColor,
-              fontFamily: inukFont,
-              fontSize: 30,
-            ),
-          ),
-          height24,
-
-          BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
-              builder: (context, state) {
-            if (state is LoadingFutureTripState) {
-              return SizedBox(
-                width: context.getWidth(),
-                height: context.getHeight(),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    color: signatureYellowColor,
-                  ),
-                ),
-              );
-            }
-            if (state is GetAllFutureTripState) {
-              if (locator.supervisorFutureTrips.isNotEmpty) {
-                return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: locator.supervisorFutureTrips.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          TripCard(
-                            userType: UserType.supervisor,
-                            trip: locator.supervisorFutureTrips[index].trip,
-                            driverName:
-                                locator.supervisorFutureTrips[index].driverName,
-                            noOfPassengers: locator
-                                .supervisorFutureTrips[index].noOfPassengers,
-                                driver: locator.supervisorFutureTrips[index].driver,
-                          ),
-                          height16,
-                        ],
-                      );
-                    });
+            height24,
+            BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                builder: (context, state) {
+              if (state is LoadingSupervisorTripState) {
+                return const NoItemText(isLoading: true, height: 100,);
+              } else if (state is GetAllSupervisorTripsState) {
+                if (locator.supervisorCurrentTrips.isNotEmpty) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: locator.supervisorCurrentTrips.length,
+                      primary: false,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            TripCard(
+                              userType: UserType.supervisor,
+                              trip: locator.supervisorCurrentTrips[index].trip,
+                              driverName: locator
+                                  .supervisorCurrentTrips[index].driverName,
+                              noOfPassengers: locator
+                                  .supervisorCurrentTrips[index].noOfPassengers,
+                              driver:
+                                  locator.supervisorCurrentTrips[index].driver,
+                              isCurrent: true,
+                            ),
+                            height16,
+                          ],
+                        );
+                      });
+                }
+                return const NoItemText(text: "لا توجد رحلات حالياً");
+                // return Column(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     height32,
+                //     Image.asset("assets/images/empty_trip.png"),
+                //     height16,
+                //     const Text(
+                //       "لا توجد رحلات حالياً",
+                //       style: TextStyle(fontSize: 16, color: signatureBlueColor),
+                //     ),
+                //   ],
+                // );
               }
-              return const NoItemText( text: "لا توجد رحلات حالياً");
-            }
-            return const NoItemText(isLoading:  true,);
-          }),
-        ],
+              return const NoItemText(
+                isLoading: true,
+              );
+            }),
+
+            // ===========================================
+            height24,
+            const Text(
+              "الرحلات القادمة",
+              style: TextStyle(
+                color: blackColor,
+                fontFamily: inukFont,
+                fontSize: 30,
+              ),
+            ),
+            height24,
+            BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                builder: (context, state) {
+              if (state is LoadingSupervisorTripState) {
+                return const NoItemText(isLoading: true, height: 100,);
+              }
+              if (state is GetAllSupervisorTripsState) {
+                if (locator.supervisorFutureTrips.isNotEmpty) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: locator.supervisorFutureTrips.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            TripCard(
+                              userType: UserType.supervisor,
+                              trip: locator.supervisorFutureTrips[index].trip,
+                              driverName: locator
+                                  .supervisorFutureTrips[index].driverName,
+                              noOfPassengers: locator
+                                  .supervisorFutureTrips[index].noOfPassengers,
+                              driver:
+                                  locator.supervisorFutureTrips[index].driver,
+                            ),
+                            height16,
+                          ],
+                        );
+                      });
+                }
+                return const NoItemText(text: "لا توجد رحلات حالياً");
+
+                // return const NoItemText(isLoading:  true,);
+                // return Column(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     height32,
+                //     Image.asset("assets/images/empty_trip.png"),
+                //     height16,
+                //     const Text(
+                //       "لا توجد رحلات حالياً",
+                //       style: TextStyle(fontSize: 16, color: signatureBlueColor),
+                //     ),
+                //   ],
+                // );
+              }
+              return const NoItemText(
+                isLoading: true,
+              );
+              //  return const NoItemText( text: "لا توجد رحلات حالياً");
+              //  return const SizedBox.shrink();
+            }),
+          ],
+        ),
       ),
-    ),
-      floatingActionButton: BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(builder: (context, state) {
-      if((state is! GetAllCurrentTripState)){
-        return FloatingActionButton(
+      floatingActionButton:
+          BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+        builder: (context, state) {
+          if ((state is LoadingSupervisorTripState)) {
+            return nothing;
+          } else {
+            return FloatingActionButton(
               onPressed: () {
                 bloc.add(GetAllSupervisorCurrentTrip());
                 bloc.add(GetAllSupervisorFutureTrip());
@@ -154,13 +176,11 @@ class SupervisorHomePage extends StatelessWidget {
                 Icons.refresh_rounded,
                 color: whiteColor,
               ),
-      );
-      }else{
-      return nothing;
-      }
-      
-    },),
-    floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+            );
+          }
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }

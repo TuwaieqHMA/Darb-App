@@ -138,7 +138,7 @@ class DBService {
   // Delete bus function
   Future deleteBus(String busId, String driverId) async {
     await supabase.from("Bus").delete().eq('id', busId);
-    final updateDriver = await supabase
+    await supabase
         .from('Driver')
         .update({'has_bus': false}).eq('id', driverId);
     await getAllBuses();
@@ -239,8 +239,9 @@ class DBService {
 
   //  Add bus
   Future addBus(Bus bus, String id) async {
-    final addBus = await supabase.from('Bus').insert(bus.toJson());
-    final updateDriver = await supabase.from('Driver').update({'has_bus': true}).eq('id', id);
+    await supabase.from('Bus').insert(bus.toJson());
+        await supabase.from('Driver').update({'has_bus': true}).eq('id', id);
+    // await getDriverData(); //////!
   }
 
   //  Add trip
@@ -324,6 +325,8 @@ class DBService {
     }
   }
 
+
+
   Future updateStudent(String studentId, String name, String phone) async {
     await supabase
         .from('User')
@@ -342,7 +345,6 @@ class DBService {
     await supabase
         .from('Bus')
         .update({'seats_number': bus.seatsNumber, 'bus_plate': bus.busPlate, 'date_issue' : bus.dateIssue.toIso8601String(), 'date_expire' : bus.dateExpire.toIso8601String(), 'driver_id': bus.driverId}).eq('id', bus.id!);
-    final updateDriver =
         await supabase.from('Driver').update({'has_bus': true}).eq('id', bus.driverId);
     await getAllBuses();
   }
@@ -535,6 +537,21 @@ class DBService {
     .insert(Chat(driverId: driverId, studentId: studentId).toJson());
   }
 
+ //---------------------------DRIVER LOCATION Actions ---------------------------
+//
+Future<List<Student>> getStudentLocationList(int tripId) async{
+  List<Student> studentList = [];
+  List<dynamic> studentMap = await supabase.rpc("get_student_location_list",
+   params:{
+"tripid":tripId
+  });
+if (studentMap.isNotEmpty) {
+  for (var student in studentMap) {
+    studentList.add(Student.fromJson(student));
+  }
+}
+return studentList;
+}
 
   //---------------------------Student Actions---------------------------
   Future<Student> getStudentInfo() async {
@@ -664,7 +681,8 @@ class DBService {
       return Location.fromJson(locationMap);
     }else {
       Position driverPos = await Geolocator.getCurrentPosition();
-      await supabase.from("Location").insert(Location(userId: locator.currentUser.id!, latitude: driverPos.latitude, longitude: driverPos.longitude).toJson());
+      Map<String, dynamic> locationJson = Location(userId: locator.currentUser.id!, latitude: driverPos.latitude, longitude: driverPos.longitude).toJson();
+      await supabase.from("Location").insert(locationJson);
       return null;
     }
   }

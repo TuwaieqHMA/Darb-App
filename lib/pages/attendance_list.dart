@@ -32,7 +32,7 @@ class AttendanceListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final attendanceListBloc = context.read<AttendanceListBloc>();
     final locator = GetIt.I.get<HomeData>();
-    (isCurrent!) ? attendanceListBloc.add(UpdateDriverLocationEvent(trip: trip)) : null;
+    (!isCurrent!) ? attendanceListBloc.add(UpdateDriverLocationEvent(trip: trip)) : null;
     attendanceListBloc.add(GetAttendanceListInfoEvent(tripId: trip.id!));
     return PopScope(
       canPop: true,
@@ -153,7 +153,7 @@ class AttendanceListPage extends StatelessWidget {
                     if(snapshot.hasData){
                       attendanceList!.sort((a, b) => a.studentId.compareTo(b.studentId,));
                       state.studentList.sort((a,b) => a.id!.compareTo(b.id!));
-                      return (attendanceList!.isNotEmpty) ? ListView.builder(
+                      return (attendanceList.isNotEmpty) ? ListView.builder(
                       shrinkWrap: true,
                       primary: false,
                       padding: const EdgeInsets.all(16),
@@ -187,7 +187,7 @@ class AttendanceListPage extends StatelessWidget {
                   color: signatureYellowColor,
                   textColor: whiteColor,
                   onPressed: () {
-                    context.push(const MapPage(), true);
+                    context.push(MapPage(trip: trip,), true);
                   },
                 ),
               )

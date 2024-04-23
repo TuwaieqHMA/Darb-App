@@ -170,7 +170,7 @@ class SupervisorActionsBloc
   // select one driver -- to add bus 
   FutureOr<void> selectBusDriver( SelectBusDriverEvent event, Emitter<SupervisorActionsState> emit) {
     dropdownAddBusValue = event.busDriverId;
-    dropdownAddTripValue = event.TripDriverId;
+    dropdownAddTripValue = event.tripDriverId;
     emit(SuccessGetDriverState());
   }
 
@@ -183,7 +183,7 @@ class SupervisorActionsBloc
 
   FutureOr<void> addBus(AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
     try {
-      final addNewBus =  await DBService().addBus(event.bus, event.id);
+      await DBService().addBus(event.bus, event.id);
       emit(SuccessAddBusState(msg: "تم إضافة الباص بنحاج "));
     } catch (e) {
       emit(ErrorAddBusState(msg: "حدث خطأ أنثاء إضافة الباص"));
@@ -191,15 +191,14 @@ class SupervisorActionsBloc
   }  
 
    FutureOr<void> getAllCurrentTrip(GetAllSupervisorCurrentTrip event, Emitter<SupervisorActionsState> emit) async {
-    emit(LoadingCurrentTripState());
-    final trips = await DBService().getAllCurrentTrip();
-    emit(GetAllCurrentTripState());
+    emit(LoadingSupervisorTripState());
+    await DBService().getAllCurrentTrip();
   }
   
   FutureOr<void> getAllFutureTrip(GetAllSupervisorFutureTrip event, Emitter<SupervisorActionsState> emit) async{
-     emit(LoadingFutureTripState());
-    final trips = await DBService().getAllFutureTrip();
-    emit(GetAllFutureTripState());
+     emit(LoadingSupervisorTripState());
+    await DBService().getAllFutureTrip();
+    emit(GetAllSupervisorTripsState());
   }
 
 
@@ -211,14 +210,14 @@ class SupervisorActionsBloc
 
   FutureOr<void> getAllBus(GetAllBus event, Emitter<SupervisorActionsState> emit) async {
     emit(LoadingState());
-    final bus = await DBService().getAllBuses();
+    await DBService().getAllBuses();
     emit(GetAllBusState());
   }
 
   FutureOr<void> addTrip(AddTripEvent event, Emitter<SupervisorActionsState> emit) async {
     emit(LoadingState());
     try{
-      final newTrip = await DBService().addTrip(event.trip);
+      await DBService().addTrip(event.trip);
       emit(SuccessfulState("تمت إضافة الرحلة بنجاح")); 
 
     }catch(e){

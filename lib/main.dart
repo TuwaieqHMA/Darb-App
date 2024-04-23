@@ -6,8 +6,6 @@ import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
 import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/utils/app_locale.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:darb_app/widgets/redirect_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';

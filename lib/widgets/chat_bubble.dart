@@ -1,31 +1,33 @@
+import 'package:darb_app/utils/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:darb_app/models/message_model.dart';
-import 'package:darb_app/models/chat_model.dart'; // استيراد نموذج الدردشة
 import 'package:timeago/timeago.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({Key? key, required this.message,}) : super(key: key); // تحديث المتغيرات
+  const ChatBubble({super.key, required this.message,}); 
 
-  final Message message; // تحديث المتغير من Profile إلى Chat
+  final Message message; 
 
   @override
   Widget build(BuildContext context) {
     List<Widget> chatContents = [
-      // إظهار صورة دائرية للمرسل
+      
       if (!message.isMine)
         CircleAvatar(
           backgroundColor: Colors.grey[500],
           child: Text(
-            message.userId.substring(0, 2), // استخدام معرف السائق بدلاً من اسم المستخدم
+            message.userId.substring(0, 2), 
             style: const TextStyle(
               color: Colors.white,
             ),
           ),
         ),
-      SizedBox(height: 8),
-      SizedBox(height: 4),
+      const SizedBox(height: 8),
+      const SizedBox(height: 4),
+      width8,
       Flexible(
         child: Container(
+          margin: const EdgeInsets.all(8),
           padding: const EdgeInsets.symmetric(
             vertical: 8,
             horizontal: 12,
@@ -53,10 +55,10 @@ class ChatBubble extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(height: 8),
-      SizedBox(height: 4),
+      const SizedBox(height: 8),
+      const SizedBox(height: 4),
       Text(format(message.createdAt, locale: 'en_short')),
-      SizedBox(height: 64),
+      const SizedBox(height: 64),
     ];
     if (message.isMine) {
       chatContents = chatContents.reversed.toList();
