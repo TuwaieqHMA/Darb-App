@@ -1,7 +1,6 @@
 import 'package:darb_app/utils/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:darb_app/models/message_model.dart';
-import 'package:darb_app/models/chat_model.dart'; 
 import 'package:timeago/timeago.dart';
 
 class ChatBubble extends StatelessWidget {

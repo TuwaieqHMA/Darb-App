@@ -76,7 +76,7 @@ final class ChangedImageState extends AuthState {
 
   ChangedImageState({this.msg});
 }
-class AvailableSessionState extends AuthState {
-  dynamic isSessionAvailable;
-  AvailableSessionState(this.isSessionAvailable);
-}
+// class AvailableSessionState extends AuthState {
+//   dynamic isSessionAvailable;
+//   AvailableSessionState(this.isSessionAvailable);
+// }
