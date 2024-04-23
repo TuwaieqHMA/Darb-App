@@ -11,6 +11,7 @@ import 'package:darb_app/widgets/circle_back_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
+import 'package:darb_app/widgets/no_item_text.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +54,6 @@ class _EditTripState extends State<EditTrip> {
             if (state is SuccessfulState) {
               context.pop();
               context.pop();
-              context.showSuccessSnackBar("تم تعديل بيانات الرحلة بنجاح");
             }
             if (state is ErrorState) {
               context.showErrorSnackBar(state.msg);
@@ -232,7 +232,7 @@ class _EditTripState extends State<EditTrip> {
                                       headerText: "اسم السائق  ",
                                       hintText: locator.busDriverName?.name ?? "حدث خطأ أثناء جلب السائق",
                                       headerColor: signatureTealColor,
-                                      isReadOnly: widget.isView ? true : false,
+                                      isReadOnly: widget.isView ? false : true,
                                       isEnabled: widget.isView ? false : true,
                                     );
                                     } return nothing;
@@ -313,7 +313,7 @@ class _EditTripState extends State<EditTrip> {
                             headerText: "الحي",
                             hintText: widget.trip.district,
                             headerColor: signatureTealColor,
-                            isReadOnly: widget.isView ? true : false,
+                            isReadOnly: widget.isView ? false : true,
                             isEnabled: widget.isView ? false : true,
                           ),
                           height16,
@@ -523,6 +523,10 @@ class _EditTripState extends State<EditTrip> {
                                       builder: (context) => DialogBox(
                                         text: "هل أنت متأكد من تعديل الرحلة ؟",
                                         onAcceptClick: () {
+                                          context.pop();
+                                          showDialog(barrierDismissible: false,context: context, builder: (context) {
+                                            return const NoItemText(isLoading: true,);
+                                          },);
                                           bloc.add(UpdateTrip(
                                             tripData: Trip(
                                               id: widget.trip.id,

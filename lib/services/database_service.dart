@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:js_interop';
 import 'package:cron/cron.dart';
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/models/attendance_list_model.dart';
