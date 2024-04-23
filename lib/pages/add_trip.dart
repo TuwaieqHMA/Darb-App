@@ -268,7 +268,7 @@ class _AddTripState extends State<AddTrip> {
                                       }).toList(),
                                       onChanged: (value) {
                                         if (value is DarbUser) {
-                                          bloc.add(SelectBusDriverEvent(TripDriverId:  value));
+                                          bloc.add(SelectBusDriverEvent(tripDriverId:  value));
                                                                                   
                                         }
                                       },

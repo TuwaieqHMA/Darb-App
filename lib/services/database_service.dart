@@ -181,7 +181,7 @@ class DBService {
   // Delete bus function
   Future deleteBus(String busId, String driverId) async {
     await supabase.from("Bus").delete().eq('id', busId);
-    final updateDriver = await supabase
+    await supabase
         .from('Driver')
         .update({'has_bus': false}).eq('id', driverId);
     await getAllBuses();
@@ -370,8 +370,7 @@ class DBService {
 
   //  Add bus
   Future addBus(Bus bus, String id) async {
-    final addBus = await supabase.from('Bus').insert(bus.toJson());
-    final updateDriver =
+    await supabase.from('Bus').insert(bus.toJson());
         await supabase.from('Driver').update({'has_bus': true}).eq('id', id);
     // await getDriverData(); //////!
   }
@@ -379,7 +378,7 @@ class DBService {
   //  Add trip
   Future addTrip(Trip trip,) async {
     // final data = await getDriverData(trip.driverId);
-    final addTrip = await supabase.from('Trip').insert(trip.toJson());
+    await supabase.from('Trip').insert(trip.toJson());
     print("trip.district");
     print(trip.district);
 
@@ -484,7 +483,6 @@ class DBService {
     await supabase
         .from('Bus')
         .update({'seats_number': bus.seatsNumber, 'bus_plate': bus.busPlate, 'date_issue' : bus.dateIssue.toIso8601String(), 'date_expire' : bus.dateExpire.toIso8601String(), 'driver_id': bus.driverId}).eq('id', bus.id!);
-    final updateDriver =
         await supabase.from('Driver').update({'has_bus': true}).eq('id', bus.driverId);
     await getAllBuses();
   }

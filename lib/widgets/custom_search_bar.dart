@@ -1,9 +1,7 @@
-import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/utils/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
@@ -20,7 +18,6 @@ class CustomSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<SupervisorActionsBloc>();
     return TextField(
       controller: controller,
       keyboardType: keyboardType,

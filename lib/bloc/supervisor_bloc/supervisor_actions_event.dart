@@ -4,42 +4,42 @@ part of 'supervisor_actions_bloc.dart';
 sealed class SupervisorActionsEvent {}
 
 class ChangeTripTypeEvent extends SupervisorActionsEvent {
-  int num;
+  final int num;
   ChangeTripTypeEvent({required this.num});
 }
 
 final class SelectDayEvent extends SupervisorActionsEvent {
-  late BuildContext context;
-  late int num ;
+  final BuildContext context;
+  final int num ;
   SelectDayEvent(this.context, this.num);
 }
 
 final class SelectStartAndExpireTimeEvent extends SupervisorActionsEvent {
-  late BuildContext context;
-  late int num ;
+  final BuildContext context;
+  final int num ;
   SelectStartAndExpireTimeEvent(this.context, this.num);
 }
 
 final class SelectBusDriverEvent extends SupervisorActionsEvent {
-  DarbUser? busDriverId;
-  DarbUser? TripDriverId;
-  SelectBusDriverEvent({this.busDriverId, this.TripDriverId});
+  final DarbUser? busDriverId;
+  final DarbUser? tripDriverId;
+  SelectBusDriverEvent({this.busDriverId, this.tripDriverId});
 }
 
 final class GetDriverBusNameEvent extends SupervisorActionsEvent {
-  Bus? busData;
-  Trip? tripData;
+  final Bus? busData;
+  final Trip? tripData;
   GetDriverBusNameEvent({this.busData, this.tripData});
 }
 
 final class GetDriverInfoEvent extends SupervisorActionsEvent {
-  String id;
+  final String id;
   GetDriverInfoEvent(this.id);
 }
 
 
 final class SelectTripDriverEvent extends SupervisorActionsEvent {
-  DarbUser driver;
+  final DarbUser driver;
   SelectTripDriverEvent(this.driver);
 }
 
@@ -54,50 +54,50 @@ final class GetAllDriver extends SupervisorActionsEvent{}
 final class GetAllStudent extends SupervisorActionsEvent{}
 
 final class SearchForStudentByIdEvent extends SupervisorActionsEvent{
-  String studentId;
+  final String studentId;
   SearchForStudentByIdEvent({required this.studentId});
 }
 
 final class AddStudentToSupervisorEvent extends SupervisorActionsEvent{
-  DarbUser student;
+  final DarbUser student;
   AddStudentToSupervisorEvent({required this.student});
 }
 
 final class UpdateStudent extends SupervisorActionsEvent{
-  String id;  
-  String name;
-  String phone;
+  final String id;  
+  final String name;
+  final String phone;
   UpdateStudent({required this.id, required this.name, required this.phone});
 }
 
 
 final class UpdateDriver extends SupervisorActionsEvent{
-  String id;  
-  String name;
-  String phone;
+  final String id;  
+  final String name;
+  final String phone;
   UpdateDriver({required this.id, required this.name, required this.phone});
 }
 
 final class GetAllBus extends SupervisorActionsEvent{}
 
 final class DeleteBus extends SupervisorActionsEvent{
-  String busId;
-  String driverId;
+  final String busId;
+  final String driverId;
   DeleteBus({ required this.busId, required this.driverId});
 }
 
 final class DeleteTrip extends SupervisorActionsEvent{
-  String tripId;
-  Driver driver;
+  final String tripId;
+  final Driver driver;
   DeleteTrip({ required this.tripId, required this.driver,});
 }
 
 final class DeleteStudent extends SupervisorActionsEvent{
-  String studentId;
+  final String studentId;
   DeleteStudent({ required this.studentId});
 }
 final class DeleteDriver extends SupervisorActionsEvent{
-  String driverId;
+  final String driverId;
   DeleteDriver({ required this.driverId});
 }
 
@@ -106,37 +106,37 @@ final class GetAllTripDriver extends SupervisorActionsEvent{}
 
 
 final class AddBusEvent extends SupervisorActionsEvent{
-  Bus bus;
-  String id;
+  final Bus bus;
+  final String id;
   AddBusEvent({required this.bus, required this.id});
 }
 
 final class UpdateBus extends SupervisorActionsEvent{
- Bus busData;
+ final Bus busData;
  UpdateBus({required this.busData,});
 }
 
 final class UpdateTrip extends SupervisorActionsEvent{
- Trip tripData;
+ final Trip tripData;
  UpdateTrip({required this.tripData,});
 }
 
 final class AddTripEvent extends SupervisorActionsEvent{
-  Trip trip;
-  Driver? driver;
+  final Trip trip;
+  final Driver? driver;
   AddTripEvent({required this.trip,  this.driver});
 }
 
 //  ------------- Search Event -------------------
 final class SearchForStudentEvent extends SupervisorActionsEvent{
-  String studentName;
+  final String studentName;
   SearchForStudentEvent({required this.studentName,});
 }
 final class SearchForDriverEvent extends SupervisorActionsEvent{
-  String driverName;
+  final String driverName;
   SearchForDriverEvent({required this.driverName,});
 }
 final class SearchForBusEvent extends SupervisorActionsEvent{
-  int busNumber;
+  final int busNumber;
   SearchForBusEvent({required this.busNumber,});
 }

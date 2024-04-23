@@ -153,7 +153,7 @@ class AttendanceListPage extends StatelessWidget {
                     if(snapshot.hasData){
                       attendanceList!.sort((a, b) => a.studentId.compareTo(b.studentId,));
                       state.studentList.sort((a,b) => a.id!.compareTo(b.id!));
-                      return (attendanceList!.isNotEmpty) ? ListView.builder(
+                      return (attendanceList.isNotEmpty) ? ListView.builder(
                       shrinkWrap: true,
                       primary: false,
                       padding: const EdgeInsets.all(16),
