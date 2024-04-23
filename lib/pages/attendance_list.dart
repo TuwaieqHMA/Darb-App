@@ -32,7 +32,7 @@ class AttendanceListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final attendanceListBloc = context.read<AttendanceListBloc>();
     final locator = GetIt.I.get<HomeData>();
-    (isCurrent!) ? attendanceListBloc.add(UpdateDriverLocationEvent(trip: trip)) : null;
+    (!isCurrent!) ? attendanceListBloc.add(UpdateDriverLocationEvent(trip: trip)) : null;
     attendanceListBloc.add(GetAttendanceListInfoEvent(tripId: trip.id!));
     return PopScope(
       canPop: true,

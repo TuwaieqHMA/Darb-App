@@ -54,8 +54,11 @@ class AttendanceListBloc
       Emitter<AttendanceListState> emit) async {
     try {
       await dbServiceLocator.checkDriverLocationExist();
+      print("checked location");
       await dbServiceLocator.createDriverLocationCron(event.trip.timeFrom, event.trip.timeTo, event.trip.driverId);
+      print("updated cron");
     } catch (e) {
+      print(e);
       emit(AttendanceListErrorState(msg: "هناك خطأ في تحديث الموقع الخاص بك"));
     }
   }
