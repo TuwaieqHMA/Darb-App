@@ -819,7 +819,8 @@ return studentList;
       return Location.fromJson(locationMap);
     }else {
       Position driverPos = await Geolocator.getCurrentPosition();
-      await supabase.from("Location").insert(Location(userId: locator.currentUser.id!, latitude: driverPos.latitude, longitude: driverPos.longitude).toJson());
+      Map<String, dynamic> locationJson = Location(userId: locator.currentUser.id!, latitude: driverPos.latitude, longitude: driverPos.longitude).toJson();
+      await supabase.from("Location").insert(locationJson);
       return null;
     }
   }
