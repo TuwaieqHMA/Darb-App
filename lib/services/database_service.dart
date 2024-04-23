@@ -459,6 +459,8 @@ class DBService {
     }
   }
 
+
+
   Future updateStudent(String studentId, String name, String phone) async {
     await supabase
         .from('User')
@@ -670,6 +672,21 @@ class DBService {
     .insert(Chat(driverId: driverId, studentId: studentId).toJson());
   }
 
+ //---------------------------DRIVER LOCATION Actions ---------------------------
+//
+Future<List<Student>> getStudentLocationList(int tripId) async{
+  List<Student> studentList = [];
+  List<dynamic> studentMap = await supabase.rpc("get_student_location_list",
+   params:{
+"tripid":tripId
+  });
+if (studentMap.isNotEmpty) {
+  for (var student in studentMap) {
+    studentList.add(Student.fromJson(student));
+  }
+}
+return studentList;
+}
 
   //---------------------------Student Actions---------------------------
   Future<Student> getStudentInfo() async {

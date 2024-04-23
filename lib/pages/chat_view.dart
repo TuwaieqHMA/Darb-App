@@ -64,41 +64,44 @@ class _ChatViewState extends State<ChatView> {
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data != null) {
                   final messages = snapshot.data!;
-                  return Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xff79CCC7),
-                          Color(0xffFCFFF2),
-                          Color(0xffF8F7E0),
-                        ],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        tileMode: TileMode.clamp,
+                  return Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xff79CCC7),
+                            Color(0xffFCFFF2),
+                            Color(0xffF8F7E0),
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          tileMode: TileMode.clamp,
+                        ),
                       ),
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: messages.isEmpty
-                              ? const Center(
-                                  child: Text("ابدأ المحادثة الان"),
-                                )
-                              : ListView.builder(
-                                  reverse: true,
-                                  itemCount: messages.length,
-                                  itemBuilder: (context, index) {
-                                    final message = messages[index];
-                                    return ChatBubble(
-                                      message: message,
-                                    );
-                                  },
-                                ),
-                        ),
-                        MessageBar(
-                          msgController: msgController,
-                        ),
-                      ],
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: messages.isEmpty
+                                ? const Center(
+                                    child: Text("ابدأ المحادثة الان"),
+                                  )
+                                : ListView.builder(
+                                    reverse: true,
+                                    itemCount: messages.length,
+                                    itemBuilder: (context, index) {
+                                      final message = messages[index];
+                                      return ChatBubble(
+                                        message: message,
+                                      );
+                                    },
+                                  ),
+                          ),
+                          MessageBar(
+                            msgController: msgController,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 } else if (snapshot.connectionState ==

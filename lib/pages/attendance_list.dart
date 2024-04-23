@@ -185,7 +185,7 @@ class AttendanceListPage extends StatelessWidget {
                   color: signatureYellowColor,
                   textColor: whiteColor,
                   onPressed: () {
-                    context.push(const MapPage(), true);
+                    context.push(MapPage(trip: trip,), true);
                   },
                 ),
               )
