@@ -31,12 +31,12 @@ class SupervisorAddCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: context.getWidth() * 0.9,
-      height: context.getHeight() * 0.27, // 0.2
+      height: context.getHeight() * 0.27, 
       margin: const EdgeInsets.only(
         top: 24,
       ),
       decoration: BoxDecoration(
-        color: bgColor, // signatureBlueColor,
+        color: bgColor,
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(30),
           bottomLeft: Radius.circular(30),
@@ -53,8 +53,8 @@ class SupervisorAddCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  width: 38, // context.getWidth() * 0.1,
-                  height: 40, // context.getWidth() * 0.1,
+                  width: 38, 
+                  height: 40, 
                   decoration: const BoxDecoration(
                     color: Color.fromARGB(60, 250, 246, 238),
                     shape: BoxShape.circle,

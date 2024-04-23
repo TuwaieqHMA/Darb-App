@@ -86,6 +86,7 @@ class _BusListPageState extends State<BusListPage> {
               );
             }
             if (state is SearchForBusState) {
+              if(state.bus.isNotEmpty){
                return ListView.builder(
                     shrinkWrap: true,
                     primary: false,
@@ -99,6 +100,7 @@ class _BusListPageState extends State<BusListPage> {
                         startDate: state.bus[index].dateIssue, 
                         endDate: state.bus[index].dateExpire,);
                     });
+              } return const Center(child: Text("لا توجد نتائج .."));
              
             }
             if (state is GetAllBusState) {

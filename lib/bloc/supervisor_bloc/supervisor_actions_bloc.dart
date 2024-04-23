@@ -22,21 +22,17 @@ class SupervisorActionsBloc
   int seletctedType = 1;
   DateTime startTripDate = DateTime.now();
   DateTime? editStartTripDate;
-
   TimeOfDay startTime = TimeOfDay.now();
   TimeOfDay? editStartTime;
   TimeOfDay endTime = TimeOfDay.now();
   TimeOfDay? editEndTime;
-
   List<DarbUser> busDriver = [];
   DarbUser? dropdownAddBusValue;
   DarbUser? dropdownAddTripValue ;
   String dropdownAddTripValueId =  '';
 
   SupervisorActionsBloc() : super(SupervisorActionsInitial()) {
-    on<SupervisorActionsEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<SupervisorActionsEvent>((event, emit) {});
 
     
 
@@ -61,8 +57,7 @@ class SupervisorActionsBloc
     on<SelectStartAndExpireTimeEvent>(selectStartTimeOfTrip);
     on<SelectBusDriverEvent>(selectBusDriver);
     on<GetDriverBusNameEvent>(getBusDriver);
-    // on<SelectBusNumberEvent>(selectBusNumber);
-    on<SelectTripDriverEvent>(selectTripDriver);
+    // on<SelectTripDriverEvent>(selectTripDriver);
     on<RefrshDriverEvent>(refreshDriver);
     on<AddBusEvent>(addBus);
     on<AddTripEvent>(addTrip);
@@ -85,7 +80,7 @@ class SupervisorActionsBloc
       emit(ErrorState("تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار"));
     }
     emit(SelectDayState(locator.startDate, locator.endDate, startTripDate));
-    emit(SelectDriverState()); //(dropdownAddBusValue!));
+    emit(SelectDriverState()); 
     emit( SuccessGetDriverState());
 
   }
@@ -150,9 +145,7 @@ class SupervisorActionsBloc
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
-                // change the border color
                 primary: signatureYellowColor,
-                // change the text color
                 onSurface: signatureTealColor,
                 secondary: greenColor),
           ),
@@ -179,15 +172,14 @@ class SupervisorActionsBloc
     dropdownAddBusValue = event.busDriverId;
     dropdownAddTripValue = event.TripDriverId;
     emit(SuccessGetDriverState());
-
   }
 
   
   // select one driver to add trip 
-  FutureOr<void> selectTripDriver( SelectTripDriverEvent event, Emitter<SupervisorActionsState> emit) async{
-    await DBService().getOneDriverData(event.driver);
-    emit(SelectTripDriverState());  
-  }
+  // FutureOr<void> selectTripDriver( SelectTripDriverEvent event, Emitter<SupervisorActionsState> emit) async{
+  //   await DBService().getOneDriverData(event.driver);
+  //   emit(SelectTripDriverState());  
+  // }
 
   FutureOr<void> addBus(AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
     try {
@@ -196,9 +188,7 @@ class SupervisorActionsBloc
     } catch (e) {
       emit(ErrorAddBusState(msg: "حدث خطأ أنثاء إضافة الباص"));
     }
-  }
-
-  
+  }  
 
    FutureOr<void> getAllCurrentTrip(GetAllSupervisorCurrentTrip event, Emitter<SupervisorActionsState> emit) async {
     emit(LoadingCurrentTripState());
@@ -286,7 +276,6 @@ class SupervisorActionsBloc
   }
 
 
-
   FutureOr<void> searchForStudentById(SearchForStudentByIdEvent event, Emitter<SupervisorActionsState> emit) async {
     emit(LoadingState());
     try{
@@ -295,6 +284,7 @@ class SupervisorActionsBloc
     }catch(_){
     }
   }
+
 
   FutureOr<void> addStudentToSupervisor(AddStudentToSupervisorEvent event, Emitter<SupervisorActionsState> emit) async {
     try{
@@ -308,13 +298,15 @@ class SupervisorActionsBloc
 
  
 
-
   FutureOr<void> deleteTrip(DeleteTrip event, Emitter<SupervisorActionsState> emit) async {
     try{
+      emit(LoadingState());
       await DBService().deleteTrip(event.tripId, event.driver,);
-      await getAllCurrentTrip(GetAllSupervisorCurrentTrip(), emit);
-      await getAllFutureTrip(GetAllSupervisorFutureTrip(), emit);
+      // await getAllCurrentTrip(GetAllSupervisorCurrentTrip(), emit);
+      // await getAllFutureTrip(GetAllSupervisorFutureTrip(), emit);
       emit(SuccessfulState("تم حذف الرحلة بنجاح "));
+      emit(GetAllCurrentTripState());
+      emit(GetAllFutureTripState());
     }catch(e){
       emit(ErrorState("حدث خطأ أثناء حذف الرحلة"));
     }
@@ -363,6 +355,7 @@ class SupervisorActionsBloc
     }
   }
 
+ // 
   FutureOr<void> getBusDriver(GetDriverBusNameEvent event, Emitter<SupervisorActionsState> emit) async {
     if(event.busData != null ){
       DBService().getDriverBusName(event.busData!.driverId);
@@ -370,9 +363,6 @@ class SupervisorActionsBloc
     if (event.tripData != null){
       await DBService().getDriverBusName(event.tripData!.driverId);
     }
-  
-    print("dropdownAddBusValue.length dddd");
-
     emit(SelectDriverState()); 
     emit(SuccessGetDriverState());
   }
@@ -383,7 +373,6 @@ class SupervisorActionsBloc
       emit(SuccessfulState("تم تحديث الباص بنجاح"));
       emit(GetAllBusState());
     }catch(e){
-      print("update Bus error $e");
       emit(ErrorState("حدث خطأ أثناء تعديل الباص"));
     }
   }
@@ -403,7 +392,6 @@ class SupervisorActionsBloc
     try{
       locator.driverData =  await DBService().getDriverData(event.id);
       emit(SuccessGetDriverState());
-
     }catch(e){
       print("get driver info $e");
     }

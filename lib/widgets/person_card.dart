@@ -73,13 +73,7 @@ class PersonCard extends StatelessWidget {
           MoreButton(
             onViewClick: onView,
             onEditClick: 
-            // (){
               onEdit,
-              // context.push(EditDriver(), true);
-              // context.push(EditStudent(), true);
-              // context.push(EditTrip(), true);
-              // context.push(EditBus(), true);
-            // },
             onDeleteClick: onDelete,
           )
 

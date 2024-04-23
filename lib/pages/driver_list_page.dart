@@ -109,6 +109,7 @@ class _DriverListPageState extends State<DriverListPage> {
                   ),
                 );
               } else if (state is SearchForDriverState) {
+                if(state.drivers.isNotEmpty){
                 return ListView.builder(
                     shrinkWrap: true,
                     primary: false,
@@ -117,8 +118,7 @@ class _DriverListPageState extends State<DriverListPage> {
                       return PersonCard(
                         user: state.drivers[index],
                         name: state.drivers[index].name,
-                        isSigned: (locator.driverHasTrip
-                                .contains(state.drivers[index].id))
+                        isSigned: (locator.driverHasBus.contains(state.drivers[index].id))
                             ? false
                             : true,
                         onView: () {
@@ -143,7 +143,6 @@ class _DriverListPageState extends State<DriverListPage> {
                             builder: (context) => DialogBox(
                               text: "هل أنت متأكد من حذف السائق ؟",
                               onAcceptClick: () {
-                                print("delete pressed");
                                 bloc.add(DeleteDriver(
                                     driverId:
                                         state.drivers[index].id.toString()));
@@ -157,6 +156,7 @@ class _DriverListPageState extends State<DriverListPage> {
                         },
                       );
                     });
+                } return const Center(child: Text("لا توجد نتائج .."));
               } else {
                 if (locator.drivers.isNotEmpty) {
                   return ListView.builder(
@@ -167,7 +167,7 @@ class _DriverListPageState extends State<DriverListPage> {
                         return PersonCard(
                           user: locator.drivers[index],
                           name: locator.drivers[index].name,
-                          isSigned: (locator.driverHasTrip
+                          isSigned: (locator.driverHasBus
                                   .contains(locator.drivers[index].id))
                               ? false
                               : true,
@@ -193,10 +193,8 @@ class _DriverListPageState extends State<DriverListPage> {
                               builder: (context) => DialogBox(
                                 text: "هل أنت متأكد من حذف السائق ؟",
                                 onAcceptClick: () {
-                                  print("delete pressed");
                                   bloc.add(DeleteDriver(
-                                      driverId: locator.drivers[index].id
-                                          .toString()));
+                                      driverId: locator.drivers[index].id.toString()));
                                   context.pop();
                                 },
                                 onRefuseClick: () {
