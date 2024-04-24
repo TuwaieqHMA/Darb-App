@@ -24,22 +24,18 @@ class HomeData {
   DateTime? editEndDate;
   final List<DarbUser> drivers = [];
   late Driver driverData ;
-  final List<String> driverHasBus = [];
+  List<String> driverHasBus = [];
   late List<DarbUser> driverHasBusList = [];
-  late List<String> driverHasTrip = [];
   DarbUser? busDriverName;
   List<DarbUser> students = [];
   final List<Bus> buses = [];
-  final List<Bus> numberOfSeat = [];
-  // List<Bus> seat = [];
+  // final List<Bus> numberOfSeat = [];
   List<TripCard> supervisorCurrentTrips = [];
   List<TripCard> supervisorFutureTrips = [];
-  List<Trip> trips = [];
+  // List<Trip> trips = [];
   List<DarbUser> tripDrivers = [];
 
-  final List<Bus> seatNumber = [
-    // Bus(busPlate: "111", driverId: "89", supervisorId: "111", seatsNumber: 6, dateExpire: DateTime.now(), dateIssue:DateTime.now() )
-  ];
+  final List<Bus> seatNumber = [];
 
   DarbUser currentUser = DarbUser(
       name: "درب",

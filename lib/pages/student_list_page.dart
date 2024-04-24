@@ -107,6 +107,7 @@ class _StudentListPageState extends State<StudentListPage> {
                 );
               }
               if(state is SearchForStudentState){
+                if(state.student.isNotEmpty){
                   return ListView.builder(
                       shrinkWrap: true,
                       primary: false,
@@ -140,7 +141,7 @@ class _StudentListPageState extends State<StudentListPage> {
                           },
                         );
                       });
-                
+                } return const Center(child: Text("لا توجد نتائج .."));
               }
               if (state is GetAllStudentState) {
                 if (state.student.isNotEmpty) {

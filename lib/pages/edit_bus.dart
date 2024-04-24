@@ -11,6 +11,7 @@ import 'package:darb_app/widgets/circle_back_button.dart';
 import 'package:darb_app/widgets/dialog_box.dart';
 import 'package:darb_app/widgets/header_text_field.dart';
 import 'package:darb_app/widgets/label_of_textfield.dart';
+import 'package:darb_app/widgets/no_item_text.dart';
 import 'package:darb_app/widgets/wave_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,12 +63,12 @@ class _EditBusState extends State<EditBus> {
       body: SafeArea(
         child: BlocListener<SupervisorActionsBloc, SupervisorActionsState>(
           listener: (context, state) {
-            if(state is SuccessfulState){
+            if (state is SuccessfulState) {
               context.pop();
               context.pop();
               context.showSuccessSnackBar(state.msg);
             }
-            if(state is ErrorState){
+            if (state is ErrorState) {
               context.pop();
               context.showErrorSnackBar(state.msg);
             }
@@ -112,8 +113,9 @@ class _EditBusState extends State<EditBus> {
                           Column(
                             children: [
                               height32,
-                              widget.isView
-                                  ? BlocBuilder<SupervisorActionsBloc, SupervisorActionsState>(
+                              widget.isView!
+                                  ? BlocBuilder<SupervisorActionsBloc,
+                                      SupervisorActionsState>(
                                       builder: (context, state) {
                                         if (state is SuccessGetDriverState) {
                                           return HeaderTextField(
@@ -123,11 +125,11 @@ class _EditBusState extends State<EditBus> {
                                                     "حدث خطأ أثناء جلب السائق",
                                             headerText: "اسم السائق",
                                             isEnabled:
-                                                widget.isView ? false : true,
+                                                widget.isView! ? false : true,
                                             headerColor: signatureTealColor,
                                             textDirection: TextDirection.rtl,
                                             isReadOnly:
-                                                widget.isView ? true : false,
+                                                widget.isView! ? true : false,
                                           );
                                         }
                                         return nothing;
@@ -161,28 +163,13 @@ class _EditBusState extends State<EditBus> {
                                             if (state
                                                 is SuccessGetDriverState) {
                                               if (drivers.isEmpty) {
-                                              //   drivers.add(DarbUser(
-                                              //       name: locator
-                                              //           .busDriverName!.name,
-                                              //       email: locator
-                                              //           .busDriverName!.email,
-                                              //       phone: locator
-                                              //           .busDriverName!.phone,
-                                              //       userType: locator
-                                              //           .busDriverName!
-                                              //           .userType,
-                                              //       id: locator
-                                              //           .busDriverName!.id));
-                                              
-                                                // for (var element in locator
-                                                //     .driverHasBusList) {
-                                                //   drivers.add(element);
-                                                // }
-                                                drivers = locator.driverHasBusList;
+                                                drivers =
+                                                    locator.driverHasBusList;
                                               }
                                               return DropdownButton(
                                                 hint: Text(
-                                                    "${locator.busDriverName?.name}",),
+                                                  "${locator.busDriverName?.name}",
+                                                ),
                                                 isExpanded: true,
                                                 underline: const Text(""),
                                                 menuMaxHeight: 200,
@@ -201,12 +188,19 @@ class _EditBusState extends State<EditBus> {
                                                 items: drivers.map((e) {
                                                   return DropdownMenuItem(
                                                     value: e,
-                                                    child: Text(e.name, style: const TextStyle(color: blackColor),),
+                                                    child: Text(
+                                                      e.name,
+                                                      style: const TextStyle(
+                                                          color: blackColor),
+                                                    ),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
                                                   if (value is DarbUser) {
-                                                    bloc.add(SelectBusDriverEvent(busDriverId: value),);
+                                                    bloc.add(
+                                                      SelectBusDriverEvent(
+                                                          busDriverId: value),
+                                                    );
                                                   }
                                                 },
                                               );
@@ -215,7 +209,9 @@ class _EditBusState extends State<EditBus> {
                                                 width: 10,
                                                 height: 10,
                                                 child:
-                                                    CircularProgressIndicator(color: signatureYellowColor,));
+                                                    CircularProgressIndicator(
+                                                  color: signatureYellowColor,
+                                                ));
                                           }),
                                         ),
                                       ],
@@ -225,37 +221,36 @@ class _EditBusState extends State<EditBus> {
                                 controller: busNumberController,
                                 headerText: "رقم الباص ",
                                 hintText: widget.bus.id.toString(),
-                                isEnabled: widget.isView ? false : false,
+                                isEnabled: widget.isView! ? false : false,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: widget.isView ? true : true,
-                                
+                                isReadOnly: widget.isView! ? true : true,
                               ),
                               height16,
                               HeaderTextField(
                                 controller: seatsNumberController,
                                 headerText: "عدد المقاعد",
                                 hintText: widget.bus.seatsNumber.toString(),
-                                isEnabled: widget.isView ? false : true,
+                                isEnabled: widget.isView! ? false : true,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: widget.isView ? true : false,
+                                isReadOnly: widget.isView! ? true : false,
                               ),
                               height16,
                               HeaderTextField(
                                 controller: busPlateController,
                                 headerText: "لوحة الباص",
                                 hintText: widget.bus.busPlate,
-                                isEnabled: widget.isView ? false : true,
+                                isEnabled: widget.isView! ? false : true,
                                 headerColor: signatureTealColor,
                                 textDirection: TextDirection.rtl,
-                                isReadOnly: widget.isView ? true : false,
+                                isReadOnly: widget.isView! ? true : false,
                               ),
                               height16,
                               TextFieldLabel(text: " تاريخ اصدار الرخصة "),
                               height8,
                               InkWell(
-                                onTap: widget.isView
+                                onTap: widget.isView!
                                     ? () {}
                                     : () {
                                         bloc.add(SelectDayEvent(context, 4));
@@ -268,7 +263,7 @@ class _EditBusState extends State<EditBus> {
                                   decoration: BoxDecoration(
                                       color: whiteColor,
                                       border: Border.all(
-                                          color: widget.isView
+                                          color: widget.isView!
                                               ? fadedBlueColor
                                               : signatureTealColor,
                                           width: 3),
@@ -323,7 +318,7 @@ class _EditBusState extends State<EditBus> {
                               TextFieldLabel(text: " تاريخ انتهاء الرخصة "),
                               height8,
                               InkWell(
-                                onTap: widget.isView
+                                onTap: widget.isView!
                                     ? () {}
                                     : () {
                                         bloc.add(SelectDayEvent(context, 2));
@@ -336,7 +331,7 @@ class _EditBusState extends State<EditBus> {
                                   decoration: BoxDecoration(
                                       color: whiteColor,
                                       border: Border.all(
-                                          color: widget.isView
+                                          color: widget.isView!
                                               ? fadedBlueColor
                                               : signatureTealColor,
                                           width: 3),
@@ -389,46 +384,58 @@ class _EditBusState extends State<EditBus> {
                               ),
                               height32,
                               height8,
-                              widget.isView
+                              widget.isView!
                                   ? const SizedBox.shrink()
                                   : BottomButton(
                                       text: "تعديل بيانات الباص",
                                       textColor: whiteColor,
                                       fontSize: 20,
                                       onPressed: () {
-                                        //      if (locator.startDate.month >
-                                        //     locator.endDate.month) {
-                                        //   context.showErrorSnackBar(
-                                        //       "تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار");
-                                        // } else if (locator.startDate.day >=
-                                        //     locator.endDate.day) {
-                                        //   context.showErrorSnackBar(
-                                        //       "تاريخ انتهاء الرخصة يجب أن يكون بعد تاريخ الإصدار");
-                                        // }
-
                                         showDialog(
                                           context: context,
                                           builder: (context) => DialogBox(
                                             text:
                                                 "هل أنت متأكد من تعديل الباص ؟",
                                             onAcceptClick: () {
-                                              
+                                              context.pop();
+                                              showDialog(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return const NoItemText(
+                                                    isLoading: true,
+                                                  );
+                                                },
+                                              );
                                               bloc.add(UpdateBus(
                                                 busData: Bus(
                                                   id: widget.bus.id!,
                                                   supervisorId:
                                                       locator.currentUser.id!,
-                                                  seatsNumber:  seatsNumberController.text.isEmpty ? widget.bus.seatsNumber : int.parse(seatsNumberController.text),
-                                                  busPlate: busPlateController.text.isEmpty  ? widget.bus.busPlate : busPlateController.text,
-                                                  dateIssue: locator.editStartDate!,
-                                                  dateExpire: locator.editEndDate!,
-                                                  driverId: bloc.dropdownAddBusValue == null ? "${locator.busDriverName!.id}" : "${bloc.dropdownAddBusValue!.id}",
+                                                  seatsNumber:
+                                                      seatsNumberController
+                                                              .text.isEmpty
+                                                          ? widget
+                                                              .bus.seatsNumber
+                                                          : int.parse(
+                                                              seatsNumberController
+                                                                  .text),
+                                                  busPlate: busPlateController
+                                                          .text.isEmpty
+                                                      ? widget.bus.busPlate
+                                                      : busPlateController.text,
+                                                  dateIssue:
+                                                      locator.editStartDate!,
+                                                  dateExpire:
+                                                      locator.editEndDate!,
+                                                  driverId: bloc
+                                                              .dropdownAddBusValue ==
+                                                          null
+                                                      ? "${locator.busDriverName!.id}"
+                                                      : "${bloc.dropdownAddBusValue!.id}",
                                                 ),
-                                                
                                               ));
                                             },
-
-                                           
                                             onRefuseClick: () {
                                               context.pop();
                                             },
@@ -436,10 +443,10 @@ class _EditBusState extends State<EditBus> {
                                         );
                                       },
                                     ),
-                              widget.isView
+                              widget.isView!
                                   ? const SizedBox.shrink()
                                   : height24,
-                              widget.isView
+                              widget.isView!
                                   ? const SizedBox.shrink()
                                   : BottomButton(
                                       text: "إلغاء",

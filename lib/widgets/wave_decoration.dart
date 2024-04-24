@@ -21,7 +21,7 @@ class WaveDecoration extends StatelessWidget {
                 ClipPath(
                   clipper: MyWaves(),
                   child: Container(
-                    color:  containerColor,// signatureBlueColor,
+                    color:  containerColor,
                     width: context.getWidth() * 0.3,
                     height: context.getHeight() ,
                     
@@ -54,8 +54,6 @@ class  MyWaves extends CustomClipper<Path>{
 
     return path;
 
-    // TODO: implement getClip
-    // throw UnimplementedError();
   }
 
   @override

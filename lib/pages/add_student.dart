@@ -147,7 +147,7 @@ class _AddStudentState extends State<AddStudent> {
                                             width8,
                                             GoToButton(
                                               isStudent: true,
-                                              text: " إضافة طالب/ة",
+                                              text: " إضافة   ",
                                               onTap: () {
                                                 showDialog(
                                                   context: context,

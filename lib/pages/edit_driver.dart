@@ -126,10 +126,8 @@ class _EditDriverState extends State<EditDriver> {
                                           showDialog(
                                               context: context,
                                               builder: (context) => DialogBox(
-                                                    text:
-                                                        "هل أنت متأكد من تعديل بيانات السائق ؟",
+                                                    text:"هل أنت متأكد من تعديل بيانات السائق ؟",
                                                     onAcceptClick: () {
-                                                      print("button pressed");
                                                       bloc.add(UpdateDriver(
                                                         id: widget.driver.id!, 
                                                         name: nameController.text.isEmpty ? widget.driver.name : nameController.text, 

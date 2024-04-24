@@ -42,8 +42,8 @@ class HomeAppBar extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      context.push(ProfilePage(), true);
-                    }, //! push to profile page ,
+                      context.push(const ProfilePage(), true);
+                    }, 
                     child: SvgPicture.asset(
                       "assets/icons/icon_person.svg",
                       width: 35,
@@ -55,7 +55,7 @@ class HomeAppBar extends StatelessWidget {
                     child: BlocBuilder<AuthBloc, AuthState>(
                       builder: (context, state) {
                         return Text(
-                          "مرحباً ${locator.currentUser.name.split(' ')[0]}", //! change name to user name
+                          "مرحباً ${locator.currentUser.name.split(' ')[0]}", 
                           style: TextStyle(
                               overflow: TextOverflow.ellipsis,
                               color: textColor ?? skyblueColor,

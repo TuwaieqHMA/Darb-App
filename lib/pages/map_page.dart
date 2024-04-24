@@ -16,7 +16,6 @@ class MapPage extends StatefulWidget {
   const MapPage({super.key, required this.trip, 
   //required this.attendanceList, required this.student
   });
-
   final Trip trip;
  // final Student student;
   //final AttendanceList attendanceList;

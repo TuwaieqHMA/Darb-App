@@ -45,14 +45,16 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     try {
       List<TripCard> tripCardList = await dbService.getAllStudentTrips();
       TripCard? currentTrip;
+      TripCard? tripToRemove;
       for(TripCard tripCard in tripCardList){
         if(formatDate(tripCard.trip.date) == formatDate(DateTime.now()) && locator.isGivenTimeInCurrentTime(tripCard.trip.timeFrom, tripCard.trip.timeTo)){
           tripCard.isCurrent = true;
           currentTrip = tripCard;
-          tripCardList.removeWhere((element) => element.trip.id == tripCard.trip.id,);
+          tripToRemove = tripCard;
           break;
         }
       }
+      tripCardList.removeWhere((element) => element == tripToRemove,);
       emit(LoadedTripsState(tripCardList: tripCardList, currentTrip: currentTrip));
     } catch (e) {
       print(e);
