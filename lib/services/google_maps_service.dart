@@ -52,7 +52,7 @@ class GMService {
     PolylineId polyLineid = PolylineId(id);
     Polyline polyline = Polyline(
       polylineId: polyLineid,
-      color: signatureTealColor,
+      color: lightSeaSaltBlue,
       points: polylineCoordinates,
       width: 8,
     );
