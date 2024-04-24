@@ -436,57 +436,12 @@ class DBService {
         .getPublicUrl(locator.currentUser.id!);
   }
 
-  //------------------------------------------------------------
-  // --------- Fetching user and session info Operations ------
- //final SupabaseClient _client;
-
- 
-
-  // Future<void> createChat(Chat chat) async {
-  //   final response = await supabase.from('chats').upsert(chat.toJson()).();
-  //   if (response.error != null) {
-  //     throw Exception('Failed to create chat: ${response.error!.message}');
-  //   }
-  // }
-
-  // Future<void> sendMessage(Message message) async {
-  //   final response = await supabase.from('messages').upsert(message.toJson()).execute();
-  //   if (response.error != null) {
-  //     throw Exception('Failed to send message: ${response.error!.message}');
-  //   }
-  // }
-
-  // Future<List<Message>> getMessagesForChat(int chatId) async {
-  //   final response = await supabase
-  //       .from('messages')
-  //       .select()
-  //       .eq('chat_id', chatId)
-  //       .order('created_at', ascending: true)
-  //       .select();
-
-  //   if (response.error != null) {
-  //     throw Exception('Failed to fetch messages: ${response.error!.message}');
-  //   }
-
-  //   return (response.data as List<dynamic>)
-  //       .map((e) => Message.fromJson(e as Map<String, dynamic>, json: {}, myUserID: ''))
-  //       .toList();
-  // }
- // Getting session data for routing
-  // Future getSessionData() async {
-  //   final session = supabase.auth.currentSession;
-  //   print("-------------------------------");
-  //   print("Session Data $session");
-  //   print("-------------------------------");
-  //   return session;
-  // }
-
  // Getting current user ID
   Future getCurrentUserID() async {
     final currentUserId = supabase.auth.currentUser?.id;
     return currentUserId;
   }
-
+// -----------------Chat Actions------------------------------------
   // Get messages stream
   Stream<List<Message>> getMessagesStream(int chatId) {
     final Stream<List<Message>> msgStream = supabase
@@ -675,9 +630,10 @@ return studentList;
   }
 
   Future<Location?> checkDriverLocationExist() async{
-    Map<String, dynamic> locationMap = await supabase.from("Location").select().eq('user_id', locator.currentUser.id!).single();
+    List<Map<String, dynamic>> locationMap = await supabase.from("Location").select().eq('user_id', locator.currentUser.id!);
+    print(locationMap);
     if(locationMap.isNotEmpty){
-      return Location.fromJson(locationMap);
+      return Location.fromJson(locationMap[0]);
     }else {
       Position driverPos = await Geolocator.getCurrentPosition();
       Map<String, dynamic> locationJson = Location(userId: locator.currentUser.id!, latitude: driverPos.latitude, longitude: driverPos.longitude).toJson();
@@ -703,6 +659,13 @@ return studentList;
         locator.driverLocationCron.close();
       }
     });
+  }
+  //---------------------------Trip Location Actions---------------------------
+
+  Stream<List<Location>> getTripCurrentDriverLocation(String driverId) {
+    return supabase.from('Location')
+        .stream(primaryKey: ["user_id"])
+        .eq('user_id', driverId).map((locations) => locations.map((location) => Location.fromJson(location)).toList());
   }
 
 }

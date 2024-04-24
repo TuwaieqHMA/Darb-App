@@ -28,14 +28,16 @@ class DriverBloc extends Bloc<DriverEvent, DriverState> {
     try {
       List<TripCard> tripCardList = await dbService.getAllDriverTrips();
       TripCard? currentTrip;
+      List<TripCard> tripsToRemove = [];
       for(TripCard tripCard in tripCardList){
         if(formatDate(tripCard.trip.date) == formatDate(DateTime.now()) && locator.isGivenTimeInCurrentTime(tripCard.trip.timeFrom, tripCard.trip.timeTo)){
           tripCard.isCurrent = true;
           currentTrip = tripCard;
-          tripCardList.removeWhere((element) => element.trip.id == tripCard.trip.id,);
+          tripsToRemove.add(tripCard);
         }
         tripCard.userType = UserType.driver;
       }
+      tripCardList.removeWhere((trip) => tripsToRemove.contains(trip),);
       emit(DriverLoadedTripsState(tripCardList: tripCardList, currentTrip: currentTrip));
     } catch (e) {
       print(e);
