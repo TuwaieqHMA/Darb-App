@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:darb_app/bloc/trip_location_bloc/trip_location_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/models/location_model.dart';
@@ -20,8 +18,9 @@ class MapStudent extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapStudent> {
-  var markerPoints = HashSet<Marker>();
-  late BitmapDescriptor customMarker;
+
+  Set<Marker> markers = {};
+  Set<Polyline> polylines = {};
 
   @override
   void initState() {
@@ -58,25 +57,30 @@ class _MapPageState extends State<MapStudent> {
                     List<Location> driverLoaction = snapshot.data!;
                     if (driverLoaction.isNotEmpty) {
                       Location driverLocation = snapshot.data![0];
-                      markerPoints.clear();
-                      markerPoints.add(Marker(
-                        markerId: MarkerId(driverLocation.userId),
-                        position: LatLng(
-                            driverLocation.latitude, driverLocation.longitude),
-                        infoWindow: const InfoWindow(
-                          title: 'موقع السائق',
-                        ),
-                      ));
+                      markers.add(Marker(markerId: MarkerId(driverLocation.userId),
+                      position: LatLng(driverLocation.latitude, driverLocation.longitude),
+                      infoWindow: const InfoWindow(title: 'موقع السائق'),
+                      icon: BitmapDescriptor.defaultMarker));
+                      markers.add(Marker(markerId: MarkerId(state.student.id!),
+                      position: LatLng(state.student.latitude!, state.student.longitude!),
+                      infoWindow: const InfoWindow(title: 'موقعك المختار'),
+                      icon: BitmapDescriptor.defaultMarker));
+                      polylines.add(Polyline(polylineId: PolylineId(driverLocation.userId),
+                      points: state.polyLineCoordinates,
+                      color: lightSeaSaltBlue,
+                      width: 8));
                       return GoogleMap(
-                        initialCameraPosition: const CameraPosition(
-                          target: LatLng(24.767719, 46.683493),
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(state.student.latitude!, state.student.longitude!),
                           zoom: 14.0,
                         ),
                         onMapCreated:
                             (GoogleMapController googleMapController) {
                           setState(() {});
                         },
-                        markers: markerPoints,
+                        markers: markers,
+                        polylines: polylines,
+                        myLocationEnabled: true,
                       );
                     } else {
                       return NoItemText(
