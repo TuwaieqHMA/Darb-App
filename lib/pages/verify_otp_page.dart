@@ -108,26 +108,16 @@ class VerifyOtpPage extends StatelessWidget {
                     textColor: whiteColor,
                   ),
                   height16,
+                  BottomButton(
+                    text: "التحقق",
+                    onPressed: () {
+                      authBloc.add(VerifyOtpEvent(otp: otpText, email: email));
+                    },
+                  ),
+                  height16, 
                 ],
               ),
             );
-          }
-        },
-      ),
-      bottomSheet: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          if (state is AuthLoadingState){
-            return nothing;
-          }else {
-          return Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-            child: BottomButton(
-              text: "التحقق",
-              onPressed: () {
-                authBloc.add(VerifyOtpEvent(otp: otpText, email: email));
-              },
-            ),
-          );
           }
         },
       ),

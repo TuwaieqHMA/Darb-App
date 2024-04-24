@@ -20,20 +20,24 @@ class MessageBar extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: TextField(
-                onTapOutside: (event) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                controller: msgController,
-                decoration: InputDecoration(
-                  hintText: 'اكتب هنا ...',
-                   hintTextDirection: TextDirection.rtl,
-                  contentPadding: const EdgeInsets.all(8),
-                  fillColor: whiteColor,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(15),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: TextField(
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  controller: msgController,
+                  decoration: InputDecoration(
+                    hintText: 'اكتب هنا ...',
+                    hintTextDirection: TextDirection.rtl,
+                    
+                    contentPadding: const EdgeInsets.all(8),
+                    fillColor: whiteColor,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
                 ),
               ),

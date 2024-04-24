@@ -30,27 +30,33 @@ class ChangePasswordPage extends StatelessWidget {
           },
         ),
       ),
-      body: Column(
-        children: [
-          Image.asset(
-            "assets/images/reset_password_vector.png",
-            height: 300,
-          ),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8),
-            child: Center(
-                child: Text(
-              "تغيير كلمة المرور",
-              style: TextStyle(
-                  color: signatureBlueColor,
-                  fontFamily: inukFont,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold),
-            )),
-          ),
-        ],
+      body: SizedBox(
+        width: context.getWidth(),
+        height: context.getHeight() * 0.5,
+        child: ListView(
+          children: [
+            Image.asset(
+              "assets/images/reset_password_vector.png",
+              height: 300,
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Center(
+                  child: Text(
+                "تغيير كلمة المرور",
+                style: TextStyle(
+                    color: signatureBlueColor,
+                    fontFamily: inukFont,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold),
+              )),
+            ),
+          ]
+        ),
       ),
-      bottomSheet: Container(
+        
+      bottomSheet:
+       Container(
         width: context.getWidth(),
         height: context.getHeight() * .45,
         padding: const EdgeInsets.all(16),
@@ -102,6 +108,8 @@ class ChangePasswordPage extends StatelessWidget {
           },
         ),
       ),
+      // ],
+      // ),
     );
   }
 }

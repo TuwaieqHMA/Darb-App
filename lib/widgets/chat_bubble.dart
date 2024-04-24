@@ -49,8 +49,10 @@ class ChatBubble extends StatelessWidget {
           ),
           child: Text(
             message.message,
+            textAlign: message.isMine ?  TextAlign.right : TextAlign.left,
             style: TextStyle(
               color: message.isMine ? Colors.white : Colors.black,
+              
             ),
           ),
         ),
