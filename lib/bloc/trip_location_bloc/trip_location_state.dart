@@ -23,6 +23,8 @@ final class TripLocationErrorState extends TripLocationState {
 
 final class TripDriverLocationRecieved extends TripLocationState {
   final Stream<List<Location>> driverLocation;
+  final List<LatLng> polyLineCoordinates;
+  final Student student;
 
-  TripDriverLocationRecieved({required this.driverLocation});
+  TripDriverLocationRecieved({required this.driverLocation, required this.student, required this.polyLineCoordinates});
 }

@@ -415,7 +415,7 @@ class DBService {
 
   Future<void> updateUserInfo(String name, String phone) async {
     await supabase.from("User").update({'name': name, 'phone': phone}).eq(
-        'id', await getCurrentUserId());
+        'id', locator.currentUser.id!);
   }
 
   Future<void> uploadImage(File file) async {
@@ -512,7 +512,7 @@ return studentList;
     return Student.fromJson(await supabase
         .from("Student")
         .select()
-        .eq('id', await getCurrentUserId())
+        .eq('id', locator.currentUser.id!)
         .single());
   }
 
@@ -520,7 +520,7 @@ return studentList;
     await supabase.from("Student").update({
       'latitude': coordinates.latitude,
       'longitude': coordinates.longitude
-    }).eq('id', await getCurrentUserId());
+    }).eq('id', locator.currentUser.id!);
   }
 
   Future<List<TripCard>> getAllStudentTrips() async {
@@ -591,18 +591,24 @@ return studentList;
       'student_id': locator.currentUser.id
     });
       return AttendanceStatus.assueredPrecense;
-    }else if (currentStatus == AttendanceStatus.assueredPrecense && studentId != null){
+    }else if (currentStatus == AttendanceStatus.assueredPrecense && studentId == null){
+      await supabase.from("AttendanceList").update({'status': "غائب"}).match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    });
+      return AttendanceStatus.absent;
+    }else if (currentStatus == AttendanceStatus.present && studentId != null){
       await supabase.from("AttendanceList").update({'status': "حاضر"}).match({
       'trip_id': tripId,
       'student_id': studentId
     });
-      return AttendanceStatus.absent;
+    return AttendanceStatus.present;
     }else {
       await supabase.from("AttendanceList").update({'status': "غائب"}).match({
       'trip_id': tripId,
       'student_id': studentId
     });
-    return AttendanceStatus.absent;
+     return AttendanceStatus.absent;
     }
   }
 
@@ -662,10 +668,17 @@ return studentList;
   }
   //---------------------------Trip Location Actions---------------------------
 
+  
   Stream<List<Location>> getTripCurrentDriverLocation(String driverId) {
     return supabase.from('Location')
         .stream(primaryKey: ["user_id"])
         .eq('user_id', driverId).map((locations) => locations.map((location) => Location.fromJson(location)).toList());
+  }
+
+  Future<Student> getStudentHomeLocation() async{
+    Map<String, dynamic> studentMap = await supabase.from("Student").select().eq('id', locator.currentUser.id!).single();
+    print(studentMap);
+    return Student.fromJson(studentMap);
   }
 
 }
