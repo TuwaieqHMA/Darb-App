@@ -3,10 +3,10 @@ part of 'driver_map_bloc.dart';
 @immutable
 sealed class DriverMapEvent {}
 
-final class DriverMapLocationEvent extends DriverMapEvent{
+final class GetDriverMapLocationEvent extends DriverMapEvent{
  final int tripid;
 
-  DriverMapLocationEvent({required this.tripid});
+  GetDriverMapLocationEvent({required this.tripid});
 }
 
 final class AddMarkerEvent extends DriverMapEvent{

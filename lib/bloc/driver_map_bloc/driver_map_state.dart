@@ -17,8 +17,9 @@ final class DriverMapErrorState extends DriverMapState {
 final class DriverMapStudentListState extends DriverMapState {
  final Set<Marker> markers;
  final Set<Polyline> polylines;
+ final LatLng driverLocation;
 
-  DriverMapStudentListState({required this.markers, required this.polylines});
+  DriverMapStudentListState({required this.markers, required this.polylines, required this.driverLocation});
 }
 
 final class DriverMapPolylineState extends DriverMapState{

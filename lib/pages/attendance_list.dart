@@ -179,7 +179,7 @@ class AttendanceListPage extends StatelessWidget {
             height8,
           ],
         ),
-        bottomSheet: (!isCurrent!)
+        bottomSheet: (isCurrent!)
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: BottomButton(

@@ -19,12 +19,12 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
   final gmLocator = GMService();
   DriverMapBloc() : super(DriverMapInitial()) {
     on<DriverMapEvent>((event, emit) {
-      on<DriverMapLocationEvent>(driverLocation);
+      on<GetDriverMapLocationEvent>(getDriverLocation);
     });
   }
 
-  FutureOr<void> driverLocation(
-      DriverMapLocationEvent event, Emitter<DriverMapState> emit) async {
+  FutureOr<void> getDriverLocation(
+      GetDriverMapLocationEvent event, Emitter<DriverMapState> emit) async {
     emit(DriverMapLoadingState());
     try {
       Map<MarkerId, Marker> markers = {};
@@ -36,7 +36,7 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
           id: homeDataLocator.currentUser.id!,
           position: LatLng(driverPos.latitude, driverPos.longitude),
           user: homeDataLocator.currentUser.name,
-          color: BitmapDescriptor.defaultMarkerWithHue(0.42));
+          color: BitmapDescriptor.defaultMarkerWithHue(5));
       markers[driverMarker[0]] = driverMarker[1];
 
       List<LatLng> polylineList = await gmLocator.getDirections(
@@ -45,23 +45,43 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
           latEnd: studentsList[0].latitude!,
           lngEnd: studentsList[0].longitude!);
 
+      final List polylineItem = gmLocator.createPolyLine(
+        polylineCoordinates: polylineList,
+        id: homeDataLocator.currentUser.id!,
+      );
+      polyLines[polylineItem[0]] = polylineItem[1];
+
+      for (int i = 0; i < studentsList.length; i++) {
+        List studentMarker = gmLocator.createMarker(
+            id: studentsList[i].id!,
+            position:
+                LatLng(studentsList[i].latitude!, studentsList[i].longitude!),
+            user: 'الطالب: ${i+1}',
+            color: BitmapDescriptor.defaultMarker);
+        markers[studentMarker[0]] = studentMarker[1];
+        if(i != studentsList.length-1){
+          //--------------------------------------------
+        List<LatLng> studentPolylineList = await gmLocator.getDirections(
+            latStart: studentsList[i].latitude!,
+            lngStart: studentsList[i].longitude!,
+            latEnd: studentsList[i + 1].latitude!,
+            lngEnd: studentsList[i + 1].longitude!);
+        //--------------------------------------------
+        List studentPolyLine = gmLocator.createPolyLine(
+            polylineCoordinates: studentPolylineList, id: studentsList[i].id!);
+      
+      polyLines[studentPolyLine[0]]= studentPolyLine[1];
+        }
+      }
+  
       emit(DriverMapStudentListState(
           markers: Set<Marker>.of(markers.values),
-          polylines: Set<Polyline>.of(polyLines.values)));
+          polylines: Set<Polyline>.of(polyLines.values),
+          driverLocation: LatLng(driverPos.latitude, driverPos.longitude)));
 
 //============================createPolyLine=================
-    final String polylineId = '${homeDataLocator.currentUser.id}}';
-    final List polylineItem = await gmLocator.createPolyLine(
-      polylineCoordinates: polylineList,
-      id: polylineId,
-    );
-    emit(DriverMapPolylineState(polylineItems: [polylineItem]));
-
-    
-  } catch (e) {
+    } catch (e) {
       emit(DriverMapErrorState('حدثت مشكلة في تنزيل الموقع'));
     }
   }
-
-
 }
