@@ -34,7 +34,7 @@ class Bus {
     _data['date_issue'] = dateIssue.toIso8601String();
     _data['date_expire'] = dateExpire.toIso8601String();
     _data['driver_id'] = driverId;
-    _data['supervisor_id'] = supervisorId; // Add supervisorId to JSON
+    _data['supervisor_id'] = supervisorId;
     return _data;
   }
 }

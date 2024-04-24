@@ -10,7 +10,6 @@ final class GetMessagesEvent extends ChatEvent {
 }
 
 // Submit message Event
-// ignore: must_be_immutable
 final class SubmitMessageEvent extends ChatEvent {
   final String message;
   final int chatId;

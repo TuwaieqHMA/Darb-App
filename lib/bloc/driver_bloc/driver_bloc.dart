@@ -5,7 +5,7 @@ import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/helpers/extensions/format_helper.dart';
 import 'package:darb_app/services/database_service.dart';
 import 'package:darb_app/utils/enums.dart';
-import 'package:darb_app/widgets/trip_card.dart';
+import 'package:darb_app/widgets/Card%20Widgets/trip_card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 

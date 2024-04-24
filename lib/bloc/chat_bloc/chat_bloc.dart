@@ -1,4 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:darb_app/models/message_model.dart';
@@ -9,7 +8,6 @@ import 'package:meta/meta.dart';
 part 'chat_event.dart';
 part 'chat_state.dart';
 
-// For ChatBloc:
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final serviceLocator = GetIt.instance.get<DBService>();
 
@@ -39,17 +37,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         await serviceLocator.getMessagesStream(event.chatId);
     emit(ShowMessageStreamState(messages));
   }
-//  Future<void> loadChatCache(int chatId) async {
-//     if (chatCache[chatId] != null) {
-//       return;
-//     }
-//     final  chatData = serviceLocator.getChatData(chatId );
-//     chatCache[chatId] = chatData ;
-//     await serviceLocator.getMessagesStream();
-//     Stream<List<Message>> messages = serviceLocator.listOfMessages;
-//     // ignore: invalid_use_of_visible_for_testing_member
-//     emit(ShowMessageStreamState(messages));
-//   }
 
   FutureOr<void> checkChat(
       CheckChatEvent event, Emitter<ChatState> emit) async {
@@ -87,72 +74,3 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 }
-
-// class ChatBloc extends Bloc<ChatEvent, ChatState> {
-//   final Locator = GetIt.I.get<HomeData>();
-//    final serviceLocator = GetIt.I.get<DBService>();
-
-//   // Map to store ID as a key and
-//   //Chat object to store chat data
-//   Map<String, Chat> chatCache = {}; // تغيير اسم الماب من profileCache إلى chatCache
-
-//   ChatBloc() : super(ChatInitial()) {
-//     on<ChatEvent>((event, emit) {});
-
-//     //--- Get All Messages ----
-//     on<GetMessagesEvent>(getMessages);
-
-//     // -- Submit/Send a Message ---
-//     on<SubmitMessageEvent>(submitMessage);
-
-//     on<CheckChatEvent>(checkChat);
-
-//     on<CreateChatEvent>(createChat);
-//   }
-
-//   FutureOr<void> submitMessage(event, emit) async {
-//     try {
-//       await serviceLocator.submitMessage(event.message);
-//       emit(SendMessageState());
-//       await serviceLocator.getMessagesStream();
-//       Stream<List<Message>> messages = serviceLocator.listOfMessages;
-//       emit(ShowMessageStreamState(messages));
-//     } catch (error) {
-//       emit(ChatErrorState(error.toString()));
-//     }
-//   }
-
-//   FutureOr<void> getMessages(event, emit) async {
-//     await serviceLocator.getMessagesStream();
-//     Stream<List<Message>> messages = serviceLocator.listOfMessages;
-//     emit(ShowMessageStreamState(messages));
-//   }
-
-//   //------ Loading Chat message Data --- // تغيير اسم الدالة والماب
-//
-
-//   FutureOr<void> checkChat(CheckChatEvent event, Emitter<ChatState> emit) async{
-//     emit(ChatLoadingState());
-
-//     try {
-//        Map<String,dynamic> chatIdMap = await serviceLocator.checkChat(event.driverId, event.studentId);
-//       if(chatIdMap.isNotEmpty){
-//         emit(ChatFoundState(chatId: chatIdMap["chat_id"]));
-//       }else{
-//         emit(ChatNotFoundState());
-//       }
-//     } catch (e) {
-//       emit(ChatErrorState(" هناك مشكلة في تحميل المحادثة "));
-//     }
-//   }
-
-//   FutureOr<void> createChat(CreateChatEvent event, Emitter<ChatState> emit) async{
-//     emit(ChatLoadingState());
-//     try {
-//       await serviceLocator.createChat(event.driverId, event.studentId);
-//       checkChat(CheckChatEvent(studentId: event.studentId, driverId: event.driverId,), emit);
-//     } catch (e) {
-//       emit(ChatErrorState('هناك مشكلة'));
-//     }
-//   }
-// }

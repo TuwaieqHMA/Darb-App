@@ -44,8 +44,6 @@ final class SelectTripDriverEvent extends SupervisorActionsEvent {
 }
 
 final class RefrshDriverEvent extends SupervisorActionsEvent {
-  // String driverName;
-  // RefrshDriverEvent(this.driverName);
 }
 
 final class GetAllSupervisorCurrentTrip extends SupervisorActionsEvent{}

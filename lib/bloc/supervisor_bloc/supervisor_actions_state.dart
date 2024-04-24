@@ -35,36 +35,26 @@ final class AddStudentToSupervisorState extends SupervisorActionsState {}
 final class GetAllBusState extends SupervisorActionsState {}
 final class SuccessGetDriverState extends SupervisorActionsState {}
 final class GetAllSupervisorTripsState extends SupervisorActionsState {}
-// ignore: must_be_immutable
 final class GetAllTripDriverState extends SupervisorActionsState {
-  List<Driver> driver = [];
+  final List<Driver> driver;
   GetAllTripDriverState(this.driver);
 }
 
-
-
-// ignore: must_be_immutable
 final class SelectDayState extends SupervisorActionsState {
-  DateTime startDate = DateTime.now();
-  DateTime startTripDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  final DateTime startDate;
+  final DateTime startTripDate;
+  final DateTime endDate;
   SelectDayState(this.startDate, this.startTripDate, this.endDate);
 }
-
-// ignore: must_be_immutable
 final class SelectStartAndExpireTimeState extends SupervisorActionsState {  
-  TimeOfDay startTime = TimeOfDay.now();
-  TimeOfDay endTime = TimeOfDay.now();
-  SelectStartAndExpireTimeState(this.startTime, this.endTime);
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
+  SelectStartAndExpireTimeState({required this.startTime,required this.endTime});
 }
 
 final class SelectTripDriverState extends SupervisorActionsState {
-  // DarbUser value ;
-  // SelectTripDriverState(this.value);
 }  
 final class SelectDriverState extends SupervisorActionsState {
-  // DarbUser value ;
-  // SelectDriverState(this.value);
 }  
 
 final class SelectBusNumberState extends SupervisorActionsState {

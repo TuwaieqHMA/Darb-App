@@ -13,9 +13,10 @@ class GMService {
     Marker marker = Marker(
       //add start location marker
       markerId: markerId,
-      position: position, //position of marker
+      //position of marker
+      position: position,
+      //popup info
       infoWindow: InfoWindow(
-        //popup info
         title: user,
       ),
       icon: color, //Icon for Marker

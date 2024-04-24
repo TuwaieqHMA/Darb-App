@@ -1,6 +1,6 @@
 import 'package:darb_app/data_layer/home_data_layer.dart';
 import 'package:darb_app/main.dart';
-import 'package:darb_app/pages/disconnected_page.dart';
+import 'package:darb_app/pages/Start%20Pages/disconnected_page.dart';
 import 'package:darb_app/services/database_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

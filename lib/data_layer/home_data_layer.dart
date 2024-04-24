@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:darb_app/models/bus_model.dart';
 import 'package:darb_app/models/darb_user_model.dart';
 import 'package:darb_app/models/driver_model.dart';
-import 'package:darb_app/pages/supervisor_home_page.dart';
-import 'package:darb_app/pages/supervisor_list_page.dart';
-import 'package:darb_app/widgets/trip_card.dart';
+import 'package:darb_app/pages/Home%20Pages/supervisor_home_page.dart';
+import 'package:darb_app/pages/List%20Pages/supervisor_list_page.dart';
+import 'package:darb_app/widgets/Card%20Widgets/trip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,10 +28,8 @@ class HomeData {
   DarbUser? busDriverName;
   List<DarbUser> students = [];
   final List<Bus> buses = [];
-  // final List<Bus> numberOfSeat = [];
   List<TripCard> supervisorCurrentTrips = [];
   List<TripCard> supervisorFutureTrips = [];
-  // List<Trip> trips = [];
   List<DarbUser> tripDrivers = [];
 
   final List<Bus> seatNumber = [];
