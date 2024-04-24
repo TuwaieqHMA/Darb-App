@@ -6,16 +6,17 @@ import 'package:darb_app/bloc/trip_details_bloc/trip_details_bloc.dart';
 import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
 import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
-import 'package:darb_app/pages/change_password_page.dart';
-import 'package:darb_app/pages/verify_otp_page.dart';
 import 'package:darb_app/bloc/trip_location_bloc/trip_location_bloc.dart';
+import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/app_locale.dart';
-import 'package:darb_app/widgets/home_appbar.dart';
+import 'package:darb_app/utils/colors.dart';
 import 'package:darb_app/widgets/redirect_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:darb_app/utils/setup.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,7 +83,13 @@ class _MainAppState extends State<MainApp> {
         // theme: ThemeData.light(),
         // darkTheme: ThemeData.dark(),
       home: 
-       const RedirectWidget(),
+       AnimatedSplashScreen(
+        splash: 'assets/images/splash_image.png',
+        nextScreen: const RedirectWidget(),
+        backgroundColor: signatureBlueColor,
+        splashTransition: SplashTransition.fadeTransition,
+        splashIconSize: context.getWidth() * .8,
+       ),
           ),
     );
   }
