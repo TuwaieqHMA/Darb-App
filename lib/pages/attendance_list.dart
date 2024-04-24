@@ -160,7 +160,7 @@ class AttendanceListPage extends StatelessWidget {
                       itemCount: state.studentList.length,
                       itemBuilder:(context, index) {
                         AttendanceStatus studentStatus = (attendanceList[index].status == "حضور مؤكد") ? AttendanceStatus.assueredPrecense : (attendanceList[index].status == "حاضر") ? AttendanceStatus.present : AttendanceStatus.absent;
-                        return ListViewBar(i: index+1, student: state.studentList[index], status:  studentStatus, trip: trip, isCurrent: !isCurrent!,);
+                        return ListViewBar(i: index+1, student: state.studentList[index], status:  studentStatus, trip: trip, isCurrent: isCurrent!,);
                     }
                     ) : nothing;
                     }else if (snapshot.connectionState == ConnectionState.waiting){
