@@ -248,7 +248,7 @@ class DBService {
     await supabase.from('Trip').insert(trip.toJson());
     await getOneDriverData(trip.driverId);
      int numTrip = 0;
-    if(locator.driverData.noTrips! == 0 ){
+    if(locator.driverData.noTrips! >= 0 ){
       numTrip = locator.driverData.noTrips! + 1;
     }
     await supabase.from("Driver").update({"no_trips": numTrip}).eq('id', trip.driverId);
@@ -556,7 +556,7 @@ return studentList;
   Future<List<TripCard>> getAllDriverTrips() async {
     List<Trip> tripList = [];
     List<TripCard> tripCardList = [];
-    List<Map<String, dynamic>> mapTriplist = await supabase.from("Trip").select().eq('driver_id', locator.currentUser.id!).order('date',);
+    List<Map<String, dynamic>> mapTriplist = await supabase.rpc('get_driver_trips', params: {'driverid': locator.currentUser.id});
     if(mapTriplist.isNotEmpty){
       for (Map<String, dynamic> tripMap in mapTriplist){
         tripList.add(Trip.fromJson(tripMap));

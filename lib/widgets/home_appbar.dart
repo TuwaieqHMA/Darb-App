@@ -46,7 +46,7 @@ class HomeAppBar extends StatelessWidget {
                     }, 
                     child: SvgPicture.asset(
                       "assets/icons/icon_person.svg",
-                      width: context.getWidth() * 0.05, // 30,
+                      width: context.getWidth() * 0.07, // 30,
                     ),
                   ),
                   width16,
@@ -59,7 +59,7 @@ class HomeAppBar extends StatelessWidget {
                           style: TextStyle(
                               overflow: TextOverflow.ellipsis,
                               color: textColor ?? skyblueColor,
-                              fontSize: context.getWidth() * .06,
+                              fontSize: context.getWidth() * .07,
                               fontFamily: inukFont),
                         );
                       },
