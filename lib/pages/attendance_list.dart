@@ -176,7 +176,7 @@ class AttendanceListPage extends StatelessWidget {
                 
               },
             ),
-            height8,
+            height50,
           ],
         ),
         bottomSheet: (!isCurrent!)
