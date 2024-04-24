@@ -57,7 +57,6 @@ class SupervisorActionsBloc
     on<SelectStartAndExpireTimeEvent>(selectStartTimeOfTrip);
     on<SelectBusDriverEvent>(selectBusDriver);
     on<GetDriverBusNameEvent>(getBusDriver);
-    // on<SelectTripDriverEvent>(selectTripDriver);
     on<RefrshDriverEvent>(refreshDriver);
     on<AddBusEvent>(addBus);
     on<AddTripEvent>(addTrip);
@@ -87,7 +86,7 @@ class SupervisorActionsBloc
 
   FutureOr<void> selectStartTimeOfTrip(SelectStartAndExpireTimeEvent event, Emitter<SupervisorActionsState> emit) async {
     await selectTime(event.context, event.num);
-    emit(SelectStartAndExpireTimeState(startTime, endTime));
+    emit(SelectStartAndExpireTimeState(startTime: startTime,endTime: endTime));
     emit(SelectDriverState());
     emit( SuccessGetDriverState());
   }
@@ -173,13 +172,6 @@ class SupervisorActionsBloc
     dropdownAddTripValue = event.tripDriverId;
     emit(SuccessGetDriverState());
   }
-
-  
-  // select one driver to add trip 
-  // FutureOr<void> selectTripDriver( SelectTripDriverEvent event, Emitter<SupervisorActionsState> emit) async{
-  //   await DBService().getOneDriverData(event.driver);
-  //   emit(SelectTripDriverState());  
-  // }
 
   FutureOr<void> addBus(AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
     try {
@@ -352,7 +344,6 @@ class SupervisorActionsBloc
     }
   }
 
- // 
   FutureOr<void> getBusDriver(GetDriverBusNameEvent event, Emitter<SupervisorActionsState> emit) async {
     if(event.busData != null ){
       DBService().getDriverBusName(event.busData!.driverId);

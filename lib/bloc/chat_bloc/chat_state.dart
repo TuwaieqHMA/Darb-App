@@ -7,16 +7,14 @@ final class ChatInitial extends ChatState {}
 
 // ---- ResultStates ----
 final class ChatSuccessState extends ChatState{}
-// ignore: must_be_immutable
 final class ChatErrorState extends ChatState{
-  String msg;
+  final String msg;
   ChatErrorState(this.msg);
 }
 
 // ---- Show Messages State ---
-// ignore: must_be_immutable
 final class ShowMessageStreamState extends ChatState {
-  Stream<List<Message>> messageList;
+  final Stream<List<Message>> messageList;
   ShowMessageStreamState(
     this.messageList,
   );

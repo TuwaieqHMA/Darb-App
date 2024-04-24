@@ -12,7 +12,7 @@ import 'package:darb_app/models/message_model.dart';
 import 'package:darb_app/models/trip_model.dart';
 import 'package:darb_app/models/student_model.dart';
 import 'package:darb_app/utils/enums.dart';
-import 'package:darb_app/widgets/trip_card.dart';
+import 'package:darb_app/widgets/Card%20Widgets/trip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,6 +24,8 @@ class DBService {
   final List<Driver> driverData = [];
 
   final locator = GetIt.I.get<HomeData>();
+
+//---------------Supervisor Actions---------------
 
   // Get All basic user information
   Future getAllDriver() async {
@@ -190,7 +192,7 @@ class DBService {
             .rpc('get_trip_student_count', params: {'tripid': trip.id});
         final drivers = await supabase.from("User").select().eq('id', trip.driverId).single();
         final driverName = await supabase.from("Driver").select().eq('id', trip.driverId).single();
-        driver = Driver.fromJson(driverName); //drivers['name'];
+        driver = Driver.fromJson(driverName);
         driverData = DarbUser.fromJson(drivers);
         tripCardList.add(TripCard(
           trip: trip,
@@ -240,7 +242,6 @@ class DBService {
   Future addBus(Bus bus, String id) async {
     await supabase.from('Bus').insert(bus.toJson());
         await supabase.from('Driver').update({'has_bus': true}).eq('id', id);
-    // await getDriverData(); //////!
   }
 
   //  Add trip
@@ -351,8 +352,7 @@ class DBService {
 
 
   //---------------Auth Actions---------------
-
-  Future<AuthResponse> signUp(
+    Future<AuthResponse> signUp(
       {required String email, required String password}) async {
     return await supabase.auth.signUp(email: email, password: password);
   }
@@ -492,7 +492,6 @@ class DBService {
   }
 
  //---------------------------DRIVER LOCATION Actions ---------------------------
-//
 Future<List<Student>> getStudentLocationList(int tripId) async{
   List<Student> studentList = [];
   List<dynamic> studentMap = await supabase.rpc("get_student_location_list",

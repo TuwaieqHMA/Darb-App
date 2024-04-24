@@ -7,9 +7,8 @@ final class DriverMapInitial extends DriverMapState {}
 
 final class DriverMapLoadingState extends DriverMapState {}
 
-// ignore: must_be_immutable
 final class DriverMapErrorState extends DriverMapState {
-   String msg;
+  final String msg;
 
   DriverMapErrorState( this.msg);
 }

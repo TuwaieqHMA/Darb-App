@@ -18,7 +18,7 @@ class Trip {
   late final TimeOfDay timeTo;
   late final String driverId;
   late final bool isToSchool;
-  late final String supervisorId; // New attribute
+  late final String supervisorId;
 
   Trip.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -28,7 +28,7 @@ class Trip {
         timeTo = _parseTimeOfDay(json['time_to']),
         driverId = json['driver_id'],
         isToSchool = json['isToSchool'],
-        supervisorId = json['supervisor_id']; // Parse supervisorId from JSON
+        supervisorId = json['supervisor_id'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -39,7 +39,7 @@ class Trip {
       'time_to': '${timeTo.hour}:${timeTo.minute}',
       'driver_id': driverId,
       'isToSchool': isToSchool,
-      'supervisor_id': supervisorId, // Add supervisorId to JSON
+      'supervisor_id': supervisorId,
     };
   }
 

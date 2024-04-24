@@ -78,8 +78,6 @@ class DriverMapBloc extends Bloc<DriverMapEvent, DriverMapState> {
           markers: Set<Marker>.of(markers.values),
           polylines: Set<Polyline>.of(polyLines.values),
           driverLocation: LatLng(driverPos.latitude, driverPos.longitude)));
-
-//============================createPolyLine=================
     } catch (e) {
       emit(DriverMapErrorState('حدثت مشكلة في تنزيل الموقع'));
     }

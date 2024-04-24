@@ -10,7 +10,7 @@ import 'package:darb_app/bloc/trip_location_bloc/trip_location_bloc.dart';
 import 'package:darb_app/helpers/extensions/screen_helper.dart';
 import 'package:darb_app/utils/app_locale.dart';
 import 'package:darb_app/utils/colors.dart';
-import 'package:darb_app/widgets/redirect_widget.dart';
+import 'package:darb_app/widgets/Redirection%20Widgets/redirect_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:darb_app/utils/setup.dart';
@@ -50,7 +50,6 @@ class _MainAppState extends State<MainApp> {
     super.initState();
   }
 
-  // the setState function here is a must to add
   void _onTranslatedLanguage(Locale? locale) {
     setState(() {});
   }
@@ -76,12 +75,6 @@ class _MainAppState extends State<MainApp> {
         supportedLocales: localization.supportedLocales,
         localizationsDelegates: localization.localizationsDelegates,
         locale: localization.currentLocale,
-        // useInheritedMediaQuery: true,
-        // locale: DevicePreview.locale(context),
-        // builder: DevicePreview.appBuilder,
-        
-        // theme: ThemeData.light(),
-        // darkTheme: ThemeData.dark(),
       home: 
        AnimatedSplashScreen(
         splash: 'assets/images/splash_image.png',
