@@ -1,5 +1,6 @@
 import 'package:darb_app/bloc/attendance_list_bloc/attendance_list_bloc.dart';
 import 'package:darb_app/bloc/driver_bloc/driver_bloc.dart';
+import 'package:darb_app/bloc/driver_map_bloc/driver_map_bloc.dart';
 import 'package:darb_app/bloc/student_bloc/student_bloc.dart';
 import 'package:darb_app/bloc/trip_details_bloc/trip_details_bloc.dart';
 import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
 import 'package:darb_app/pages/change_password_page.dart';
 import 'package:darb_app/pages/verify_otp_page.dart';
+import 'package:darb_app/bloc/trip_location_bloc/trip_location_bloc.dart';
 import 'package:darb_app/utils/app_locale.dart';
 import 'package:darb_app/widgets/home_appbar.dart';
 import 'package:darb_app/widgets/redirect_widget.dart';
@@ -65,6 +67,8 @@ class _MainAppState extends State<MainApp> {
         BlocProvider(create: (context) => DriverBloc(),),
         BlocProvider(create: (context) => TripDetailsBloc(),),
         BlocProvider(create: (context) => AttendanceListBloc(),),
+        BlocProvider(create: (context) => TripLocationBloc(),),
+        BlocProvider(create: (context) => DriverMapBloc(),),
         ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -32,7 +32,7 @@ class AttendanceListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final attendanceListBloc = context.read<AttendanceListBloc>();
     final locator = GetIt.I.get<HomeData>();
-    (!isCurrent!) ? attendanceListBloc.add(UpdateDriverLocationEvent(trip: trip)) : null;
+    (isCurrent!) ? attendanceListBloc.add(UpdateDriverLocationEvent(trip: trip)) : null;
     attendanceListBloc.add(GetAttendanceListInfoEvent(tripId: trip.id!));
     return PopScope(
       canPop: true,
@@ -160,7 +160,7 @@ class AttendanceListPage extends StatelessWidget {
                       itemCount: state.studentList.length,
                       itemBuilder:(context, index) {
                         AttendanceStatus studentStatus = (attendanceList[index].status == "حضور مؤكد") ? AttendanceStatus.assueredPrecense : (attendanceList[index].status == "حاضر") ? AttendanceStatus.present : AttendanceStatus.absent;
-                        return ListViewBar(i: index+1, student: state.studentList[index], status:  studentStatus, trip: trip, isCurrent: !isCurrent!,);
+                        return ListViewBar(i: index+1, student: state.studentList[index], status:  studentStatus, trip: trip, isCurrent: isCurrent!,);
                     }
                     ) : nothing;
                     }else if (snapshot.connectionState == ConnectionState.waiting){
@@ -179,7 +179,7 @@ class AttendanceListPage extends StatelessWidget {
             height50,
           ],
         ),
-        bottomSheet: (!isCurrent!)
+        bottomSheet: (isCurrent!)
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: BottomButton(

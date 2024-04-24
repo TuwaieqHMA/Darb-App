@@ -415,7 +415,7 @@ class DBService {
 
   Future<void> updateUserInfo(String name, String phone) async {
     await supabase.from("User").update({'name': name, 'phone': phone}).eq(
-        'id', await getCurrentUserId());
+        'id', locator.currentUser.id!);
   }
 
   Future<void> uploadImage(File file) async {
@@ -436,57 +436,12 @@ class DBService {
         .getPublicUrl(locator.currentUser.id!);
   }
 
-  //------------------------------------------------------------
-  // --------- Fetching user and session info Operations ------
- //final SupabaseClient _client;
-
- 
-
-  // Future<void> createChat(Chat chat) async {
-  //   final response = await supabase.from('chats').upsert(chat.toJson()).();
-  //   if (response.error != null) {
-  //     throw Exception('Failed to create chat: ${response.error!.message}');
-  //   }
-  // }
-
-  // Future<void> sendMessage(Message message) async {
-  //   final response = await supabase.from('messages').upsert(message.toJson()).execute();
-  //   if (response.error != null) {
-  //     throw Exception('Failed to send message: ${response.error!.message}');
-  //   }
-  // }
-
-  // Future<List<Message>> getMessagesForChat(int chatId) async {
-  //   final response = await supabase
-  //       .from('messages')
-  //       .select()
-  //       .eq('chat_id', chatId)
-  //       .order('created_at', ascending: true)
-  //       .select();
-
-  //   if (response.error != null) {
-  //     throw Exception('Failed to fetch messages: ${response.error!.message}');
-  //   }
-
-  //   return (response.data as List<dynamic>)
-  //       .map((e) => Message.fromJson(e as Map<String, dynamic>, json: {}, myUserID: ''))
-  //       .toList();
-  // }
- // Getting session data for routing
-  // Future getSessionData() async {
-  //   final session = supabase.auth.currentSession;
-  //   print("-------------------------------");
-  //   print("Session Data $session");
-  //   print("-------------------------------");
-  //   return session;
-  // }
-
  // Getting current user ID
   Future getCurrentUserID() async {
     final currentUserId = supabase.auth.currentUser?.id;
     return currentUserId;
   }
-
+// -----------------Chat Actions------------------------------------
   // Get messages stream
   Stream<List<Message>> getMessagesStream(int chatId) {
     final Stream<List<Message>> msgStream = supabase
@@ -557,7 +512,7 @@ return studentList;
     return Student.fromJson(await supabase
         .from("Student")
         .select()
-        .eq('id', await getCurrentUserId())
+        .eq('id', locator.currentUser.id!)
         .single());
   }
 
@@ -565,7 +520,7 @@ return studentList;
     await supabase.from("Student").update({
       'latitude': coordinates.latitude,
       'longitude': coordinates.longitude
-    }).eq('id', await getCurrentUserId());
+    }).eq('id', locator.currentUser.id!);
   }
 
   Future<List<TripCard>> getAllStudentTrips() async {
@@ -636,18 +591,24 @@ return studentList;
       'student_id': locator.currentUser.id
     });
       return AttendanceStatus.assueredPrecense;
-    }else if (currentStatus == AttendanceStatus.assueredPrecense && studentId != null){
+    }else if (currentStatus == AttendanceStatus.assueredPrecense && studentId == null){
+      await supabase.from("AttendanceList").update({'status': "غائب"}).match({
+      'trip_id': tripId,
+      'student_id': locator.currentUser.id
+    });
+      return AttendanceStatus.absent;
+    }else if (currentStatus == AttendanceStatus.present && studentId != null){
       await supabase.from("AttendanceList").update({'status': "حاضر"}).match({
       'trip_id': tripId,
       'student_id': studentId
     });
-      return AttendanceStatus.absent;
+    return AttendanceStatus.present;
     }else {
       await supabase.from("AttendanceList").update({'status': "غائب"}).match({
       'trip_id': tripId,
       'student_id': studentId
     });
-    return AttendanceStatus.absent;
+     return AttendanceStatus.absent;
     }
   }
 
@@ -675,9 +636,10 @@ return studentList;
   }
 
   Future<Location?> checkDriverLocationExist() async{
-    Map<String, dynamic> locationMap = await supabase.from("Location").select().eq('user_id', locator.currentUser.id!).single();
+    List<Map<String, dynamic>> locationMap = await supabase.from("Location").select().eq('user_id', locator.currentUser.id!);
+    print(locationMap);
     if(locationMap.isNotEmpty){
-      return Location.fromJson(locationMap);
+      return Location.fromJson(locationMap[0]);
     }else {
       Position driverPos = await Geolocator.getCurrentPosition();
       Map<String, dynamic> locationJson = Location(userId: locator.currentUser.id!, latitude: driverPos.latitude, longitude: driverPos.longitude).toJson();
@@ -703,6 +665,20 @@ return studentList;
         locator.driverLocationCron.close();
       }
     });
+  }
+  //---------------------------Trip Location Actions---------------------------
+
+  
+  Stream<List<Location>> getTripCurrentDriverLocation(String driverId) {
+    return supabase.from('Location')
+        .stream(primaryKey: ["user_id"])
+        .eq('user_id', driverId).map((locations) => locations.map((location) => Location.fromJson(location)).toList());
+  }
+
+  Future<Student> getStudentHomeLocation() async{
+    Map<String, dynamic> studentMap = await supabase.from("Student").select().eq('id', locator.currentUser.id!).single();
+    print(studentMap);
+    return Student.fromJson(studentMap);
   }
 
 }
