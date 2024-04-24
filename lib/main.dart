@@ -5,6 +5,7 @@ import 'package:darb_app/bloc/trip_details_bloc/trip_details_bloc.dart';
 import 'package:darb_app/bloc/chat_bloc/chat_bloc.dart';
 import 'package:darb_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:darb_app/bloc/supervisor_bloc/supervisor_actions_bloc.dart';
+import 'package:darb_app/bloc/trip_location_bloc/trip_location_bloc.dart';
 import 'package:darb_app/utils/app_locale.dart';
 import 'package:darb_app/widgets/redirect_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,6 +63,7 @@ class _MainAppState extends State<MainApp> {
         BlocProvider(create: (context) => DriverBloc(),),
         BlocProvider(create: (context) => TripDetailsBloc(),),
         BlocProvider(create: (context) => AttendanceListBloc(),),
+        BlocProvider(create: (context) => TripLocationBloc(),),
         ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

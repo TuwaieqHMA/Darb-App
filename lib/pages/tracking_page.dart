@@ -95,7 +95,7 @@ class TrackingPage extends StatelessWidget {
                   } else {
                     return DriverInfoCard(
                         driver: locator.currentTripDriver,
-                        isCurrent: !isCurrent!);
+                        isCurrent: isCurrent!);
                   }
                 },
               ),
@@ -142,7 +142,7 @@ class TrackingPage extends StatelessWidget {
                   ? BottomButton(
                       text: "تتبع الباص",
                       onPressed: () {
-                        context.push(const MapStudent(), true);
+                        context.push(MapStudent(driverId: trip.driverId,), true);
                       },
                       textColor: whiteColor,
                       fontSize: 24,
