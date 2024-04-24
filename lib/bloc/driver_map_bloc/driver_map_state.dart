@@ -5,8 +5,6 @@ sealed class DriverMapState {}
 
 final class DriverMapInitial extends DriverMapState {}
 
-final class DriverMapSuccessState extends DriverMapState {}
-
 final class DriverMapLoadingState extends DriverMapState {}
 
 // ignore: must_be_immutable
@@ -17,7 +15,14 @@ final class DriverMapErrorState extends DriverMapState {
 }
 
 final class DriverMapStudentListState extends DriverMapState {
-final List<Student> studentsList;
+ final Set<Marker> markers;
+ final Set<Polyline> polylines;
 
-  DriverMapStudentListState(param0, {required this.studentsList});
+  DriverMapStudentListState({required this.markers, required this.polylines});
+}
+
+final class DriverMapPolylineState extends DriverMapState{
+  final List polylineItems;
+
+  DriverMapPolylineState({required this.polylineItems});
 }
