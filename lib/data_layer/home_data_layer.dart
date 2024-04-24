@@ -18,7 +18,7 @@ class HomeData {
   Cron driverLocationCron = Cron();
 
   DateTime startDate = DateTime.now();
-  DateTime? editStartDate ;
+  DateTime? editStartDate;
   DateTime endDate = DateTime.now();
   DateTime? editEndDate;
   final List<DarbUser> drivers = [];

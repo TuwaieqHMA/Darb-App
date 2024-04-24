@@ -125,7 +125,7 @@ class SupervisorActionsBloc
       }else if (num == 4) {
         locator.editStartDate = picked;
       } else if (num == 5) {
-        editStartTripDate = picked;
+        locator.editEndDate = picked;
       } 
       else{
         if(locator.startDate.month <= picked.month && locator.startDate.day < picked.day){

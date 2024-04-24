@@ -321,7 +321,7 @@ class _EditBusState extends State<EditBus> {
                                 onTap: widget.isView!
                                     ? () {}
                                     : () {
-                                        bloc.add(SelectDayEvent(context, 2));
+                                        bloc.add(SelectDayEvent(context, 5));
                                       },
                                 child: Container(
                                   padding: const EdgeInsets.only(right: 16),
@@ -338,8 +338,7 @@ class _EditBusState extends State<EditBus> {
                                       borderRadius: BorderRadius.circular(
                                         10,
                                       )),
-                                  child: BlocBuilder<SupervisorActionsBloc,
-                                      SupervisorActionsState>(
+                                  child: BlocBuilder<SupervisorActionsBloc,SupervisorActionsState>(
                                     builder: (context, state) {
                                       locator.editEndDate ??=
                                           locator.buses[0].dateExpire;

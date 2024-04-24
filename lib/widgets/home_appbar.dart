@@ -23,7 +23,7 @@ class HomeAppBar extends StatelessWidget {
       width: context.getWidth(),
       height: context.getWidth() * 0.91,
       padding: const EdgeInsets.symmetric(
-        horizontal: 15,
+        horizontal: 12,
       ),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
@@ -35,7 +35,7 @@ class HomeAppBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               height24,
               Row(
@@ -46,7 +46,7 @@ class HomeAppBar extends StatelessWidget {
                     }, 
                     child: SvgPicture.asset(
                       "assets/icons/icon_person.svg",
-                      width: 35,
+                      width: context.getWidth() * 0.05, // 30,
                     ),
                   ),
                   width16,
@@ -59,7 +59,7 @@ class HomeAppBar extends StatelessWidget {
                           style: TextStyle(
                               overflow: TextOverflow.ellipsis,
                               color: textColor ?? skyblueColor,
-                              fontSize: context.getWidth() * .07,
+                              fontSize: context.getWidth() * .06,
                               fontFamily: inukFont),
                         );
                       },
@@ -74,7 +74,7 @@ class HomeAppBar extends StatelessWidget {
             children: [
               Container(
                 width: context.getWidth() * 0.23,
-                height: context.getWidth() * 0.25,
+                height: context.getWidth() * 0.23,
                 alignment: Alignment.bottomCenter,
                 padding: const EdgeInsets.only(bottom: 10),
                 decoration: const BoxDecoration(

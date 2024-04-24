@@ -37,7 +37,7 @@ class _BusListPageState extends State<BusListPage> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(context.getWidth(), context.getHeight() * .19),
+        preferredSize: Size(context.getWidth(), context.getHeight() * .21),
         child: PageAppBar(
           backgroundColor: signatureBlueColor,
           textColor: whiteColor,

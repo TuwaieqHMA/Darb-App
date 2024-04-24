@@ -30,7 +30,7 @@ class SupervisorAddCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: context.getWidth() * 0.9,
+      width: context.getWidth() * 0.92,
       height: context.getHeight() * 0.27, 
       margin: const EdgeInsets.only(
         top: 24,
@@ -46,7 +46,7 @@ class SupervisorAddCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          width20,
+          width16,
           InkWell(
             onTap: onTap,
             child: Row(
