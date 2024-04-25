@@ -40,10 +40,11 @@ final class GetAllTripDriverState extends SupervisorActionsState {
   GetAllTripDriverState(this.driver);
 }
 
+// ignore: must_be_immutable
 final class SelectDayState extends SupervisorActionsState {
-  final DateTime startDate;
-  final DateTime startTripDate;
-  final DateTime endDate;
+  DateTime startDate = DateTime.now();
+  DateTime startTripDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   SelectDayState(this.startDate, this.startTripDate, this.endDate);
 }
 final class SelectStartAndExpireTimeState extends SupervisorActionsState {  

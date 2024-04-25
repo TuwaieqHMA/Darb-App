@@ -176,9 +176,9 @@ class SupervisorActionsBloc
   FutureOr<void> addBus(AddBusEvent event, Emitter<SupervisorActionsState> emit) async {
     try {
       await DBService().addBus(event.bus, event.id);
-      emit(SuccessAddBusState(msg: "تم إضافة الباص بنحاج "));
+      emit(SuccessAddBusState(msg: "تم إضافة الباص بنجاح "));
     } catch (e) {
-      emit(ErrorAddBusState(msg: "حدث خطأ أنثاء إضافة الباص"));
+      emit(ErrorAddBusState(msg: "حدث خطأ أثناء إضافة الباص"));
     }
   }  
 

@@ -169,7 +169,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> verifyOtp(
       VerifyOtpEvent event, Emitter<AuthState> emit) async {
     if (event.otp.trim().isNotEmpty) {
-      if (event.otp.length >= 6) {
+      if (event.otp.length == 6) {
         try {
           await dbService.verifyOtp(event.otp, event.email);
           emit(OtpVerifiedState(

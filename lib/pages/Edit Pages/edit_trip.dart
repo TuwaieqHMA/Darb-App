@@ -61,7 +61,7 @@ class _EditTripState extends State<EditTrip> {
           },
           child: Stack(
             children: [
-              WaveDecoration(
+              const WaveDecoration(
                 containerColor: lightGreenColor,
               ),
               ListView(
@@ -97,7 +97,7 @@ class _EditTripState extends State<EditTrip> {
                             ),
                           ),
                           height32,
-                          TextFieldLabel(text: "نوع الرحلة"),
+                          const TextFieldLabel(text: "نوع الرحلة"),
                           height8,
                           BlocBuilder<SupervisorActionsBloc,
                               SupervisorActionsState>(
@@ -239,7 +239,7 @@ class _EditTripState extends State<EditTrip> {
                                 )
                               : Column(
                                   children: [
-                                    TextFieldLabel(text: "اسم السائق "),
+                                    const TextFieldLabel(text: "اسم السائق "),
                                     height16,
                                     Container(
                                       padding: const EdgeInsets.only(right: 16),
@@ -316,7 +316,7 @@ class _EditTripState extends State<EditTrip> {
                             isEnabled: widget.isView ? false : true,
                           ),
                           height16,
-                          TextFieldLabel(text: "اليوم "),
+                          const TextFieldLabel(text: "اليوم "),
                           height8,
                           InkWell(
                             onTap: widget.isView
@@ -381,7 +381,7 @@ class _EditTripState extends State<EditTrip> {
                                 })),
                           ),
                           height16,
-                          TextFieldLabel(text: "بداية الرحلة"),
+                          const TextFieldLabel(text: "بداية الرحلة"),
                           height8,
                           InkWell(
                             onTap: widget.isView
@@ -445,7 +445,7 @@ class _EditTripState extends State<EditTrip> {
                             ),
                           ),
                           height16,
-                          TextFieldLabel(text: "نهاية الرحلة"),
+                          const TextFieldLabel(text: "نهاية الرحلة"),
                           height8,
                           InkWell(
                             onTap: widget.isView
