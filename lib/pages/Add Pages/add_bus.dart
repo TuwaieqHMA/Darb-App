@@ -323,7 +323,7 @@ class _AddBusState extends State<AddBus> {
                                           .text.isEmpty &&
                                       busPlateController.text.isEmpty 
                                      ){ context.showErrorSnackBar(
-                                        "الرجاء ملئ جميع الجقول");
+                                        "الرجاء ملئ جميع الحقول");
                                         
                                       }else if (locator.startDate.month >
                                       locator.endDate.month) {
