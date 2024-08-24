@@ -16,7 +16,7 @@ dependencies:
   get_it: ^7.6.7
   get_storage: ^2.1.1
   supabase_flutter: ^2.3.4
-  intl: ^0.18.1
+  intl: 0.19.0
   flutter_otp_text_field: ^1.1.0+2
   otp_timer_button: ^1.1.1
   timer_button: ^2.1.1

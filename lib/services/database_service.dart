@@ -120,7 +120,7 @@ class DBService {
   // Search for bus
   Future<List<Bus>> searchForBus(int busNumber) async {
     List<Bus> searchBus = [];
-    final data = await supabase.from("Bus").select().match({'id' : busNumber, 'supervisor_id' : locator.currentUser.id});
+    final data = await supabase.from("Bus").select().match({'id' : busNumber, 'supervisor_id' : locator.currentUser.id!});
       for (var user in data) {
         searchBus.add(Bus.fromJson(user));
       }
@@ -579,7 +579,7 @@ return studentList;
   Future<AttendanceList> getStudentAttendanceStatus(int tripId) async {
     return AttendanceList.fromJson(await supabase.from("AttendanceList").select().match({
       'trip_id': tripId,
-      'student_id': locator.currentUser.id
+      'student_id': locator.currentUser.id!
     }).single());
   }
 
@@ -587,13 +587,13 @@ return studentList;
     if(currentStatus == AttendanceStatus.absent && studentId == null){
       await supabase.from("AttendanceList").update({'status': "حضور مؤكد"}).match({
       'trip_id': tripId,
-      'student_id': locator.currentUser.id
+      'student_id': locator.currentUser.id!
     });
       return AttendanceStatus.assueredPrecense;
     }else if (currentStatus == AttendanceStatus.assueredPrecense && studentId == null){
       await supabase.from("AttendanceList").update({'status': "غائب"}).match({
       'trip_id': tripId,
-      'student_id': locator.currentUser.id
+      'student_id': locator.currentUser.id!
     });
       return AttendanceStatus.absent;
     }else if (currentStatus == AttendanceStatus.present && studentId != null){
@@ -605,7 +605,7 @@ return studentList;
     }else {
       await supabase.from("AttendanceList").update({'status': "غائب"}).match({
       'trip_id': tripId,
-      'student_id': studentId
+      'student_id': studentId!
     });
      return AttendanceStatus.absent;
     }

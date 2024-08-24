@@ -33,10 +33,10 @@ class GMService {
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      dotenv.env['googleCloudKey']!,
+      googleApiKey:  dotenv.env['googleCloudKey']!,
+      request: PolylineRequest(origin: 
       PointLatLng(latStart, lngStart),
-      PointLatLng(latEnd, lngEnd),
-      travelMode: TravelMode.driving,
+      destination: PointLatLng(latEnd, lngEnd), mode: TravelMode.driving)
     );
 
     if (result.points.isNotEmpty) {
